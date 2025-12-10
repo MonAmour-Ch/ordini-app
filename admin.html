@@ -1,205 +1,45 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pannello Admin Bar | Ordini</title>
-    <link rel="stylesheet" href="style.css"> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pannello Admin Bar | Ordini</title>
+    
+    <link rel="stylesheet" href="style.css"> 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-    <style>
-        /* --- Layout Dashboard --- */
-        #dashboard-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 15px;
-            background-color: #f7f9fc;
-        }
-        
-        /* Stili per il pulsante Logout */
-        #admin-logout-btn {
-            padding: 8px 15px;
-            background: #dc3545; /* Rosso Admin */
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.2s;
-        }
-        #admin-logout-btn:hover {
-            background: #c82333;
-        }
-
-        /* --- STILI NOTA AGGIUNTI QUI --- */
-        .order-note-display {
-            margin: 15px 0 10px 0;
-            padding: 10px 15px;
-            border-left: 5px solid #ffc107; /* Giallo/Arancio per evidenziare */
-            background-color: #fff9e6; /* Sfondo leggero */
-            font-size: 1em;
-            color: #333;
-            border-radius: 3px;
-            white-space: pre-wrap; /* Mantiene la formattazione se l'utente usa invio */
-        }
-
-        .order-note-display strong {
-            color: #ffc107;
-            margin-right: 5px;
-        }
-        /* --- FINE STILI NOTA --- */
-
-
-        /* --- Stili Card Ordine --- */
-        .order-card {
-            border: 1px solid #e0e0e0;
-            padding: 20px;
-            margin-bottom: 25px;
-            border-radius: 10px;
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-            transition: transform 0.2s;
-        }
-        .order-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-        }
-
-        /* Intestazione e Ora */
-        .order-card h3 {
-            color: #343a40;
-            margin-bottom: 10px;
-            padding-bottom: 5px;
-            border-bottom: 1px dashed #eee;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .order-time {
-            font-size: 0.9em;
-            font-weight: normal;
-            color: #6c757d;
-        }
-        .order-staff {
-            font-style: italic;
-            font-size: 0.9em;
-            color: #007bff; /* Colore staff */
-            margin-bottom: 10px;
-        }
-
-        /* Lista Articoli */
-        .order-items { 
-            list-style: circle; 
-            margin-left: 20px; 
-            padding: 5px 0;
-            font-size: 1.1em;
-        }
-        .order-items li {
-            padding: 3px 0;
-        }
-
-        /* Footer e Totale */
-        .order-footer {
-            margin-top: 15px;
-            padding-top: 10px;
-            border-top: 1px solid #f0f0f0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 1.3em;
-            color: #dc3545; /* Totale in rosso per attenzione */
-        }
-        .completed-label {
-             font-size: 0.8em;
-             color: #6c757d;
-             font-weight: normal;
-        }
-        
-        /* Pulsante Completa */
-        .complete-btn {
-            padding: 10px 15px;
-            background-color: #28a745; /* Verde per completare */
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.2s;
-        }
-        .complete-btn:hover {
-            background-color: #1e7e34;
-        }
-        
-        /* --- Filtri Ordini --- */
-        #order-filters {
-            display: flex;
-            justify-content: center;
-            margin: 20px auto;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #ddd;
-            max-width: 800px; /* Larghezza massima per centrare i pulsanti */
-        }
-
-        .filter-btn {
-            padding: 10px 20px;
-            margin: 0 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #f8f8f8;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.2s, color 0.2s;
-        }
-
-        .filter-btn.active {
-            background-color: #dc3545; /* Rosso Admin */
-            color: white;
-            border-color: #dc3545;
-        }
-        
-        /* --- Stili di Stato --- */
-        .order-card.pending { border-left: 8px solid #ffc107; } /* Giallo - In Attesa */
-        .order-card.completed { 
-            border-left: 8px solid #007bff; /* Blu per ordini completati */
-            opacity: 0.8; 
-        }
-        
-        .empty-message, .error-message {
-            text-align: center; 
-            padding: 50px; 
-            color: #6c757d;
-            font-size: 1.2em;
-        }
-    </style>
-</head>
+    
+    </head>
 <body>
-    
-    <header>
-        <div id="dashboard-header">
-            <h1>Dashboard Ordini Bar</h1>
-            <div id="logout-container">
-                <button id="admin-logout-btn">Logout Admin</button>
-            </div>
-        </div>
-    </header>
+    
+    <header>
+        <div id="dashboard-header">
+            <h1><i class="fas fa-utensils"></i> Dashboard Ordini Bar</h1>
+            <div id="logout-container">
+                <button id="admin-logout-btn"><i class="fas fa-sign-out-alt"></i> Logout Admin</button>
+            </div>
+        </div>
+    </header>
 
-    <main>
-        <div id="order-filters">
-            <button class="filter-btn active" data-status="pending">Ordini In Attesa</button>
-            <button class="filter-btn" data-status="completed">Ordini Completati</button>
-        </div>
-        
-        <div id="orders-container">
-            <h2 style="text-align: center;">Caricamento Ordini...</h2>
-        </div>
-    </main>
+    <main class="admin-main">
+        <div id="order-filters">
+            <button class="filter-btn active" data-status="pending">
+                <i class="fas fa-clock"></i> Ordini In Attesa
+            </button>
+            <button class="filter-btn" data-status="completed">
+                <i class="fas fa-check-circle"></i> Ordini Completati
+            </button>
+        </div>
+        
+        <div id="orders-container">
+            <h2 style="text-align: center;">Caricamento Ordini...</h2>
+        </div>
+    </main>
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script> 
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    
-    <script src="admin-script.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script> 
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    
+    <script src="admin-script.js"></script>
 </body>
 </html>
