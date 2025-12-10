@@ -1,6 +1,4 @@
 
-};
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
 import {
   getFirestore,
@@ -22,6 +20,7 @@ const firebaseConfig = {
   storageBucket: "menu-6630f.firebasestorage.app",
   messagingSenderId: "250958312970",
   appId: "1:250958312970:web:9a7929c07e8c4fa352d1f3",
+};
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -138,4 +137,5 @@ function initStaff() {
     });
   });
 }
+
 
