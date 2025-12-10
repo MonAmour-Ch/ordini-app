@@ -28,7 +28,6 @@ let cartItems = {};
 let currentTableId = null; 
 
 // --- 3. RIFERIMENTI DOM (Dichiarati come LET per l'assegnazione successiva e sicura) ---
-// Questi verranno assegnati solo in initializeStaffApp
 let mainContainer, cartList, totalPriceSpan, sendOrderBtn, tableIdDisplay, cartTableDisplay;
 let tableSelect; // Elemento cruciale
 
@@ -96,7 +95,6 @@ function handleLogout() {
  * Popola il dropdown di selezione tavolo (Fino a 40) e gestisce l'evento 'change'.
  */
 function populateTableSelect() {
-    // Controllo sicurezza essenziale, questi elementi DEVONO essere stati assegnati in initializeStaffApp
     if (!tableSelect || !mainContainer || !tableIdDisplay || !cartTableDisplay) {
         console.error("populateTableSelect: Elementi DOM essenziali non disponibili.");
         return;
@@ -110,12 +108,12 @@ function populateTableSelect() {
     defaultOption.selected = true; 
     tableSelect.appendChild(defaultOption);
     
-    // Tavoli da 1 a 40 (COME RICHIESTO)
+    // Tavoli da 1 a 40 
     for (let i = 1; i <= 40; i++) {
         const option = document.createElement('option');
         option.value = `TAVOLO_${i}`;
-        // MOSTRA SOLO IL NUMERO PER CHIAREZZA MOBILE
-        option.textContent = `${i}`; 
+        // RIPRISTINATO: include la parola "Tavolo" nel dropdown
+        option.textContent = `Tavolo ${i}`; 
         tableSelect.appendChild(option);
     }
 
@@ -124,7 +122,6 @@ function populateTableSelect() {
         const selectedValue = e.target.value;
         
         if (selectedValue === '') {
-            // Caso di non selezione
             currentTableId = null;
             mainContainer.style.pointerEvents = 'none';
             mainContainer.style.opacity = '0.5';
@@ -135,12 +132,12 @@ function populateTableSelect() {
 
         currentTableId = selectedValue;
         
-        // Estrae il numero puro (es. 'TAVOLO_25' -> '25') per la visualizzazione
-        const displayId = currentTableId.replace('TAVOLO_', ''); 
+        // Estrae il numero puro (es. 'TAVOLO_25' -> '25')
+        const tableNumber = currentTableId.replace('TAVOLO_', ''); 
         
-        // Aggiorna i display (solo numero)
-        tableIdDisplay.textContent = displayId;
-        cartTableDisplay.textContent = displayId;
+        // Aggiorna i display - Ripristinato per mostrare solo il numero
+        tableIdDisplay.textContent = tableNumber;
+        cartTableDisplay.textContent = tableNumber;
         
         // SBLOCCA L'INTERFACCIA
         mainContainer.style.pointerEvents = 'auto';
@@ -150,7 +147,7 @@ function populateTableSelect() {
         // Reset e render
         cartItems = {};
         renderCart();
-        renderMenu(); // Chiama renderMenu che usa menuData globale
+        renderMenu(); 
     });
 }
 
@@ -162,7 +159,6 @@ async function loadMenu() {
         const snapshot = await menuCollection.get();
         menuData = snapshot.docs.map(doc => ({
             id: doc.id,
-            // Assicura che price sia un numero
             price: parseFloat(doc.data().price), 
             ...doc.data()
         }));
@@ -195,7 +191,7 @@ function renderMenu() {
     mainContainer.innerHTML = '';
     Object.keys(groupedMenu).sort().forEach(category => {
         const section = document.createElement('section');
-        section.className = 'menu-category'; // Aggiungiamo classe per styling
+        section.className = 'menu-category'; 
         section.innerHTML = `<h2>${category}</h2>`;
 
         const itemsContainer = document.createElement('div');
@@ -203,7 +199,6 @@ function renderMenu() {
 
         groupedMenu[category].forEach(item => {
             const itemElement = document.createElement('div');
-            // Usiamo una classe più descrittiva per il card item
             itemElement.className = 'menu-item-card'; 
             
             itemElement.innerHTML = `
@@ -216,7 +211,6 @@ function renderMenu() {
                         data-price="${item.price}" 
                         class="add-to-cart-btn"><i class="fas fa-plus"></i></button>
             `;
-            // Ho sostituito "Aggiungi" con l'icona + (fas fa-plus) per salvare spazio su mobile
             itemsContainer.appendChild(itemElement);
         });
 
@@ -241,7 +235,7 @@ function handleAddToCart(event) {
         return;
     }
     
-    const button = event.target.closest('button'); // Garantisce di prendere il bottone anche se si clicca sull'icona
+    const button = event.target.closest('button'); 
     if (!button) return;
 
     const id = button.dataset.id;
@@ -301,7 +295,6 @@ function renderCart() {
                     <button class="cart-btn cart-remove" onclick="updateCartQuantity('${item.id}', -${item.quantity})"><i class="fas fa-trash-alt"></i></button>
                 </div>
             `;
-            // Sostituite i simboli +,-,x con le icone per chiarezza mobile.
             cartList.appendChild(listItem);
         });
         if (sendOrderBtn) sendOrderBtn.disabled = false;
@@ -344,7 +337,7 @@ async function sendOrder(staffUser) {
 
     try {
         await ordersCollection.add(orderData);
-        // Usa solo il numero per l'alert
+        // Usa il numero del tavolo per l'alert
         const tableNumber = currentTableId.replace('TAVOLO_', ''); 
         alert(`Ordine inviato con successo per il Tavolo ${tableNumber}!`);
         
@@ -368,7 +361,7 @@ async function sendOrder(staffUser) {
  * Avvia l'applicazione Staff Order-Taking.
  */
 function initializeStaffApp(user) {
-    // ASSEGNAZIONE DEGLI ELEMENTI DOM in initializeStaffApp (più sicuro)
+    // ASSEGNAZIONE DEGLI ELEMENTI DOM in initializeStaffApp
     window.mainContainer = document.getElementById('menu-container');
     window.cartList = document.getElementById('cart-list');
     window.totalPriceSpan = document.getElementById('total-price');
@@ -405,7 +398,6 @@ function initializeStaffApp(user) {
  * Gestore principale che attende il caricamento della pagina (DOM pronto).
  */
 document.addEventListener('DOMContentLoaded', () => {
-    // Gestione del login (solo se l'HTML ha il bottone)
     if (window.location.pathname.endsWith('staff-login.html')) {
         document.getElementById('login-btn')?.addEventListener('click', handleStaffLogin);
     }
