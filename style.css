@@ -167,22 +167,212 @@ a {
 }
 
 /* ========================================================== */
-/* 5. STILI PANNELLO ADMIN AGGIUNTIVI (incluso per la nota) */
+/* 5. STILI PANNELLO ADMIN (DESIGN MODERNO E FUNZIONALE) */
 /* ========================================================== */
 
-/* Stile per il contenitore della nota (usato in admin-script.js) */
-.order-note-display {
-    margin: 15px 0 10px 0;
+/* --- Layout Generale Admin --- */
+.admin-main {
+    max-width: 1200px; /* Larghezza maggiore per una dashboard più ampia */
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+#dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding: 10px 15px;
-    border-left: 5px solid #ffc107; /* Giallo/Arancio per evidenziare */
-    background-color: #fff9e6; /* Sfondo leggero */
+    background-color: #f7f9fc; 
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Stili per il pulsante Logout */
+#admin-logout-btn {
+    padding: 8px 15px;
+    background: var(--delete-color); /* Rosso Admin */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+#admin-logout-btn:hover {
+    background: #c82333;
+}
+
+
+/* --- Filtri/Controlli --- */
+#order-filters {
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Spazio tra i pulsanti */
+    margin: 25px auto 35px;
+    padding: 15px 0;
+    border-bottom: none; /* Rimuoviamo la linea di separazione inutile */
+}
+
+.filter-btn {
+    padding: 12px 25px;
+    border: 2px solid #ccc;
+    border-radius: 8px; /* Bordi leggermente più quadrati e moderni */
+    background-color: var(--card-bg);
+    color: var(--text-dark);
     font-size: 1em;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+/* Stato Attivo/In attesa */
+.filter-btn[data-status="pending"].active {
+    background-color: #ffc107; /* Giallo Attenzione */
+    color: var(--text-dark);
+    border-color: #ffc107;
+    box-shadow: 0 4px 6px rgba(255, 193, 7, 0.3);
+}
+
+/* Stato Completato */
+.filter-btn[data-status="completed"].active {
+    background-color: var(--primary-color); /* Blu */
+    color: white;
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
+}
+
+/* --- Grid Ordini --- */
+#orders-container {
+    display: grid;
+    /* Usa colonne flessibili: minimo 320px, massimo 1fr */
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+    gap: 25px; /* Spazio tra le card */
+}
+
+/* Messaggi di stato */
+.empty-message, .error-message {
+    text-align: center; 
+    padding: 50px; 
+    color: #6c757d;
+    font-size: 1.2em;
+}
+
+/* --- Card Ordine --- */
+.order-card {
+    padding: 0; 
+    margin-bottom: 0;
+    border-radius: 12px;
+    box-shadow: var(--shadow); /* Usa la variabile d'ombra */
+    overflow: hidden; /* Per contenere i bordi colorati */
+    border: none;
+    background-color: var(--card-bg);
+    transition: transform 0.2s;
+}
+.order-card:hover {
+    transform: none; /* Rimuovi l'hover lift su ogni card per la dashboard */
+    box-shadow: var(--shadow);
+}
+
+
+/* Intestazione Card */
+.card-header {
+    background-color: #f7f7f7;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.order-card h3 {
+    font-size: 1.3em;
+    color: var(--text-dark);
+    margin: 0;
+    padding: 0;
+    border-bottom: none; 
+}
+
+.order-time {
+    font-size: 0.9em;
+    font-weight: normal;
+    color: #6c757d;
+}
+
+/* Stili di Stato Card */
+.order-card.pending { border-top: 5px solid #ffc107; } 
+.order-card.completed { border-top: 5px solid var(--primary-color); opacity: 0.9; }
+
+/* Lista Articoli */
+.order-items { 
+    list-style: none; /* Rimuovi i pallini */
+    margin: 0; 
+    padding: 15px 20px;
+    font-size: 1em;
+}
+
+.order-items li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 0;
+    border-bottom: 1px dashed #f0f0f0;
+}
+.order-items li:last-child {
+    border-bottom: none;
+}
+
+/* Stile Prezzo Articolo */
+.item-price {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+
+/* NOTA (Massima attenzione con rosso/arancio scuro) */
+.order-note-display {
+    margin: 10px 20px;
+    padding: 10px 15px;
+    border-left: 5px solid var(--delete-color); /* Rosso per un'attenzione immediata */
+    background-color: #fef4f5; /* Sfondo molto chiaro e caldo */
+    font-size: 0.95em;
     color: #333;
     border-radius: 3px;
-    white-space: pre-wrap; /* Mantiene la formattazione se l'utente usa invio */
+    white-space: pre-wrap;
 }
 
 .order-note-display strong {
-    color: #ffc107;
+    color: var(--delete-color);
     margin-right: 5px;
+}
+
+/* Footer e Totale */
+.order-footer {
+    padding: 15px 20px;
+    margin-top: 0;
+    border-top: 1px solid #f0f0f0;
+    font-size: 1.2em;
+    background-color: #fafafa;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-dark); /* Totale non in rosso, ma scuro */
+}
+.order-footer strong {
+    color: var(--delete-color); /* Totale in rosso per maggiore enfasi */
+}
+
+/* Pulsante Completa */
+.complete-btn {
+    padding: 10px 18px;
+    background-color: var(--secondary-color); /* Verde */
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-weight: 600;
+}
+.complete-btn:hover {
+    background-color: #1e7e34;
+}
+
+.completed-label {
+    font-size: 0.9em;
+    color: var(--primary-color);
+    font-weight: 600;
 }
