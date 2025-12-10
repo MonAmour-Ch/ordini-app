@@ -1,91 +1,202 @@
-body {
-    font-family: sans-serif;
-    margin: 20px;
-    background-color: #f4f4f9;
+Assolutamente! Creiamo un file style.css completamente nuovo e più moderno, ottimizzato per un'applicazione mobile (visto che verrà usata tramite QR code) e che implementi un design chiaro per le categorie.
+
+Sostituisci l'intero contenuto del tuo file style.css con il codice qui sotto:
+
+💅 Nuovo file style.css (Design Professionale)
+CSS
+
+/* --- 1. RESET E FONDAMENTALI --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-header, #cart {
-    background: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f7f9fc; /* Sfondo chiaro e moderno */
+    color: #333;
+    line-height: 1.6;
+    padding: 0;
+    margin: 0;
 }
+
+main, header, #cart {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 15px;
+}
+
+h1, h2 {
+    color: #007bff;
+    margin-bottom: 10px;
+}
+
+/* --- 2. HEADER E TAVOLO --- */
+header {
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px 15px;
+    text-align: center;
+    position: sticky; /* Rende l'header fisso in alto */
+    top: 0;
+    z-index: 10; /* Assicura che sia sopra gli altri elementi */
+}
+
+#table-id {
+    color: #28a745; /* Colore verde per l'ID del tavolo */
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+/* --- 3. SEZIONE MENU E CATEGORIE --- */
 
 #menu-container {
-    display: block; /* Ora è un blocco di sezioni */
-    gap: 0; /* Rimuovi gap */
+    padding: 15px;
 }
 
-/* Stile per le sezioni di categoria */
 section {
     margin-bottom: 30px;
     padding: 15px;
-    background-color: #ffffff; /* Sfondo bianco per staccare dal body */
+    background-color: #ffffff;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Ombreggiatura più pronunciata */
 }
 
 section h2 {
-    border-bottom: 2px solid #007bff;
+    font-size: 1.5em;
     padding-bottom: 5px;
     margin-top: 0;
+    border-bottom: 3px solid #007bff; /* Linea di divisione categoria */
     color: #007bff;
+    margin-bottom: 15px;
 }
 
-/* Griglia per visualizzare gli articoli all'interno di ogni categoria */
+/* Griglia per gli articoli all'interno della categoria */
 .category-items {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 15px;
-    margin-top: 15px;
 }
 
+/* Stile del singolo articolo */
 .menu-item {
-    /* Mantieni lo stile esistente, se lo avevi: */
-    background: #e9ecef;
+    background: #e9f0f9; /* Sfondo leggermente azzurro per gli articoli */
     padding: 15px;
-    border-radius: 5px;
+    border-radius: 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: transform 0.2s;
 }
 
-.menu-item {
-    background: #e9ecef;
-    padding: 15px;
-    border-radius: 5px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.menu-item:hover {
+    transform: translateY(-2px); /* Effetto leggero al passaggio del mouse/tocco */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.menu-item strong {
+    font-size: 1.1em;
+    color: #333;
+}
+
+.menu-item span {
+    font-size: 0.9em;
+    color: #6c757d;
 }
 
 .menu-item button {
-    background-color: #007bff;
+    background-color: #28a745; /* Pulsante verde (Aggiungi) */
     color: white;
     border: none;
-    padding: 8px 12px;
+    padding: 10px 15px;
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.menu-item button:active {
+    background-color: #1e7e34;
+}
+
+/* --- 4. SEZIONE CARRELLO (FISSA IN FONDO) --- */
+#cart {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #343a40; /* Sfondo scuro per contrasto */
+    color: white;
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.15);
+    padding: 15px 0;
+    z-index: 10;
+}
+
+#cart h2 {
+    color: white;
+    border-bottom: 1px solid #6c757d;
+    padding-bottom: 5px;
+    margin: 0 15px 10px 15px;
+}
+
+#cart-list {
+    list-style: none;
+    padding: 0 15px;
+    max-height: 150px; /* Limita l'altezza per non coprire tutto lo schermo */
+    overflow-y: auto; /* Aggiunge scroll se ci sono molti articoli */
 }
 
 #cart-list li {
-    list-style: none;
     padding: 5px 0;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px dashed #6c757d;
+    font-size: 0.9em;
+}
+
+#cart > p {
+    text-align: right;
+    font-size: 1.2em;
+    font-weight: bold;
+    padding: 10px 15px 0 15px;
+}
+
+#total-price {
+    color: #ffc107; /* Colore giallo per il totale */
 }
 
 #send-order-btn {
-    width: 100%;
-    padding: 10px;
-    background-color: #28a745;
+    width: calc(100% - 30px); /* Larga quanto la sezione cart meno il padding */
+    margin: 10px 15px 5px 15px;
+    padding: 12px;
+    background-color: #dc3545; /* Pulsante rosso (Invia Ordine) */
     color: white;
     border: none;
-    font-size: 1.1em;
+    font-size: 1.2em;
     cursor: pointer;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+
+#send-order-btn:hover:not(:disabled) {
+    background-color: #c82333;
 }
 
 #send-order-btn:disabled {
     background-color: #6c757d;
     cursor: not-allowed;
+}
+
+/* --- 5. MOBILE VIEW (OPZIONALE MA CONSIGLIATO) --- */
+@media (max-width: 600px) {
+    body {
+        padding-bottom: 250px; /* Lascia spazio in fondo per il carrello fisso */
+    }
+    
+    .category-items {
+        grid-template-columns: 1fr; /* Una singola colonna su schermi piccoli */
+    }
+
+    #cart-list {
+        max-height: 100px;
+    }
 }
