@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bar QR Order App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Il tuo Ordine al Tavolo: <span id="table-id"></span></h1>
+    </header>
+
+    <main id="menu-container">
+        <h2>Caricamento Menu...</h2>
+    </main>
+
+    <section id="cart">
+        <h2>Riepilogo Ordine</h2>
+        <ul id="cart-list">
+            </ul>
+        <p>Totale: € <span id="total-price">0.00</span></p>
+        <button id="send-order-btn" disabled>Invia Ordine</button>
+    </section>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
