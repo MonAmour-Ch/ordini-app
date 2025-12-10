@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pannello Admin Bar</title>
+    <link rel="stylesheet" href="style.css"> <style>
+        /* Stili specifici per l'admin */
+        .order-card {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .order-card.pending { border-left: 5px solid #ffc107; }
+        .order-card.ready { border-left: 5px solid #28a745; }
+        .order-card.served { border-left: 5px solid #6c757d; }
+        .order-items li { list-style: circle; margin-left: 20px; }
+        .status-button {
+            margin-right: 10px;
+            padding: 8px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            color: white;
+        }
+        .btn-ready { background-color: #28a745; }
+        .btn-served { background-color: #6c757d; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Dashboard Ordini Bar</h1>
+    </header>
+
+    <main id="orders-container">
+        <h2>In attesa di ordini...</h2>
+    </main>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="admin-script.js"></script>
+</body>
+</html>
