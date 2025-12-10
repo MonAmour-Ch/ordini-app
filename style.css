@@ -141,7 +141,7 @@ a {
     box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.3); 
     padding: 10px 15px; /* Compattato per altezza ridotta */
     text-align: center;
-    /* RIMOZIONE CRITICA: Rimosso pointer-events: none; per permettere il click */
+    
 }
 
 #toggle-cart-btn {
@@ -153,9 +153,13 @@ a {
     font-weight: 700;
     padding: 0;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    cursor: pointer; /* Modificato da 'default' a 'pointer' dato che ora esegue un'azione */
+    cursor: pointer; 
+}
+
+#cart-fixed-bar #cart-fixed-total {
+    margin-left: 10px;
 }
 
 #toggle-cart-btn i {
