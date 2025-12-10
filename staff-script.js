@@ -49,11 +49,8 @@ auth.onAuthStateChanged(user => {
         window.location.href = 'staff-menu.html';
     } 
     // Se siamo sulla pagina di ordinazione e l'utente è loggato, avvia l'app
-    // NOTA: Qui è dove si avvia la logica principale una volta che l'utente è noto
     else if (window.location.pathname.endsWith('staff-menu.html') && user) {
-        // Controlla se gli elementi DOM sono già stati caricati e passali.
-        // Se initializeStaffApp è chiamata troppo presto (prima del DOM), fallirà.
-        // La logica di avvio è ora spostata sotto la funzione DOMContentLoaded (vedi Sezione 6)
+        // La logica di avvio è gestita in DOMContentLoaded (Sezione 6) per sicurezza DOM
     }
 });
 
@@ -111,16 +108,28 @@ function populateTableSelect() {
     const tableSelect = document.getElementById('table-select');
     if (!tableSelect) return;
 
-    // Esempio: numeri di tavolo da 1 a 40
+    // Aggiunge l'opzione iniziale "Seleziona..."
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.textContent = 'Seleziona Tavolo...';
+    defaultOption.disabled = true;
+    defaultOption.selected = true; 
+    tableSelect.appendChild(defaultOption);
+    
+    // Tavoli da 1 a 40
     for (let i = 1; i <= 40; i++) {
         const option = document.createElement('option');
         option.value = `TAVOLO_${i}`;
-        option.textContent = `${i}`;
+        option.textContent = `${i}`; // Mostra solo il numero
         tableSelect.appendChild(option);
     }
 
     tableSelect.addEventListener('change', (e) => {
         currentTableId = e.target.value;
+        
+        // CORREZIONE: Crea il nome del tavolo formattato (es. "Tavolo 15")
+        const displayId = currentTableId.replace('TAVOLO_', 'Tavolo ');
+        
         tableIdDisplay.textContent = displayId;
         cartTableDisplay.textContent = displayId;
         
