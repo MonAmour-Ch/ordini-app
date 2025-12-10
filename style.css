@@ -13,9 +13,42 @@ header, #cart {
 }
 
 #menu-container {
+    display: block; /* Ora è un blocco di sezioni */
+    gap: 0; /* Rimuovi gap */
+}
+
+/* Stile per le sezioni di categoria */
+section {
+    margin-bottom: 30px;
+    padding: 15px;
+    background-color: #ffffff; /* Sfondo bianco per staccare dal body */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+section h2 {
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 5px;
+    margin-top: 0;
+    color: #007bff;
+}
+
+/* Griglia per visualizzare gli articoli all'interno di ogni categoria */
+.category-items {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.menu-item {
+    /* Mantieni lo stile esistente, se lo avevi: */
+    background: #e9ecef;
+    padding: 15px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .menu-item {
