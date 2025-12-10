@@ -24,15 +24,15 @@ let cartItems = {}; // Carrello {itemId: {name, price, quantity}}
 let currentTableId = null; // Tavolo selezionato dallo staff
 
 // --- 2. ELEMENTI DOM (Comuni a entrambi gli HTML) ---
+// Usiamo i controlli DOMContentLoaded per assicurarci che questi esistano
 const mainContainer = document.getElementById('menu-container');
 const cartList = document.getElementById('cart-list');
 const totalPriceSpan = document.getElementById('total-price');
 const sendOrderBtn = document.getElementById('send-order-btn');
 const tableIdDisplay = document.getElementById('table-id');
 const cartTableDisplay = document.getElementById('cart-table-display');
-
-// VARIABILE PER LA NAVIGAZIONE RAPIDA (come da HTML)
 const navQuickLinks = document.getElementById('quick-links');
+
 
 // --- 3. GESTIONE AUTENTICAZIONE (Solo se su staff-menu.html) ---
 
@@ -49,8 +49,11 @@ auth.onAuthStateChanged(user => {
         window.location.href = 'staff-menu.html';
     } 
     // Se siamo sulla pagina di ordinazione e l'utente è loggato, avvia l'app
+    // NOTA: Qui è dove si avvia la logica principale una volta che l'utente è noto
     else if (window.location.pathname.endsWith('staff-menu.html') && user) {
-        initializeStaffApp(user);
+        // Controlla se gli elementi DOM sono già stati caricati e passali.
+        // Se initializeStaffApp è chiamata troppo presto (prima del DOM), fallirà.
+        // La logica di avvio è ora spostata sotto la funzione DOMContentLoaded (vedi Sezione 6)
     }
 });
 
@@ -134,7 +137,6 @@ function populateTableSelect() {
         renderCart();
         
         // Ricarica il menu (già caricato, ma meglio per consistenza)
-        // La funzione renderMenu ora accetta groupedMenu, quindi ricarichiamo i dati
         const groupedMenu = groupItemsByCategory(menuData);
         renderMenu(groupedMenu); 
     });
@@ -186,6 +188,8 @@ function groupItemsByCategory(items) {
  * Genera i pulsanti di navigazione rapida (Quick Links) in base alle categorie.
  */
 function renderCategoryNavigation(groupedItems) {
+    if (!navQuickLinks) return;
+    
     navQuickLinks.innerHTML = '';
     const sortedCategories = Object.keys(groupedItems).sort();
 
@@ -235,7 +239,8 @@ function renderMenu(groupedMenu) {
 
         groupedMenu[category].forEach(item => {
             const itemElement = document.createElement('div');
-            itemElement.className = 'menu-item';
+            // Assicurati che l'elemento div per l'articolo abbia la classe corretta
+            itemElement.className = 'menu-item-card'; 
             
             itemElement.innerHTML = `
                 <div>
@@ -301,20 +306,21 @@ function updateCartQuantity(id, change) {
  * Renderizza la lista del carrello e aggiorna il totale.
  */
 function renderCart() {
+    if (!cartList || !totalPriceSpan) return;
+    
     cartList.innerHTML = '';
     let total = 0;
     const cartItemsArray = Object.values(cartItems);
 
     if (cartItemsArray.length === 0) {
         cartList.innerHTML = '<li>Il carrello è vuoto.</li>';
-        sendOrderBtn.disabled = true;
+        if (sendOrderBtn) sendOrderBtn.disabled = true;
     } else {
         cartItemsArray.forEach(item => {
             const itemTotal = item.price * item.quantity;
             total += itemTotal;
 
             const listItem = document.createElement('li');
-            // Usiamo classi per un futuro CSS migliore
             listItem.className = 'staff-cart-item'; 
             listItem.innerHTML = `
                 ${item.quantity} x ${item.name} 
@@ -327,7 +333,7 @@ function renderCart() {
             `;
             cartList.appendChild(listItem);
         });
-        sendOrderBtn.disabled = false;
+        if (sendOrderBtn) sendOrderBtn.disabled = false;
     }
 
     totalPriceSpan.textContent = total.toFixed(2);
@@ -342,8 +348,10 @@ async function sendOrder(staffUser) {
         return;
     }
 
-    sendOrderBtn.disabled = true;
-    sendOrderBtn.textContent = 'Invio...';
+    if (sendOrderBtn) {
+        sendOrderBtn.disabled = true;
+        sendOrderBtn.textContent = 'Invio...';
+    }
 
     const total = parseFloat(totalPriceSpan.textContent);
     const orderDetails = Object.values(cartItems).map(item => ({
@@ -375,16 +383,18 @@ async function sendOrder(staffUser) {
         console.error("Errore nell'invio dell'ordine: ", error);
         alert("Errore nell'invio dell'ordine. Controlla la console.");
     } finally {
-        sendOrderBtn.disabled = false;
-        sendOrderBtn.textContent = 'Invia Ordine';
+        if (sendOrderBtn) {
+            sendOrderBtn.disabled = false;
+            sendOrderBtn.textContent = 'Invia Ordine';
+        }
     }
 }
 
 
-// --- 6. INIZIALIZZAZIONE ---
+// --- 6. INIZIALIZZAZIONE (LOGICA DI AVVIO REVISIONATA) ---
 
 /**
- * Avvia l'applicazione Staff Order-Taking.
+ * Avvia l'applicazione Staff Order-Taking (chiamata SOLO dopo l'autenticazione).
  */
 function initializeStaffApp(user) {
     // 1. Carica il menu, che poi chiama renderCategoryNavigation e renderMenu
@@ -394,18 +404,33 @@ function initializeStaffApp(user) {
     populateTableSelect(); 
 
     // 3. Aggiunge l'event listener per l'invio ordine
-    sendOrderBtn.addEventListener('click', () => sendOrder(user));
+    sendOrderBtn?.addEventListener('click', () => sendOrder(user));
 
     // 4. Aggiunge l'event listener per il logout
-    document.getElementById('logout-btn').addEventListener('click', handleLogout);
+    document.getElementById('logout-btn')?.addEventListener('click', handleLogout);
     
     // 5. Stato iniziale del carrello
     renderCart();
 }
 
+// Funzione principale che attende il caricamento completo della pagina
 document.addEventListener('DOMContentLoaded', () => {
-    // Se siamo nella pagina di login, gestiamo il login
+    // Gestione della pagina di LOGIN
     if (window.location.pathname.endsWith('staff-login.html')) {
         document.getElementById('login-btn')?.addEventListener('click', handleStaffLogin);
+    }
+    
+    // Gestione della pagina di ORDINAZIONE STAFF
+    if (window.location.pathname.endsWith('staff-menu.html')) {
+        
+        // 1. Dobbiamo aspettare che l'autenticazione sia risolta
+        auth.onAuthStateChanged(user => {
+            // Reindirizzamento gestito nella Sezione 3.
+            
+            // Se l'utente è loggato, avvia l'app DOPO che il DOM è pronto.
+            if (user) {
+                initializeStaffApp(user);
+            }
+        });
     }
 });
