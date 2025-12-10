@@ -128,7 +128,7 @@ a {
 }
 
 /* ========================================================== */
-/* 4. BARRA FISSA CARRELLO (Compattata e NON Cliccabile) */
+/* 4. BARRA FISSA CARRELLO (Cliccabile per lo Scroll) */
 /* ========================================================== */
 
 #cart-fixed-bar {
@@ -141,7 +141,7 @@ a {
     box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.3); 
     padding: 10px 15px; /* Compattato per altezza ridotta */
     text-align: center;
-    pointer-events: none; /* Rende la barra non interattiva (solo scorrimento tramite script) */
+    /* RIMOZIONE CRITICA: Rimosso pointer-events: none; per permettere il click */
 }
 
 #toggle-cart-btn {
@@ -155,20 +155,10 @@ a {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    cursor: default; /* Imposta il cursore di default dato che non apre una modale */
+    cursor: pointer; /* Modificato da 'default' a 'pointer' dato che ora esegue un'azione */
 }
 
 #toggle-cart-btn i {
     margin-right: 5px;
 }
 
-/* Badge (Conteggio Articoli) */
-.badge {
-    background-color: var(--delete-color); /* Rosso per l'attenzione */
-    color: white;
-    border-radius: 50%;
-    padding: 3px 8px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    margin-left: 5px;
-}
