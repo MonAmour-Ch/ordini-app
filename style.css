@@ -11,8 +11,8 @@
     --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     --delete-color: #dc3545;
     
-    /* MODIFICATO: Ulteriore, drastica riduzione dell'altezza totale di compensazione */
-    --header-height: 70px; /* Ridotto da 80px a 70px */ 
+    /* DEFINITIVO: Altezza totale di compensazione per header e nav */
+    --header-height: 70px; 
 }
 
 body {
@@ -34,8 +34,8 @@ a {
 .menu-header {
     background-color: var(--card-bg);
     color: var(--text-dark);
-    /* MODIFICATO: Padding ridotto al minimo (4px) */
-    padding: 4px 0; /* Ridotto da 6px */
+    /* Padding minimo */
+    padding: 4px 0; 
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     position: fixed;
     top: 0;
@@ -52,8 +52,8 @@ a {
 }
 
 .menu-header h1 {
-    /* MODIFICATO: Titolo leggermente ridotto per risparmiare spazio verticale */
-    font-size: 1.4em; /* Ridotto da 1.5em */
+    /* Titolo leggermente ridotto */
+    font-size: 1.4em; 
     font-weight: 700;
     color: var(--primary-color);
     margin: 0;
@@ -64,21 +64,21 @@ a {
     display: flex;
     overflow-x: auto; 
     white-space: nowrap;
-    /* MODIFICATO: Padding verticale ridotto */
-    padding: 6px 0; /* Ridotto da 8px */
+    /* Padding verticale ridotto */
+    padding: 6px 0; 
     background-color: var(--card-bg);
     border-bottom: 1px solid #eee;
     
     position: sticky;
-    /* MODIFICATO: Adattato il top alla nuova altezza (l'header è ora circa 38px) */
-    top: 35px; /* Regolato da 40px */
+    /* Posizione adattata alla nuova altezza minima */
+    top: 35px; 
     z-index: 900;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .category-btn {
     display: inline-block;
-    padding: 8px 15px; /* Riduciamo un po' il padding orizzontale */
+    padding: 8px 15px;
     margin: 0 4px;
     border-radius: 25px;
     background-color: var(--bg-light);
@@ -99,7 +99,7 @@ a {
 /* ========================================================= */
 #menu-container {
     max-width: 900px;
-    /* UTILIZZA LA NUOVA VARIABILE --header-height ULTERIORMENTE RIDOTTA */
+    /* Compensazione finale */
     padding-top: var(--header-height); 
     margin: 0 auto;
     padding-left: 20px;
@@ -110,8 +110,9 @@ a {
     font-size: 2em;
     color: var(--text-dark);
     border-bottom: none; 
-    margin-top: 25px; /* Ridotto */
-    margin-bottom: 12px; /* Ridotto */
+    /* MODIFICATO: Margine tra le categorie ridotto ulteriormente */
+    margin-top: 20px; /* Ridotto da 25px */
+    margin-bottom: 10px; /* Ridotto da 12px */
 }
 
 .menu-item-card {
@@ -120,9 +121,10 @@ a {
     align-items: center;
     background: var(--card-bg);
     /* MODIFICATO: Padding interno della card ridotto al minimo */
-    padding: 10px 15px; /* Ridotto da 14px 18px */
-    margin-bottom: 8px; /* Ridotto da 10px */
-    border-radius: 8px; /* Ridotto da 10px */
+    padding: 8px 15px; /* Ridotto da 10px */
+    /* MODIFICATO: Spazio tra le card ridotto al minimo */
+    margin-bottom: 6px; /* Ridotto da 8px */
+    border-radius: 8px; 
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
