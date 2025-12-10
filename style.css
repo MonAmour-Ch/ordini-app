@@ -11,20 +11,15 @@
     --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     --delete-color: #dc3545;
     
-    /* MODIFICA 1: Ulteriore riduzione dell'altezza totale di compensazione */
-    --header-height: 80px; /* Ridotto da 90px a 80px */ 
+    /* MODIFICATO: Ulteriore, drastica riduzione dell'altezza totale di compensazione */
+    --header-height: 70px; /* Ridotto da 80px a 70px */ 
 }
 
-/* Importa un font moderno se non è già nel tuo HTML (ad esempio via Google Fonts) */
-/* Se usi Google Fonts, aggiungi questo link nel tuo <head>: 
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"> 
-*/
 body {
     font-family: 'Roboto', Arial, sans-serif;
     background-color: var(--bg-light);
     color: var(--text-dark);
     line-height: 1.6;
-    /* Spazio extra in fondo per la barra fissa del carrello */
     padding-bottom: 80px; 
 }
 
@@ -39,8 +34,8 @@ a {
 .menu-header {
     background-color: var(--card-bg);
     color: var(--text-dark);
-    /* MODIFICA 1: Padding ulteriormente ridotto per snellire */
-    padding: 6px 0; /* Ridotto da 8px a 6px */
+    /* MODIFICATO: Padding ridotto al minimo (4px) */
+    padding: 4px 0; /* Ridotto da 6px */
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     position: fixed;
     top: 0;
@@ -57,8 +52,8 @@ a {
 }
 
 .menu-header h1 {
-    /* Manteniamo 1.5em per leggibilità, ma possiamo ridurre se necessario */
-    font-size: 1.5em; 
+    /* MODIFICATO: Titolo leggermente ridotto per risparmiare spazio verticale */
+    font-size: 1.4em; /* Ridotto da 1.5em */
     font-weight: 700;
     color: var(--primary-color);
     margin: 0;
@@ -69,23 +64,22 @@ a {
     display: flex;
     overflow-x: auto; 
     white-space: nowrap;
-    /* MODIFICA 1: Padding verticale ridotto */
-    padding: 8px 0; /* Ridotto da 10px a 8px */
+    /* MODIFICATO: Padding verticale ridotto */
+    padding: 6px 0; /* Ridotto da 8px */
     background-color: var(--card-bg);
     border-bottom: 1px solid #eee;
     
     position: sticky;
-    /* MODIFICA 1: Adattato il top alla nuova altezza (l'header è ora circa 44px) */
-    top: 40px; /* Regolato da 48px a 40px */
+    /* MODIFICATO: Adattato il top alla nuova altezza (l'header è ora circa 38px) */
+    top: 35px; /* Regolato da 40px */
     z-index: 900;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .category-btn {
     display: inline-block;
-    /* Manteniamo questo padding per le dimensioni dei pulsanti */
-    padding: 8px 18px; 
-    margin: 0 5px;
+    padding: 8px 15px; /* Riduciamo un po' il padding orizzontale */
+    margin: 0 4px;
     border-radius: 25px;
     background-color: var(--bg-light);
     color: var(--text-dark);
@@ -116,8 +110,8 @@ a {
     font-size: 2em;
     color: var(--text-dark);
     border-bottom: none; 
-    margin-top: 30px;
-    margin-bottom: 15px;
+    margin-top: 25px; /* Ridotto */
+    margin-bottom: 12px; /* Ridotto */
 }
 
 .menu-item-card {
@@ -125,11 +119,11 @@ a {
     justify-content: space-between;
     align-items: center;
     background: var(--card-bg);
-    /* MODIFICA 2: Ridotto il padding interno della card per snellire */
-    padding: 14px 18px; /* Ridotto da 18px */
-    margin-bottom: 10px; /* Ridotto da 12px */
-    border-radius: 10px; /* Ridotto da 12px */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Ombra più leggera e piccola */
+    /* MODIFICATO: Padding interno della card ridotto al minimo */
+    padding: 10px 15px; /* Ridotto da 14px 18px */
+    margin-bottom: 8px; /* Ridotto da 10px */
+    border-radius: 8px; /* Ridotto da 10px */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 /* ========================================================== */
@@ -177,7 +171,7 @@ a {
 
 /* --- Layout Generale Admin --- */
 .admin-main {
-    max-width: 1200px; /* Larghezza maggiore per una dashboard più ampia */
+    max-width: 1200px;
     margin: 20px auto;
     padding: 0 20px;
 }
@@ -195,7 +189,7 @@ a {
 /* Stili per il pulsante Logout */
 #admin-logout-btn {
     padding: 8px 15px;
-    background: var(--delete-color); /* Rosso Admin */
+    background: var(--delete-color); 
     color: white;
     border: none;
     border-radius: 5px;
@@ -212,16 +206,16 @@ a {
 #order-filters {
     display: flex;
     justify-content: center;
-    gap: 15px; /* Spazio tra i pulsanti */
+    gap: 15px;
     margin: 25px auto 35px;
     padding: 15px 0;
-    border-bottom: none; /* Rimuoviamo la linea di separazione inutile */
+    border-bottom: none;
 }
 
 .filter-btn {
     padding: 12px 25px;
     border: 2px solid #ccc;
-    border-radius: 8px; /* Bordi leggermente più quadrati e moderni */
+    border-radius: 8px;
     background-color: var(--card-bg);
     color: var(--text-dark);
     font-size: 1em;
@@ -231,7 +225,7 @@ a {
 
 /* Stato Attivo/In attesa */
 .filter-btn[data-status="pending"].active {
-    background-color: #ffc107; /* Giallo Attenzione */
+    background-color: #ffc107;
     color: var(--text-dark);
     border-color: #ffc107;
     box-shadow: 0 4px 6px rgba(255, 193, 7, 0.3);
@@ -239,7 +233,7 @@ a {
 
 /* Stato Completato */
 .filter-btn[data-status="completed"].active {
-    background-color: var(--primary-color); /* Blu */
+    background-color: var(--primary-color);
     color: white;
     border-color: var(--primary-color);
     box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
@@ -248,9 +242,8 @@ a {
 /* --- Grid Ordini --- */
 #orders-container {
     display: grid;
-    /* Usa colonne flessibili: minimo 320px, massimo 1fr */
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
-    gap: 25px; /* Spazio tra le card */
+    gap: 25px;
 }
 
 /* Messaggi di stato */
@@ -266,14 +259,14 @@ a {
     padding: 0; 
     margin-bottom: 0;
     border-radius: 12px;
-    box-shadow: var(--shadow); /* Usa la variabile d'ombra */
-    overflow: hidden; /* Per contenere i bordi colorati */
+    box-shadow: var(--shadow);
+    overflow: hidden;
     border: none;
     background-color: var(--card-bg);
     transition: transform 0.2s;
 }
 .order-card:hover {
-    transform: none; /* Rimuovi l'hover lift su ogni card per la dashboard */
+    transform: none;
     box-shadow: var(--shadow);
 }
 
@@ -307,7 +300,7 @@ a {
 
 /* Lista Articoli */
 .order-items { 
-    list-style: none; /* Rimuovi i pallini */
+    list-style: none;
     margin: 0; 
     padding: 15px 20px;
     font-size: 1em;
@@ -335,8 +328,8 @@ a {
 .order-note-display {
     margin: 10px 20px;
     padding: 10px 15px;
-    border-left: 5px solid var(--delete-color); /* Rosso per un'attenzione immediata */
-    background-color: #fef4f5; /* Sfondo molto chiaro e caldo */
+    border-left: 5px solid var(--delete-color);
+    background-color: #fef4f5;
     font-size: 0.95em;
     color: #333;
     border-radius: 3px;
@@ -358,16 +351,16 @@ a {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: var(--text-dark); /* Totale non in rosso, ma scuro */
+    color: var(--text-dark);
 }
 .order-footer strong {
-    color: var(--delete-color); /* Totale in rosso per maggiore enfasi */
+    color: var(--delete-color);
 }
 
 /* Pulsante Completa */
 .complete-btn {
     padding: 10px 18px;
-    background-color: var(--secondary-color); /* Verde */
+    background-color: var(--secondary-color);
     border-radius: 4px;
     font-size: 0.9em;
     font-weight: 600;
