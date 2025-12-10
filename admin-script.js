@@ -101,6 +101,10 @@ auth.onAuthStateChanged(user => {
 // 3. LOGICA DASHBOARD (CORE)
 // ====================================================================
 
+// Stato globale per il filtro attivo e la funzione per disiscriversi dal listener
+let currentFilterStatus = 'pending';
+let unsubscribeOrders = null; 
+
 /**
  * Funzione di utilità per formattare il Timestamp in ora leggibile.
  * @param {firebase.firestore.Timestamp} timestamp
@@ -108,10 +112,8 @@ auth.onAuthStateChanged(user => {
  */
 function formatTimestampToTime(timestamp) {
     if (!timestamp) return 'Ora Sconosciuta';
-    // Converte il Timestamp Firebase in un oggetto Date
     const date = timestamp.toDate();
-    // Formatta l'ora nel formato IT (es. 18:30:00)
-    return date.toLocaleTimeString('it-IT');
+    return date.toLocaleTimeString('it-IT') + ' del ' + date.toLocaleDateString('it-IT');
 }
 
 /**
@@ -127,26 +129,68 @@ function initializeAdminDashboard(user) {
         logoutBtn.addEventListener('click', handleAdminLogout);
     }
     
-    // Avvia l'ascolto degli ordini in tempo reale
-    listenForNewOrders();
+    // 1. Configura i pulsanti di filtro
+    setupOrderFilters(); 
+    
+    // 2. Avvia l'ascolto degli ordini in tempo reale
+    listenForOrdersByStatus(currentFilterStatus);
 }
 
 /**
- * Ascolta in tempo reale gli ordini "pending" (in attesa) da Firestore.
- * Utilizza `onSnapshot` per aggiornare l'interfaccia istantaneamente.
+ * Configura gli event listener per i pulsanti di filtro.
  */
-function listenForNewOrders() {
-    // La query filtra per 'pending' e ordina dal più vecchio al più recente (asc)
-    db.collection('orders')
-      .where('status', '==', 'pending')
-      .orderBy('timestamp', 'asc') 
-      .onSnapshot(snapshot => {
-        if (!ordersContainer) return;
+function setupOrderFilters() {
+    const filterContainer = document.getElementById('order-filters');
+    if (!filterContainer) return;
 
+    filterContainer.querySelectorAll('.filter-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            const newStatus = button.getAttribute('data-status');
+            if (newStatus === currentFilterStatus) return; // Non fare nulla se lo stato è lo stesso
+
+            // Aggiorna la classe 'active'
+            filterContainer.querySelector('.active').classList.remove('active');
+            button.classList.add('active');
+
+            // Aggiorna lo stato e riavvia il listener
+            currentFilterStatus = newStatus;
+            listenForOrdersByStatus(currentFilterStatus);
+        });
+    });
+}
+
+/**
+ * Ascolta in tempo reale gli ordini in base allo stato selezionato.
+ * @param {string} status Lo stato da filtrare ('pending' o 'completed').
+ */
+function listenForOrdersByStatus(status) {
+    if (!ordersContainer) return;
+    
+    // Stacca il listener precedente, se esiste
+    if (unsubscribeOrders) {
+        unsubscribeOrders();
+        unsubscribeOrders = null;
+    }
+    
+    ordersContainer.innerHTML = '<h2 style="text-align: center;">Caricamento Ordini...</h2>';
+
+    // Determina l'ordinamento: pending (dal più vecchio), completed (dal più nuovo)
+    const sortDirection = (status === 'pending') ? 'asc' : 'desc';
+
+    // Query dinamica
+    const query = db.collection('orders')
+      .where('status', '==', status)
+      .orderBy('timestamp', sortDirection); 
+      
+    // Avvia il nuovo listener e salva la funzione di unsubscribe
+    unsubscribeOrders = query.onSnapshot(snapshot => {
         ordersContainer.innerHTML = ''; // Pulisce il contenitore
 
         if (snapshot.empty) {
-            ordersContainer.innerHTML = '<p class="empty-message">Nessun nuovo ordine in attesa.</p>';
+            const message = (status === 'pending') 
+                ? 'Nessun nuovo ordine in attesa.' 
+                : 'Nessun ordine completato di recente.';
+            ordersContainer.innerHTML = `<p class="empty-message">${message}</p>`;
             return;
         }
 
@@ -156,53 +200,69 @@ function listenForNewOrders() {
             renderOrderCard(order, orderId);
         });
     }, error => {
-        console.error("Errore nel ricevere gli ordini: ", error);
-        if (ordersContainer) {
-            ordersContainer.innerHTML = '<p class="error-message">Errore nel caricamento degli ordini. Controlla la console.</p>';
-        }
+        console.error("Errore nel ricevere gli ordini:", error);
+        ordersContainer.innerHTML = '<p class="error-message">Errore nel caricamento degli ordini. Controlla la console.</p>';
     });
 }
 
 /**
  * Crea e aggiunge la card HTML per un singolo ordine al DOM.
+ * AGGIORNATO per gestire lo stato 'completed'.
  * @param {object} order I dati dell'ordine.
  * @param {string} orderId L'ID del documento Firestore.
  */
 function renderOrderCard(order, orderId) {
     const card = document.createElement('div');
-    card.className = 'order-card pending';
+    // La classe dipende ora dallo stato reale dell'ordine
+    card.className = `order-card ${order.status}`; 
     
-    const time = formatTimestampToTime(order.timestamp);
+    let timeInfo = '';
+
+    if (order.status === 'completed' && order.completionTime) {
+        // Per gli ordini completati, mostriamo l'ora di completamento
+        timeInfo = formatTimestampToTime(order.completionTime);
+    } else {
+        // Per gli ordini in attesa, mostriamo l'ora di creazione
+        timeInfo = formatTimestampToTime(order.timestamp);
+    }
     
-    // Genera l'HTML per la lista degli articoli
     const itemsHtml = order.items.map(item => 
         `<li>${item.quantity}x ${item.name} (€${(item.quantity * item.price).toFixed(2)})</li>`
     ).join('');
     
+    // Contenuto dinamico del footer
+    let footerContent;
+    if (order.status === 'pending') {
+        footerContent = `<button class="complete-btn" data-id="${orderId}">Completa Ordine</button>`;
+    } else {
+        footerContent = `<span class="completed-label">Completato alle ${timeInfo.split('del')[0]}</span>`;
+    }
+
     card.innerHTML = `
-        <h3>Tavolo: ${order.tableId} <span class="order-time">${time}</span></h3>
+        <h3>Tavolo: ${order.tableId} <span class="order-time">${timeInfo}</span></h3>
         <p class="order-staff">Preso da: ${order.staffEmail || 'Cliente QR'}</p>
         
         <ul class="order-items">${itemsHtml}</ul>
         
         <div class="order-footer">
             <strong>TOTALE: €${order.total.toFixed(2)}</strong>
-            <button class="complete-btn" data-id="${orderId}">Completa Ordine</button>
+            ${footerContent}
         </div>
     `;
 
-    // Listener per il pulsante 'Completa Ordine'
-    card.querySelector('.complete-btn').addEventListener('click', () => {
-        updateOrderStatus(orderId, 'completed');
-    });
+    // Aggiungi l'event listener solo se l'ordine è in attesa
+    if (order.status === 'pending') {
+        card.querySelector('.complete-btn').addEventListener('click', () => {
+            updateOrderStatus(orderId, 'completed');
+        });
+    }
 
     ordersContainer.appendChild(card);
 }
 
 /**
- * Aggiorna lo stato di un ordine da "pending" a "completed" su Firestore.
- * @param {string} orderId L'ID del documento da aggiornare.
- * @param {string} newStatus Il nuovo stato (es. 'completed').
+ * Aggiorna lo stato di un ordine su Firestore.
+ * ... (La funzione updateOrderStatus resta invariata) ...
  */
 async function updateOrderStatus(orderId, newStatus) {
     try {
@@ -210,14 +270,12 @@ async function updateOrderStatus(orderId, newStatus) {
             status: newStatus,
             completionTime: firebase.firestore.FieldValue.serverTimestamp()
         });
-        // Non è necessario manipolare il DOM, onSnapshot lo farà.
-        console.log(`Ordine ${orderId} aggiornato a ${newStatus}.`);
+        console.log(`Ordine ${orderId} segnato come ${newStatus}.`);
     } catch (error) {
         console.error("Errore nell'aggiornamento dello stato:", error);
         alert("Impossibile aggiornare lo stato dell'ordine.");
     }
 }
-
 
 // ====================================================================
 // 4. INIZIALIZZAZIONE DOM GLOBALE
