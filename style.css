@@ -241,7 +241,7 @@ a {
 /* 4. BARRA FISSA CARRELLO & SEZIONE CARRELLO STAFF */
 /* ========================================================== */
 
-/* Sezione Carrello Staff (staff-menu.html) */
+/* Sezione Carrello Staff (staff-menu.html) - DESKTOP DEFAULT */
 #cart-container {
     position: fixed;
     top: 0;
@@ -270,29 +270,85 @@ a {
     margin-bottom: 20px;
 }
 
+/* RIMUOVI GLI STILI VECCHI PER IL CARRELLO STAFF NON COMPATTO (Staff-cart-item) */
 .staff-cart-item {
+    display: none; /* Nascondi la vecchia struttura */
+}
+
+/* NUOVI STILI PER IL CARRELLO STAFF COMPATTO (staff-cart-item-compact) */
+.staff-cart-item-compact {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* Spazia gli elementi: Controlli | Nome | Prezzo/Rimuovi */
     align-items: center;
-    padding: 10px 0;
+    padding: 8px 0; /* Riduci il padding verticale */
     border-bottom: 1px dotted #ccc;
-    font-size: 0.95em;
+    font-size: 0.9em;
 }
 
-.staff-cart-controls .cart-btn {
-    background: none;
-    border: 1px solid var(--text-dark);
+.item-quantity-controls {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.quantity-display {
+    padding: 0 5px;
+    font-weight: 700;
+    min-width: 20px; 
+    text-align: center;
+}
+
+.item-name-compact {
+    flex-grow: 1; /* Permette al nome di occupare lo spazio centrale */
+    margin: 0 8px;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    font-size: 1em; 
+}
+
+.item-price-and-remove {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.item-total-price {
+    font-weight: 700;
+    margin-right: 10px;
     color: var(--text-dark);
-    padding: 2px 7px;
-    margin-left: 5px;
-    border-radius: 4px;
-    cursor: pointer;
 }
 
-.staff-cart-controls .cart-remove {
+/* Stili per i Pulsanti di Controllo (Icone) */
+.cart-btn.compact-btn {
+    background-color: var(--card-bg);
+    border: 1px solid #ccc; 
+    color: var(--text-dark);
+    width: 28px; 
+    height: 28px;
+    line-height: 1; /* Centra verticalmente l'icona */
+    padding: 0;
+    margin: 0 2px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.1s;
+}
+
+.cart-btn.compact-btn:hover {
+    background-color: var(--bg-light);
+}
+
+.cart-remove.compact-btn {
     border-color: var(--delete-color);
     color: var(--delete-color);
 }
+.cart-remove.compact-btn:hover {
+    background-color: rgba(220, 53, 69, 0.1);
+}
+/* FINE NUOVI STILI COMPATTI */
+
 
 #send-order-btn {
     width: 100%;
@@ -362,4 +418,65 @@ a {
     font-weight: 700;
     margin-left: 5px;
     line-height: 1;
+}
+
+/* ========================================================== */
+/* 5. MEDIA QUERIES (Ottimizzazione Mobile) */
+/* ========================================================== */
+
+@media (max-width: 768px) {
+    
+    /* 1. Sposta il Carrello Staff in Basso su Mobile */
+    #cart-container {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%; /* Occupa tutta la larghezza */
+        height: auto; /* Altezza dinamica (max-height per non coprire tutto) */
+        max-height: 50vh; /* Massimo metà schermo */
+        box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
+        transform: translateY(100%); /* Nascondi sotto lo schermo */
+        transition: transform 0.3s ease-in-out;
+        z-index: 2000;
+        
+        /* Rimuovi il padding-top fisso */
+        padding-top: 15px; 
+        padding-bottom: 80px; /* Spazio per la barra di attivazione */
+    }
+    
+    /* 2. Regola il Container Menu per non sovrapporsi al carrello */
+    #menu-container {
+        /* Riduci il padding top su mobile (l'header è più compatto) */
+        padding-top: 120px; 
+    }
+
+    /* 3. Nascondi il carrello per default (sarà mostrato con un pulsante, logica da implementare nel JS/HTML se necessario)
+       Per ora, lo lasciamo nascosto e l'utente usa la barra fissa per vedere il totale.
+       Dato che non abbiamo una logica di toggle implementata, per ora lasciamo il carrello a destra
+       solo su schermi più grandi e diamo spazio extra al menu su mobile. */
+    
+    /* Per lo staff, l'interfaccia a carrello laterale non funziona. 
+       Su mobile, diamo tutta la larghezza al menu e nascondiamo il carrello, in attesa di una barra fissa con totale. 
+       Poiché il codice Staff non ha un pulsante di toggle, disattiviamo il carrello su mobile, forzando lo scroll del menu a schermo intero. 
+       L'utente dovrà usare un sistema di toggle o un layout diverso.
+
+       SOLUZIONE TEMPORANEA: Rendiamo il menu a schermo intero e nascondiamo il carrello staff su mobile per dare spazio:
+    */
+    
+    #cart-container {
+        display: none; /* Nascondi il carrello laterale su mobile per lasciare spazio al menu */
+    }
+
+    body {
+        /* Rimuovi l'offset per la colonna del carrello su mobile */
+        padding-right: 0;
+    }
+    
+    #menu-container {
+        /* Usa tutta la larghezza */
+        max-width: 100%;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
 }
