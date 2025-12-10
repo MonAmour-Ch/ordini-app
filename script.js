@@ -46,17 +46,94 @@ function addToCart(item) {
     renderCart();
 }
 
-// Aggiorna la lista del carrello e il totale nell'interfaccia
+// NUOVA FUNZIONE: Aggiorna la quantità di un articolo nel carrello
+function updateQuantity(itemId, change) {
+    const itemIndex = cart.findIndex(i => i.id === itemId);
+
+    if (itemIndex !== -1) {
+        const newQuantity = cart[itemIndex].quantity + change;
+        
+        if (newQuantity <= 0) {
+            // Se la quantità scende a zero o meno, rimuovi l'articolo
+            removeItem(itemId);
+        } else {
+            cart[itemIndex].quantity = newQuantity;
+            renderCart();
+        }
+    }
+}
+
+// NUOVA FUNZIONE: Rimuove un articolo dal carrello
+function removeItem(itemId) {
+    // Filtra l'array per mantenere solo gli articoli il cui ID NON corrisponde all'ID da rimuovere
+    cart = cart.filter(item => item.id !== itemId);
+    renderCart();
+}
+
+// Funzione aggiornata: Aggiorna la lista del carrello e il totale nell'interfaccia
 function renderCart() {
     cartList.innerHTML = '';
     let total = 0;
 
+    // Ordina il carrello per nome per una visualizzazione più pulita
+    cart.sort((a, b) => a.name.localeCompare(b.name));
+
     if (cart.length === 0) {
-        cartList.innerHTML = '<li>Il carrello è vuoto.</li>';
+        cartList.innerHTML = '<li style="text-align: center; color: #ccc;">Il carrello è vuoto. Aggiungi qualcosa dal menu!</li>';
         sendOrderBtn.disabled = true;
         totalPriceSpan.textContent = '0.00';
         return;
     }
+    
+    sendOrderBtn.disabled = false;
+
+    cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+        
+        const li = document.createElement('li');
+        li.dataset.id = item.id;
+        li.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 5px 0;">
+                
+                <span style="flex-grow: 1; color: #f8f9fa;">
+                    <strong>${item.name}</strong> 
+                    <small>(€${item.price.toFixed(2)})</small>
+                </span>
+                
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <button class="cart-btn cart-decrement" data-id="${item.id}">-</button>
+                    <span class="cart-qty" data-id="${item.id}" style="color: #ffc107; font-weight: bold;">${item.quantity}</span>
+                    <button class="cart-btn cart-increment" data-id="${item.id}">+</button>
+                    <button class="cart-btn cart-remove" data-id="${item.id}" style="color: #dc3545; background: none; border: none; font-size: 1.2em;">&times;</button>
+                </div>
+
+            </div>
+        `;
+        cartList.appendChild(li);
+    });
+
+    totalPriceSpan.textContent = total.toFixed(2);
+    
+    // Dopo aver creato i pulsanti, colleghiamo i listener di evento
+    attachCartEventListeners();
+}
+// NUOVA FUNZIONE: Collega gli eventi ai pulsanti del carrello
+function attachCartEventListeners() {
+    document.querySelectorAll('.cart-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const itemId = e.target.dataset.id;
+            
+            if (e.target.classList.contains('cart-increment')) {
+                updateQuantity(itemId, 1); // Aumenta di 1
+            } else if (e.target.classList.contains('cart-decrement')) {
+                updateQuantity(itemId, -1); // Diminuisce di 1
+            } else if (e.target.classList.contains('cart-remove')) {
+                removeItem(itemId); // Rimuovi completamente
+            }
+        });
+    });
+}
     
     // Disabilita il pulsante se il carrello è vuoto
     sendOrderBtn.disabled = cart.length === 0;
