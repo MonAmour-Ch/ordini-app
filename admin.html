@@ -9,37 +9,46 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
-    </head>
+</head>
 <body>
     
-    <header>
-        <div id="dashboard-header">
-            <h1><i class="fas fa-utensils"></i> Dashboard Ordini Bar</h1>
-            <div id="logout-container">
-                <button id="admin-logout-btn"><i class="fas fa-sign-out-alt"></i> Logout Admin</button>
-            </div>
-        </div>
-    </header>
-
     <main class="admin-main">
-        <div id="order-filters">
+        <header id="dashboard-header">
+            <h2><i class="fas fa-utensils"></i> Dashboard Ordini Tavoli</h2>
+            <div id="logout-container">
+                <button id="admin-logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </header>
+
+        <div id="order-filters" style="display: none;"> 
             <button class="filter-btn active" data-status="pending">
-                <i class="fas fa-clock"></i> Ordini In Attesa
+                <i class="fas fa-clock"></i> In Attesa
+            </button>
+            <button class="filter-btn" data-status="executed">
+                <i class="fas fa-utensils"></i> Eseguiti
             </button>
             <button class="filter-btn" data-status="completed">
-                <i class="fas fa-check-circle"></i> Ordini Completati
+                <i class="fas fa-check-circle"></i> Storico (Pagati)
             </button>
         </div>
         
-        <div id="orders-container">
-            <h2 style="text-align: center;">Caricamento Ordini...</h2>
-        </div>
-    </main>
+        <section id="admin-dashboard-layout">
+            
+            <div id="tables-grid">
+                </div>
+
+            <div id="order-details" class="order-card-detail">
+                <p class="empty-message">Seleziona un tavolo con un ordine attivo per visualizzare i dettagli.</p>
+            </div>
+            
+        </section>
+        
+        </main>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script> 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     
-    <script src="admin-script.js"></script>
+    <script src="admin-script.js"></script> 
 </body>
 </html>
