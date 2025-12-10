@@ -206,6 +206,58 @@ function renderMenu(groupedItems) {
         menuContainer.appendChild(categorySection);
     });
 }
+// Funzione che crea la struttura { Categoria1: [ArticoloA, ArticoloB], Categoria2: [...] }
+function groupItemsByCategory(items) {
+    return items.reduce((acc, item) => {
+        // Legge il campo category. Usa 'Altro' se per sbaglio è vuoto.
+        const category = item.category || 'Altro'; 
+        
+        // Se la categoria non esiste ancora nell'oggetto (acc), la crea
+        if (!acc[category]) {
+            acc[category] = [];
+        }
+        // Aggiunge l'articolo all'array di quella categoria
+        acc[category].push(item);
+        return acc;
+    }, {});
+}
+// La funzione che legge da Firestore e attiva il raggruppamento
+async function fetchMenu() {
+    try {
+        const snapshot = await db.collection('menu').get();
+        const menuItems = snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+        
+        // CHIAMA LA FUNZIONE DI RAGGRUPPAMENTO
+        const groupedItems = groupItemsByCategory(menuItems);
+        
+        // Passa il menu raggruppato alla funzione di rendering
+        renderMenu(groupedItems); 
+
+    } catch (error) {
+        // ... gestione errore
+    }
+}
+// La funzione che visualizza la struttura HTML
+function renderMenu(groupedItems) {
+    menuContainer.innerHTML = ''; 
+
+    // Ordina le categorie alfabeticamente per coerenza (es. Bibite, Caffetteria, Pasticceria)
+    const sortedCategories = Object.keys(groupedItems).sort();
+
+    sortedCategories.forEach(category => {
+        // Crea la <section> con l'intestazione della categoria
+        const categorySection = document.createElement('section');
+        categorySection.id = `category-${category.replace(/\s/g, '_')}`; 
+        categorySection.innerHTML = `<h2>${category}</h2>`;
+        
+        // ... (resto del codice che crea il div.category-items e i menu-item)
+        
+        menuContainer.appendChild(categorySection);
+    });
+}
     items.forEach(item => {
         const div = document.createElement('div');
         div.className = 'menu-item';
