@@ -10,17 +10,21 @@
     --card-bg: #ffffff;
     --shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Ombreggiatura più morbida */
     --delete-color: #dc3545; /* Rosso per eliminare */
+    
+    /* Variabile per l'altezza totale di header + nav */
+    --header-height: 110px; 
 }
 
 /* Importa un font moderno se non è già nel tuo HTML (ad esempio via Google Fonts) */
 /* Se usi Google Fonts, aggiungi questo link nel tuo <head>: 
-   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"> 
 */
 body {
     font-family: 'Roboto', Arial, sans-serif; /* Font più moderno */
     background-color: var(--bg-light);
     color: var(--text-dark);
     line-height: 1.6;
+    /* Spazio extra in fondo per la barra fissa del carrello */
     padding-bottom: 80px; 
 }
 
@@ -30,15 +34,17 @@ a {
 }
 
 /* ========================================================= */
-/* 2. Header & Navigazione (Più pulito e minimalista) */
+/* 2. Header & Navigazione (Fissi e Compatti) */
 /* ========================================================= */
 .menu-header {
     background-color: var(--card-bg); /* Sfondo Header chiaro */
     color: var(--text-dark); /* Testo Header scuro */
-    padding: 15px 0;
+    padding: 10px 0; /* Ridotto il padding per renderlo più basso */
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Ombra leggera */
-    position: sticky;
+    position: fixed; /* Fissa in alto */
     top: 0;
+    left: 0;
+    width: 100%;
     z-index: 1000;
 }
 
@@ -50,9 +56,10 @@ a {
 }
 
 .menu-header h1 {
-    font-size: 2em; /* Titolo leggermente più grande */
+    font-size: 1.5em; /* Titolo più piccolo e compatto */
     font-weight: 700;
     color: var(--primary-color);
+    margin: 0; /* Rimuovi margini predefiniti */
 }
 
 /* Navigazione Categorie (Quick Links) */
@@ -63,6 +70,12 @@ a {
     padding: 10px 0;
     background-color: var(--card-bg); /* Navigazione Chiara */
     border-bottom: 1px solid #eee;
+    
+    /* Blocco la nav subito sotto l'header principale */
+    position: sticky;
+    top: 60px; /* Adatta questo valore all'altezza dell'header compattato */
+    z-index: 900;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .category-btn {
@@ -88,14 +101,16 @@ a {
 /* ========================================================= */
 #menu-container {
     max-width: 900px;
-    margin: 20px auto;
-    padding: 0 20px;
+    /* Questo padding-top compensa l'header fisso + la nav di categoria */
+    padding-top: var(--header-height); 
+    margin: 0 auto;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 .menu-category h2 {
     font-size: 2em;
     color: var(--text-dark);
-    /* Rimuoviamo la linea di accento giallo/rosso per un look più pulito */
     border-bottom: none; 
     margin-top: 30px;
     margin-bottom: 15px;
@@ -109,4 +124,50 @@ a {
     padding: 18px; /* Più spaziatura interna */
     margin-bottom: 12px;
     border-radius: 12px; /* Bordi più arrotondati */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /*
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* CHIUSURA RIGA TRONCATA */
+}
+
+/* ========================================================== */
+/* 4. BARRA FISSA CARRELLO (Nuova Implementazione Fissa) */
+/* ========================================================== */
+
+#cart-fixed-bar {
+    position: fixed;
+    bottom: 0; /* Lo fissa in fondo allo schermo */
+    left: 0;
+    width: 100%;
+    background-color: var(--secondary-color); /* Verde per risalto */
+    z-index: 1000;
+    box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.3); /* Ombra verso l'alto */
+    padding: 15px 20px;
+    text-align: center;
+}
+
+#toggle-cart-btn {
+    width: 100%;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 700;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between; /* Spazio tra icona/testo e totale */
+    align-items: center;
+}
+
+#toggle-cart-btn i {
+    margin-right: 10px;
+}
+
+/* Badge (Conteggio Articoli) */
+.badge {
+    background-color: var(--delete-color); /* Rosso per l'attenzione */
+    color: white;
+    border-radius: 50%;
+    padding: 3px 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-left: 5px;
+}
