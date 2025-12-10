@@ -34,7 +34,7 @@ a {
 }
 
 /* ========================================================= */
-/* 2. Header & Navigazione (Fissi e Compatti) */
+/* 2. Header & Navigazione (Fissi e Compatti) - AGGIORNATO PER STAFF E CLIENTE */
 /* ========================================================= */
 .menu-header {
     background-color: var(--card-bg); /* Sfondo Header chiaro */
@@ -52,7 +52,13 @@ a {
     max-width: 900px;
     margin: 0 auto;
     padding: 0 20px;
-    text-align: center;
+    
+    /* Utilizzato per posizionare gli elementi (Titolo, Icona Carrello/Logout) */
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    /* Il contenuto dell'header dello staff è più complesso e potrebbe non centrare */
+    text-align: left; 
 }
 
 .menu-header h1 {
@@ -60,6 +66,35 @@ a {
     font-weight: 700;
     color: var(--primary-color);
     margin: 0; /* Rimuovi margini predefiniti */
+}
+
+/* NUOVI STILI PER IL CARRELLO NELL'HEADER (MENU CLIENTI) */
+#header-cart-btn {
+    background: none;
+    border: none;
+    color: var(--text-dark);
+    font-size: 1.6rem;
+    cursor: pointer;
+    position: relative;
+    padding: 5px;
+    transition: color 0.2s;
+}
+
+#header-cart-btn:hover {
+    color: var(--primary-color);
+}
+
+#header-cart-btn .badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: var(--delete-color); 
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    line-height: 1;
 }
 
 /* Navigazione Categorie (Quick Links) */
@@ -73,7 +108,8 @@ a {
     
     /* Blocco la nav subito sotto l'header principale */
     position: sticky;
-    top: 60px; /* Adatta questo valore all'altezza dell'header compattato */
+    /* AGGIUSTAMENTO PER STAFF: Diamo un valore più alto per coprire l'header più complesso */
+    top: 100px; 
     z-index: 900;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
@@ -101,8 +137,8 @@ a {
 /* ========================================================= */
 #menu-container {
     max-width: 900px;
-    /* Questo padding-top compensa l'header fisso + la nav di categoria */
-    padding-top: var(--header-height); 
+    /* AGGIUSTAMENTO PER STAFF: Compensa l'header fisso staff + nav di categoria */
+    padding-top: 150px; 
     margin: 0 auto;
     padding-left: 20px;
     padding-right: 20px;
@@ -127,8 +163,21 @@ a {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
+/* --- STILI AGGIUNTIVI PER CARD MENU STAFF (se necessario) --- */
+.menu-item { /* Usato nello staff-script per la card generica */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--card-bg);
+    padding: 18px; 
+    margin-bottom: 12px;
+    border-radius: 12px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+
 /* ========================================================== */
-/* 4. BARRA FISSA CARRELLO (Cliccabile per lo Scroll) */
+/* 4. BARRA FISSA CARRELLO (Cliccabile e COMPATTATA) */
 /* ========================================================== */
 
 #cart-fixed-bar {
@@ -141,7 +190,7 @@ a {
     box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.3); 
     padding: 10px 15px; /* Compattato per altezza ridotta */
     text-align: center;
-    
+    /* pointer-events: none; (Assicurati che sia rimosso in staff/client CSS se vuoi il click) */
 }
 
 #toggle-cart-btn {
@@ -153,11 +202,13 @@ a {
     font-weight: 700;
     padding: 0;
     display: flex;
-    justify-content: center;
+    /* CORREZIONE: Centra gli elementi (non space-between) */
+    justify-content: center; 
     align-items: center;
     cursor: pointer; 
 }
 
+/* Spaziatura tra badge/icona e totale */
 #cart-fixed-bar #cart-fixed-total {
     margin-left: 10px;
 }
@@ -166,3 +217,13 @@ a {
     margin-right: 5px;
 }
 
+/* Badge (Conteggio Articoli) */
+.badge {
+    background-color: var(--delete-color); /* Rosso per l'attenzione */
+    color: white;
+    border-radius: 50%;
+    padding: 3px 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-left: 5px;
+}
