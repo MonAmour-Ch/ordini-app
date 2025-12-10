@@ -230,7 +230,7 @@ function renderCategoryNavigation(groupedItems) {
                     top: target.offsetTop - 100, 
                     behavior: 'smooth'
                 });
-            )}
+            })
         });
         navQuickLinks.appendChild(button);
     });
