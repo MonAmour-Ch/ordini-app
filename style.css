@@ -11,8 +11,8 @@
     --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     --delete-color: #dc3545;
     
-    /* MODIFICA CRITICA: Aumento la compensazione per il menu cliente per garantire visibilità */
-    --header-height: 95px; /* Aumentato da 70px per risolvere la sovrapposizione */
+    /* Compensazione aumentata */
+    --header-height: 95px; 
 }
 
 body {
@@ -51,12 +51,28 @@ a {
     text-align: center;
 }
 
+/* NASCONDI IL VECCHIO TITOLO SE PRESENTE (Se non lo hai rimosso dall'HTML) */
 .menu-header h1 {
-    /* Titolo leggermente ridotto */
-    font-size: 1.4em; 
-    font-weight: 700;
-    color: var(--primary-color);
+    display: none; /* Rimuove lo spazio e la scritta "Bar Order App" */
     margin: 0;
+}
+
+/* NUOVI STILI PER IL NUMERO DEL TAVOLO */
+.header-content #table-display {
+    /* Stile generale per la dicitura "Tavolo: 12" */
+    font-size: 1.3em; 
+    font-weight: 500;
+    color: var(--text-dark);
+    margin: 5px 0 5px; /* Aggiunge un po' di margine verticale per centrare */
+}
+
+.header-content #table-display span {
+    /* Stile specifico per il numero (più grande e in evidenza) */
+    font-size: 1.6em; 
+    font-weight: 700;
+    color: var(--primary-color); 
+    display: inline-block;
+    margin-left: 5px;
 }
 
 /* Navigazione Categorie (Quick Links) */
@@ -70,8 +86,8 @@ a {
     border-bottom: 1px solid #eee;
     
     position: sticky;
-    /* Posizione adattata alla nuova altezza minima dell'header (circa 38px) */
-    top: 35px; 
+    /* Adattato in base all'altezza effettiva del nuovo header (solo Tavolo) */
+    top: 45px; /* Leggermente aumentato per sicurezza */
     z-index: 900;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
@@ -99,7 +115,7 @@ a {
 /* ========================================================= */
 #menu-container {
     max-width: 900px;
-    /* UTILIZZA LA NUOVA VARIABILE --header-height (95px) */
+    /* Compensazione finale (95px) */
     padding-top: var(--header-height); 
     margin: 0 auto;
     padding-left: 20px;
@@ -110,7 +126,6 @@ a {
     font-size: 2em;
     color: var(--text-dark);
     border-bottom: none; 
-    /* MODIFICA PER COMPATTEZZA */
     margin-top: 20px; 
     margin-bottom: 10px; 
 }
@@ -120,9 +135,7 @@ a {
     justify-content: space-between;
     align-items: center;
     background: var(--card-bg);
-    /* MODIFICA PER COMPATTEZZA (Padding interno ridotto) */
     padding: 8px 15px; 
-    /* MODIFICA PER COMPATTEZZA (Spazio tra le card ridotto) */
     margin-bottom: 6px; 
     border-radius: 8px; 
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
@@ -176,7 +189,6 @@ a {
     max-width: 1200px;
     margin: 20px auto;
     padding: 0 20px;
-    /* MODIFICA CRITICA: Aggiunto padding-top per compensare l'header Admin */
     padding-top: 20px; 
 }
 
@@ -188,7 +200,6 @@ a {
     background-color: #f7f9fc; 
     border-bottom: 1px solid #ddd;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    /* Assicura che l'header Admin sia fisso durante lo scroll */
     position: sticky;
     top: 0; 
     z-index: 100;
