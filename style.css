@@ -5,7 +5,7 @@
     --secondary-color: #28a745; /* Verde per Aggiungi al carrello */
     --accent-color: #ffc107; /* Giallo/Arancio per totale e interattività carrello */
     --dark-bg: #343a40; /* Sfondo scuro per il carrello fisso */
-    --light-bg: #f7f9fc; /* Sfondo chiaro del body */
+    --light-bg: #b22222; /* Sfondo chiaro del body */
     --white: #ffffff;
     --red: #dc3545; /* Rosso per pulsanti Rimuovi/Invia */
 }
