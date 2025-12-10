@@ -24,6 +24,7 @@ const tableFromUrl = params.get("table");
 if (tableFromUrl) {
   document.getElementById("table").value = tableFromUrl;
 }
+
 document.getElementById("orderForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -48,6 +49,7 @@ document.getElementById("orderForm").addEventListener("submit", async (e) => {
     console.error(error);
   }
 });
+
 
 
 
