@@ -2,12 +2,11 @@
 // 1. CONFIGURAZIONE FIREBASE E INIZIALIZZAZIONE
 // ====================================================================
 
-// --- Configurazione (Includi solo i campi necessari per App/Auth/Firestore) ---
+// --- Configurazione (Include solo i campi necessari per App/Auth/Firestore) ---
 const firebaseConfig = {
     apiKey: "AIzaSyC0SFan3-K074DG5moeqmu4mUgXtxCmTbg",
     authDomain: "menu-6630f.firebaseapp.com",
     projectId: "menu-6630f",
-    // Rimosse le chiavi non usate (storageBucket, messagingSenderId, ecc.) per pulizia
 };
 
 // Inizializzazione Firebase
@@ -25,17 +24,22 @@ const ordersContainer = document.getElementById('orders-container');
 
 /**
  * Gestisce il processo di login per admin-login.html.
+ * Usa l'evento 'submit' del form per supportare sia il click che il tasto Invio.
  * @returns {void}
  */
 function handleAdminLogin() {
+    const loginForm = document.getElementById('admin-login-form'); // Riferimento al form
     const emailInput = document.getElementById('admin-email');
     const passwordInput = document.getElementById('admin-password');
     const loginBtn = document.getElementById('admin-login-btn');
     const errorMessage = document.getElementById('error-message');
 
-    if (!emailInput || !loginBtn) return; // Controllo se siamo sulla pagina di login
+    if (!loginForm || !loginBtn) return; // Controllo se siamo sulla pagina di login
 
-    loginBtn.addEventListener('click', () => {
+    // Modificato da click a submit del form
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault(); // Impedisce il ricaricamento della pagina
+        
         const email = emailInput.value;
         const password = passwordInput.value;
         
@@ -113,7 +117,8 @@ let unsubscribeOrders = null;
 function formatTimestampToTime(timestamp) {
     if (!timestamp) return 'Ora Sconosciuta';
     const date = timestamp.toDate();
-    return date.toLocaleTimeString('it-IT') + ' del ' + date.toLocaleDateString('it-IT');
+    // Migliorato il formato per chiarezza negli ordini completati
+    return date.toLocaleTimeString('it-IT', {hour: '2-digit', minute:'2-digit'}) + ' ' + date.toLocaleDateString('it-IT');
 }
 
 /**
@@ -149,7 +154,10 @@ function setupOrderFilters() {
             if (newStatus === currentFilterStatus) return; // Non fare nulla se lo stato è lo stesso
 
             // Aggiorna la classe 'active'
-            filterContainer.querySelector('.active').classList.remove('active');
+            const currentActive = filterContainer.querySelector('.active');
+            if (currentActive) {
+                currentActive.classList.remove('active');
+            }
             button.classList.add('active');
 
             // Aggiorna lo stato e riavvia il listener
@@ -175,6 +183,8 @@ function listenForOrdersByStatus(status) {
     ordersContainer.innerHTML = '<h2 style="text-align: center;">Caricamento Ordini...</h2>';
 
     // Determina l'ordinamento: pending (dal più vecchio), completed (dal più nuovo)
+    // Se ordiniamo per 'timestamp' e poi per 'status', potremmo aver bisogno di un altro indice composito!
+    // Per ora, ordiniamo solo per timestamp.
     const sortDirection = (status === 'pending') ? 'asc' : 'desc';
 
     // Query dinamica
@@ -207,24 +217,21 @@ function listenForOrdersByStatus(status) {
 
 /**
  * Crea e aggiunge la card HTML per un singolo ordine al DOM.
- * AGGIORNATO per gestire lo stato 'completed'.
  * @param {object} order I dati dell'ordine.
  * @param {string} orderId L'ID del documento Firestore.
  */
 function renderOrderCard(order, orderId) {
     const card = document.createElement('div');
-    // La classe dipende ora dallo stato reale dell'ordine
     card.className = `order-card ${order.status}`; 
     
-    let timeInfo = '';
+    let timeLabel = 'Ora Ordine';
+    let timeValue = formatTimestampToTime(order.timestamp);
 
     if (order.status === 'completed' && order.completionTime) {
         // Per gli ordini completati, mostriamo l'ora di completamento
-        timeInfo = formatTimestampToTime(order.completionTime);
-    } else {
-        // Per gli ordini in attesa, mostriamo l'ora di creazione
-        timeInfo = formatTimestampToTime(order.timestamp);
-    }
+        timeLabel = 'Completato alle';
+        timeValue = formatTimestampToTime(order.completionTime);
+    } 
     
     const itemsHtml = order.items.map(item => 
         `<li>${item.quantity}x ${item.name} (€${(item.quantity * item.price).toFixed(2)})</li>`
@@ -235,11 +242,12 @@ function renderOrderCard(order, orderId) {
     if (order.status === 'pending') {
         footerContent = `<button class="complete-btn" data-id="${orderId}">Completa Ordine</button>`;
     } else {
-        footerContent = `<span class="completed-label">Completato alle ${timeInfo.split('del')[0]}</span>`;
+        // Mostra solo l'etichetta del tempo senza il pulsante
+        footerContent = `<span class="completed-label">${timeLabel}: ${timeValue}</span>`;
     }
 
     card.innerHTML = `
-        <h3>Tavolo: ${order.tableId} <span class="order-time">${timeInfo}</span></h3>
+        <h3>Tavolo: ${order.tableId} <span class="order-time">${timeValue}</span></h3>
         <p class="order-staff">Preso da: ${order.staffEmail || 'Cliente QR'}</p>
         
         <ul class="order-items">${itemsHtml}</ul>
@@ -262,7 +270,6 @@ function renderOrderCard(order, orderId) {
 
 /**
  * Aggiorna lo stato di un ordine su Firestore.
- * ... (La funzione updateOrderStatus resta invariata) ...
  */
 async function updateOrderStatus(orderId, newStatus) {
     try {
@@ -286,6 +293,5 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.location.pathname.endsWith('admin-login.html')) {
         handleAdminLogin();
     }
-    // L'avvio completo della dashboard (initializeAdminDashboard) è gestito 
-    // dal listener di autenticazione globale (onAuthStateChanged).
+    // L'avvio completo della dashboard è gestito da onAuthStateChanged
 });
