@@ -13,7 +13,7 @@ const firebaseConfig = {
     measurementId: "G-GTQS2S4GNF"
 };
 
-// Inizializza Firebase e Firestore (Compat Mode per la versione 9.x tramite CDN)
+// Inizializza Firebase e Firestore (Compat Mode)
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
@@ -27,12 +27,19 @@ const cartList = document.getElementById('cart-list');
 const totalPriceSpan = document.getElementById('total-price');
 const sendOrderBtn = document.getElementById('send-order-btn');
 const tableIdSpan = document.getElementById('table-id');
-// Costante per la navigazione rapida (che implementeremo al prossimo passo)
-const navQuickLinks = document.getElementById('quick-links'); 
+const navQuickLinks = document.getElementById('quick-links');
+
+// NUOVI SELETTORI PER LA MODALE CARRELLO
+const cartModal = document.getElementById('cart-modal');
+const toggleCartBtn = document.getElementById('toggle-cart-btn');
+const closeCartBtn = document.querySelector('#cart-modal .close-btn');
+const cartItemCount = document.getElementById('cart-item-count');
+const cartFixedTotal = document.getElementById('cart-fixed-total');
 
 // Stato dell'applicazione
 let cart = []; // Array per contenere gli articoli nel carrello
-let tableId = 'DEFAULT_TAVOLO'; // Valore di default
+let tableId = 'Tavolo non trovato'; // Modificato il default per chiarezza
+let menuStructure = {}; // Salverà la struttura del menu raggruppato
 
 // ====================================================================
 // 3. LOGICA DI CARRELLO E STATO
@@ -51,6 +58,19 @@ function getTableIdFromUrl() {
 }
 
 /**
+ * Gestisce l'apertura e la chiusura della Modale Carrello.
+ */
+function toggleCartModal(show) {
+    if (show) {
+        cartModal.style.display = 'block';
+        document.body.style.overflow = 'hidden'; // Impedisce lo scroll del body
+    } else {
+        cartModal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+}
+
+/**
  * Aggiunge un articolo al carrello o incrementa la quantità se già presente.
  * @param {object} item - L'articolo da aggiungere ({id, name, price}).
  */
@@ -60,8 +80,7 @@ function addToCart(item) {
     if (existingItem) {
         existingItem.quantity += 1;
     } else {
-        // Usa l'operatore spread per creare un nuovo oggetto con la quantità
-        cart.push({...item, quantity: 1}); 
+        cart.push({ ...item, quantity: 1 });
     }
     renderCart();
 }
@@ -76,7 +95,7 @@ function updateQuantity(itemId, change) {
 
     if (itemIndex !== -1) {
         const newQuantity = cart[itemIndex].quantity + change;
-        
+
         if (newQuantity <= 0) {
             removeItem(itemId);
         } else {
@@ -96,19 +115,17 @@ function removeItem(itemId) {
 }
 
 /**
- * Collega gli eventi ai pulsanti di manipolazione del carrello (+, -, Rimuovi).
+ * Collega gli eventi di delegation ai pulsanti di manipolazione del carrello (+, -, Rimuovi) nel Modale.
  */
 function attachCartEventListeners() {
-    // Rimuoviamo i vecchi listener prima di collegarne di nuovi per evitare duplicazioni
-    // Questo è un metodo semplice, ma ri-renderizza l'intera lista ogni volta
-    
     // Si usa il delegation event listener sull'elemento genitore (cartList)
     cartList.onclick = (e) => {
+        // Cerca il pulsante più vicino con la classe .cart-btn
         const button = e.target.closest('.cart-btn');
         if (!button) return; // Non è un pulsante del carrello
 
         const itemId = button.dataset.id;
-        
+
         if (button.classList.contains('cart-increment')) {
             updateQuantity(itemId, 1);
         } else if (button.classList.contains('cart-decrement')) {
@@ -121,69 +138,64 @@ function attachCartEventListeners() {
 
 
 /**
- * Aggiorna la lista del carrello nell'interfaccia utente (UI).
+ * Aggiorna la lista del carrello nell'interfaccia utente (UI) e la barra fissa.
  */
 function renderCart() {
     cartList.innerHTML = '';
     let total = 0;
+    let itemCount = 0;
 
     cart.sort((a, b) => a.name.localeCompare(b.name));
 
     if (cart.length === 0) {
-        cartList.innerHTML = '<li style="text-align: center; color: #ccc;">Il carrello è vuoto. Aggiungi qualcosa dal menu!</li>';
+        cartList.innerHTML = '<li style="text-align: center; color: #6c757d; padding: 20px;">Il carrello è vuoto. Aggiungi qualcosa dal menu!</li>';
         sendOrderBtn.disabled = true;
-        totalPriceSpan.textContent = '0.00';
-        return;
+    } else {
+        sendOrderBtn.disabled = false;
     }
     
-    sendOrderBtn.disabled = false;
-
     cart.forEach(item => {
         const itemTotal = item.price * item.quantity;
         total += itemTotal;
-        
+        itemCount += item.quantity;
+
         const li = document.createElement('li');
+        li.className = 'cart-item'; // Classe dal CSS moderno
         li.dataset.id = item.id;
         li.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 5px 0;">
-                
-                <span style="flex-grow: 1; color: #f8f9fa;">
-                    <strong>${item.name}</strong> 
-                    <small>(€${item.price.toFixed(2)})</small>
-                </span>
-                
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <button class="cart-btn cart-decrement" data-id="${item.id}">-</button>
-                    <span class="cart-qty" data-id="${item.id}" style="color: #ffc107; font-weight: bold;">${item.quantity}</span>
-                    <button class="cart-btn cart-increment" data-id="${item.id}">+</button>
-                    <button class="cart-btn cart-remove" data-id="${item.id}" style="color: #dc3545; background: none; border: none; font-size: 1.2em;">&times;</button>
-                </div>
-
+            <div class="item-details">
+                <strong>${item.name}</strong>
+                <span>€${item.price.toFixed(2)}</span>
             </div>
+            
+            <div class="cart-item-controls">
+                <button class="cart-btn cart-decrement minus-btn" data-id="${item.id}">-</button>
+                <span class="cart-qty">${item.quantity}</span>
+                <button class="cart-btn cart-increment" data-id="${item.id}">+</button>
+                </div>
         `;
         cartList.appendChild(li);
     });
 
-    totalPriceSpan.textContent = total.toFixed(2);
-    
-    // Attacca i listener di evento SOLO una volta, all'inizio, 
-    // ma la funzione è chiamata qui per garantire che il delegation sia attivo.
-    // L'ottimizzazione è spostata nella parte di Inizializzazione.
+    // Aggiornamento Totali nel Modale e nella Barra Fissa
+    const formattedTotal = total.toFixed(2);
+    totalPriceSpan.textContent = formattedTotal;
+    cartItemCount.textContent = itemCount;
+    cartFixedTotal.textContent = formattedTotal;
 }
 
 
 // ====================================================================
-// 4. LOGICA DEL MENU E FIREBASE
+// 4. LOGICA DEL MENU E FIREBASE (Migliorata con Navigazione)
 // ====================================================================
 
 /**
  * Raggruppa un array piatto di articoli per il campo 'category'.
- * @param {Array} items - L'array di articoli dal database.
- * @returns {object} Oggetto con le categorie come chiavi e gli array di articoli come valori.
  */
 function groupItemsByCategory(items) {
+    // ... la tua logica è corretta ...
     return items.reduce((acc, item) => {
-        const category = item.category || 'Altro'; 
+        const category = item.category || 'Altro';
         if (!acc[category]) {
             acc[category] = [];
         }
@@ -193,143 +205,21 @@ function groupItemsByCategory(items) {
 }
 
 /**
- * Visualizza il menu raggruppato in sezioni HTML.
- * @param {object} groupedItems - Il menu raggruppato per categoria.
+ * Genera i pulsanti di navigazione rapida (Quick Links) in base alle categorie.
+ * @param {object} groupedItems - Il menu raggruppato.
  */
-function renderMenu(groupedItems) {
-    menuContainer.innerHTML = ''; 
-
-    // Ordina le categorie alfabeticamente
+function renderCategoryNavigation(groupedItems) {
+    navQuickLinks.innerHTML = '';
     const sortedCategories = Object.keys(groupedItems).sort();
 
     sortedCategories.forEach(category => {
-        const categorySection = document.createElement('section');
-        // ID pulito per l'ancoraggio (necessario per la navigazione rapida)
-        categorySection.id = `category-${category.replace(/\s+/g, '_').toLowerCase()}`; 
-        categorySection.innerHTML = `<h2>${category}</h2>`;
+        const cleanId = `category-${category.replace(/[^a-zA-Z0-9]+/g, '_').toLowerCase()}`;
         
-        const itemsListDiv = document.createElement('div');
-        itemsListDiv.className = 'category-items'; 
-
-        groupedItems[category].forEach(item => {
-            const div = document.createElement('div');
-            div.className = 'menu-item';
-            div.innerHTML = `
-                <div>
-                    <strong>${item.name}</strong><br>
-                    <span>€${item.price.toFixed(2)}</span>
-                </div>
-                <button class="add-to-cart-btn" data-id="${item.id}" 
-                        data-name="${item.name}" data-price="${item.price}">
-                    Aggiungi
-                </button>
-            `;
-            
-            // Aggiunge l'evento al pulsante "Aggiungi"
-            const btn = div.querySelector('.add-to-cart-btn');
-            btn.addEventListener('click', () => {
-                addToCart({
-                    id: item.id,
-                    name: item.name,
-                    // Converte il prezzo in un numero float per sicurezza
-                    price: parseFloat(item.price) 
-                });
-            });
-
-            itemsListDiv.appendChild(div);
-        });
+        const button = document.createElement('button');
+        button.className = 'category-btn';
+        button.textContent = category;
         
-        categorySection.appendChild(itemsListDiv);
-        menuContainer.appendChild(categorySection);
-    });
-}
-
-/**
- * Legge il menu da Firestore, raggruppa e renderizza.
- */
-async function fetchMenu() {
-    menuContainer.innerHTML = '<h2>Caricamento Menu...</h2>';
-    try {
-        const snapshot = await db.collection('menu').get();
-        const menuItems = snapshot.docs.map(doc => ({
-            id: doc.id,
-            // I prezzi salvati come Stringa vengono convertiti in Float
-            price: parseFloat(doc.data().price), 
-            ...doc.data()
-        }));
-        
-        const groupedItems = groupItemsByCategory(menuItems);
-        renderMenu(groupedItems);
-
-    } catch (error) {
-        console.error("Errore nel caricamento del menu: ", error);
-        menuContainer.innerHTML = '<p style="color:red;">Impossibile caricare il menu. Controlla la connessione a Firebase.</p>';
-    }
-}
-
-/**
- * Invia l'ordine a Firestore.
- */
-async function sendOrder() {
-    if (cart.length === 0) {
-        alert("Il carrello è vuoto!");
-        return;
-    }
-
-    sendOrderBtn.disabled = true;
-    sendOrderBtn.textContent = 'Invio in corso...';
-    
-    // Crea una versione pulita degli articoli del carrello per il database
-    const itemsToSave = cart.map(item => ({
-        id: item.id,
-        name: item.name,
-        price: item.price,
-        quantity: item.quantity
-    }));
-    
-    const orderData = {
-        tableId: tableId,
-        items: itemsToSave,
-        total: parseFloat(totalPriceSpan.textContent),
-        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        status: 'pending' 
-    };
-    
-    try {
-        await db.collection('orders').add(orderData);
-        
-        alert(`Ordine inviato con successo al Tavolo ${tableId}! Sarai servito a breve.`);
-        
-        // Pulisce lo stato
-        cart = [];
-        renderCart(); 
-
-    } catch (error) {
-        console.error("Errore nell'invio dell'ordine: ", error);
-        alert("Si è verificato un errore durante l'invio dell'ordine.");
-    } finally {
-        sendOrderBtn.disabled = false;
-        sendOrderBtn.textContent = 'Invia Ordine';
-    }
-}
-
-// ====================================================================
-// 5. INIZIALIZZAZIONE
-// ====================================================================
-
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. Legge il tavolo dall'URL
-    getTableIdFromUrl();
-    
-    // 2. Carica e visualizza il menu
-    fetchMenu();
-    
-    // 3. Inizializza la visualizzazione del carrello vuoto
-    renderCart(); 
-
-    // 4. Collega i listener di base
-    sendOrderBtn.addEventListener('click', sendOrder);
-    
-    // 5. Collega il listener di delegation per il carrello interattivo
-    attachCartEventListeners(); 
-});
+        // Collega l'evento di scroll all'ID della sezione
+        button.addEventListener('click', () => {
+            const target = document.getElementById(cleanId);
+            if (target
