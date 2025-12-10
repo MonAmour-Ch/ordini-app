@@ -27,8 +27,9 @@ let menuData = [];
 let cartItems = {};
 let currentTableId = null; 
 
-// --- 3. RIFERIMENTI DOM (Definiti in initializeStaffApp per sicurezza) ---
-let mainContainer, cartList, totalPriceSpan, sendOrderBtn, tableIdDisplay, cartTableDisplay, navQuickLinks;
+// --- 3. RIFERIMENTI DOM (Dichiarati come LET per l'assegnazione successiva e sicura) ---
+// Questi verranno assegnati solo in initializeStaffApp
+let mainContainer, cartList, totalPriceSpan, sendOrderBtn, tableIdDisplay, cartTableDisplay;
 let tableSelect; // Elemento cruciale
 
 // ===============================================
@@ -47,7 +48,6 @@ auth.onAuthStateChanged(user => {
     } else if (isStaffLogin && user) {
         window.location.href = 'staff-menu.html';
     } else if (isStaffMenu && user) {
-        // Avvia l'app solo se siamo su staff-menu E l'utente è loggato
         initializeStaffApp(user);
     }
 });
@@ -93,12 +93,16 @@ function handleLogout() {
 // ===============================================
 
 /**
- * Popola il dropdown di selezione tavolo (Fino a 40, solo numero).
+ * Popola il dropdown di selezione tavolo (Fino a 40) e gestisce l'evento 'change'.
  */
 function populateTableSelect() {
-    if (!tableSelect || !mainContainer || !tableIdDisplay || !cartTableDisplay) return;
+    // Controllo sicurezza essenziale, questi elementi DEVONO essere stati assegnati in initializeStaffApp
+    if (!tableSelect || !mainContainer || !tableIdDisplay || !cartTableDisplay) {
+        console.error("populateTableSelect: Elementi DOM essenziali non disponibili.");
+        return;
+    }
 
-    // 1. Inizializzazione del dropdown
+    // Aggiunge l'opzione di default
     const defaultOption = document.createElement('option');
     defaultOption.value = '';
     defaultOption.textContent = 'Seleziona Tavolo...';
@@ -110,27 +114,28 @@ function populateTableSelect() {
     for (let i = 1; i <= 40; i++) {
         const option = document.createElement('option');
         option.value = `TAVOLO_${i}`;
-        // MOSTRA SOLO IL NUMERO DI TAVOLO NEL DROPDOWN
+        // MOSTRA SOLO IL NUMERO PER CHIAREZZA MOBILE
         option.textContent = `${i}`; 
         tableSelect.appendChild(option);
     }
 
-    // 2. Gestione dell'evento di selezione
+    // Gestione dell'evento di selezione
     tableSelect.addEventListener('change', (e) => {
         const selectedValue = e.target.value;
         
         if (selectedValue === '') {
+            // Caso di non selezione
             currentTableId = null;
             mainContainer.style.pointerEvents = 'none';
             mainContainer.style.opacity = '0.5';
-            tableIdDisplay.textContent = 'Nessuno';
-            cartTableDisplay.textContent = 'Nessuno';
+            tableIdDisplay.textContent = 'NON SELEZIONATO';
+            cartTableDisplay.textContent = '...';
             return;
         }
 
         currentTableId = selectedValue;
         
-        // Estrae il numero puro (es. 'TAVOLO_25' -> '25')
+        // Estrae il numero puro (es. 'TAVOLO_25' -> '25') per la visualizzazione
         const displayId = currentTableId.replace('TAVOLO_', ''); 
         
         // Aggiorna i display (solo numero)
@@ -142,12 +147,10 @@ function populateTableSelect() {
         mainContainer.style.opacity = '1';
         document.querySelector('.loading-state')?.style.display = 'none';
 
-        // Reset e render del carrello/menu
+        // Reset e render
         cartItems = {};
         renderCart();
-        
-        const groupedMenu = groupItemsByCategory(menuData);
-        renderMenu(groupedMenu); 
+        renderMenu(); // Chiama renderMenu che usa menuData globale
     });
 }
 
@@ -156,30 +159,30 @@ function populateTableSelect() {
  */
 async function loadMenu() {
     try {
-        const snapshot = await menuCollection.orderBy('category').get();
+        const snapshot = await menuCollection.get();
         menuData = snapshot.docs.map(doc => ({
             id: doc.id,
+            // Assicura che price sia un numero
             price: parseFloat(doc.data().price), 
             ...doc.data()
         }));
         
-        const groupedMenu = groupItemsByCategory(menuData);
-        
-        // Renderizza la navigazione e il menu
-        if(navQuickLinks) renderCategoryNavigation(groupedMenu); 
-        renderMenu(groupedMenu); 
-
+        // Renderizza il menu
+        renderMenu(); 
     } catch (error) {
         console.error("Errore nel caricamento del menu: ", error);
-        if (mainContainer) mainContainer.innerHTML = `<p style="color: red; padding: 20px;">Impossibile caricare il menu.</p>`;
+        if (mainContainer) mainContainer.innerHTML = `<p style="color: red; padding: 20px;">Impossibile caricare il menu. Riprova più tardi.</p>`;
     }
 }
 
 /**
- * Funzione di utilità per raggruppare gli articoli per categoria.
+ * Renderizza l'intero menu in base ai dati memorizzati (Migliorando la struttura per mobile).
  */
-function groupItemsByCategory(items) {
-    return items.reduce((acc, item) => {
+function renderMenu() {
+    if (!mainContainer || menuData.length === 0) return;
+
+    // 1. Raggruppa gli elementi per categoria
+    const groupedMenu = menuData.reduce((acc, item) => {
         const category = item.category || 'Generico';
         if (!acc[category]) {
             acc[category] = [];
@@ -187,51 +190,12 @@ function groupItemsByCategory(items) {
         acc[category].push(item);
         return acc;
     }, {});
-}
 
-/**
- * Genera i pulsanti di navigazione rapida (Quick Links).
- */
-function renderCategoryNavigation(groupedItems) {
-    if (!navQuickLinks) return;
-    
-    navQuickLinks.innerHTML = '';
-    const sortedCategories = Object.keys(groupedItems).sort();
-
-    sortedCategories.forEach(category => {
-        const cleanId = `category-${category.replace(/[^a-zA-Z0-9]+/g, '_').toLowerCase()}`;
-        
-        const button = document.createElement('button');
-        button.className = 'category-btn';
-        button.textContent = category;
-        
-        button.addEventListener('click', () => {
-            const target = document.getElementById(cleanId);
-            if (target) { 
-                window.scrollTo({
-                    top: target.offsetTop - 120, 
-                    behavior: 'smooth'
-                });
-            } 
-        }); 
-        
-        navQuickLinks.appendChild(button); 
-    }); 
-}
-
-/**
- * Renderizza il menu completo.
- */
-function renderMenu(groupedMenu) {
-    if (!mainContainer) return;
-
-    mainContainer.innerHTML = ''; 
-    
+    // 2. Genera l'HTML del menu
+    mainContainer.innerHTML = '';
     Object.keys(groupedMenu).sort().forEach(category => {
         const section = document.createElement('section');
-        const cleanId = `category-${category.replace(/[^a-zA-Z0-9]+/g, '_').toLowerCase()}`;
-        section.id = cleanId; 
-        section.className = 'menu-category';
+        section.className = 'menu-category'; // Aggiungiamo classe per styling
         section.innerHTML = `<h2>${category}</h2>`;
 
         const itemsContainer = document.createElement('div');
@@ -239,18 +203,20 @@ function renderMenu(groupedMenu) {
 
         groupedMenu[category].forEach(item => {
             const itemElement = document.createElement('div');
+            // Usiamo una classe più descrittiva per il card item
             itemElement.className = 'menu-item-card'; 
             
             itemElement.innerHTML = `
-                <div>
+                <div class="item-details">
                     <strong>${item.name}</strong>
-                    <span>€ ${parseFloat(item.price).toFixed(2)}</span>
+                    <span>€ ${item.price.toFixed(2)}</span>
                 </div>
                 <button data-id="${item.id}" 
                         data-name="${item.name}" 
                         data-price="${item.price}" 
-                        class="add-to-cart-btn">Aggiungi</button>
+                        class="add-to-cart-btn"><i class="fas fa-plus"></i></button>
             `;
+            // Ho sostituito "Aggiungi" con l'icona + (fas fa-plus) per salvare spazio su mobile
             itemsContainer.appendChild(itemElement);
         });
 
@@ -258,24 +224,26 @@ function renderMenu(groupedMenu) {
         mainContainer.appendChild(section);
     });
 
-    // Aggiunge gli ascoltatori di eventi
+    // 3. Aggiunge gli ascoltatori di eventi
     document.querySelectorAll('.add-to-cart-btn').forEach(button => {
         button.addEventListener('click', handleAddToCart);
     });
 }
 
-// --- 5. GESTIONE CARRELLO (CART) ---
+// --- 5. GESTIONE CARRELLO E ORDINE (Logica Staff) ---
 
 /**
  * Aggiunge un articolo al carrello.
  */
 function handleAddToCart(event) {
     if (!currentTableId) {
-        alert("Seleziona prima un tavolo.");
+        alert("Per favore, seleziona un tavolo prima di aggiungere articoli.");
         return;
     }
     
-    const button = event.target;
+    const button = event.target.closest('button'); // Garantisce di prendere il bottone anche se si clicca sull'icona
+    if (!button) return;
+
     const id = button.dataset.id;
     const name = button.dataset.name;
     const price = parseFloat(button.dataset.price);
@@ -302,17 +270,17 @@ function updateCartQuantity(id, change) {
 }
 
 /**
- * Renderizza la lista del carrello e aggiorna il totale.
+ * Renderizza la lista del carrello e aggiorna il totale (Migliorato per mobile).
  */
 function renderCart() {
     if (!cartList || !totalPriceSpan) return;
-    
+
     cartList.innerHTML = '';
     let total = 0;
     const cartItemsArray = Object.values(cartItems);
 
     if (cartItemsArray.length === 0) {
-        cartList.innerHTML = '<li>Il carrello è vuoto.</li>';
+        cartList.innerHTML = '<li class="empty-cart-message">Il carrello è vuoto.</li>';
         if (sendOrderBtn) sendOrderBtn.disabled = true;
     } else {
         cartItemsArray.forEach(item => {
@@ -322,14 +290,18 @@ function renderCart() {
             const listItem = document.createElement('li');
             listItem.className = 'staff-cart-item'; 
             listItem.innerHTML = `
-                ${item.quantity} x ${item.name} 
-                (€ ${itemTotal.toFixed(2)})
+                <div class="item-info">
+                    <span class="item-quantity">${item.quantity} x</span>
+                    <span class="item-name">${item.name}</span>
+                    <span class="item-total-price">€ ${itemTotal.toFixed(2)}</span>
+                </div>
                 <div class="staff-cart-controls">
-                    <button class="cart-btn" onclick="updateCartQuantity('${item.id}', 1)">+</button>
-                    <button class="cart-btn" onclick="updateCartQuantity('${item.id}', -1)">-</button>
-                    <button class="cart-btn cart-remove" onclick="updateCartQuantity('${item.id}', -${item.quantity})">×</button>
+                    <button class="cart-btn" onclick="updateCartQuantity('${item.id}', 1)"><i class="fas fa-plus"></i></button>
+                    <button class="cart-btn" onclick="updateCartQuantity('${item.id}', -1)"><i class="fas fa-minus"></i></button>
+                    <button class="cart-btn cart-remove" onclick="updateCartQuantity('${item.id}', -${item.quantity})"><i class="fas fa-trash-alt"></i></button>
                 </div>
             `;
+            // Sostituite i simboli +,-,x con le icone per chiarezza mobile.
             cartList.appendChild(listItem);
         });
         if (sendOrderBtn) sendOrderBtn.disabled = false;
@@ -361,7 +333,7 @@ async function sendOrder(staffUser) {
     }));
 
     const orderData = {
-        tableId: currentTableId, // Es. TAVOLO_25
+        tableId: currentTableId,
         staffId: staffUser.uid, 
         staffEmail: staffUser.email,
         items: orderDetails,
@@ -390,21 +362,19 @@ async function sendOrder(staffUser) {
     }
 }
 
-
 // --- 6. INIZIALIZZAZIONE ---
 
 /**
  * Avvia l'applicazione Staff Order-Taking.
  */
 function initializeStaffApp(user) {
-    // ASSEGNAZIONE DEGLI ELEMENTI DOM (più sicuro qui che all'inizio)
+    // ASSEGNAZIONE DEGLI ELEMENTI DOM in initializeStaffApp (più sicuro)
     window.mainContainer = document.getElementById('menu-container');
     window.cartList = document.getElementById('cart-list');
     window.totalPriceSpan = document.getElementById('total-price');
     window.sendOrderBtn = document.getElementById('send-order-btn');
     window.tableIdDisplay = document.getElementById('table-id');
     window.cartTableDisplay = document.getElementById('cart-table-display');
-    window.navQuickLinks = document.getElementById('quick-links');
     window.tableSelect = document.getElementById('table-select');
     
     // Controllo critico
@@ -439,5 +409,4 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.location.pathname.endsWith('staff-login.html')) {
         document.getElementById('login-btn')?.addEventListener('click', handleStaffLogin);
     }
-    // L'avvio di initializeStaffApp(user) è gestito da auth.onAuthStateChanged.
 });
