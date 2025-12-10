@@ -31,7 +31,7 @@ const sendOrderBtn = document.getElementById('send-order-btn');
 const tableIdDisplay = document.getElementById('table-id');
 const cartTableDisplay = document.getElementById('cart-table-display');
 
-// NUOVA VARIABILE PER LA NAVIGAZIONE RAPIDA
+// VARIABILE PER LA NAVIGAZIONE RAPIDA (come da HTML)
 const navQuickLinks = document.getElementById('quick-links');
 
 // --- 3. GESTIONE AUTENTICAZIONE (Solo se su staff-menu.html) ---
@@ -99,7 +99,7 @@ function handleLogout() {
 }
 
 
-// --- 4. GESTIONE TAVOLI E MENU STAFF ---
+// --- 4. GESTIONE TAVOLI E MENU STAFF (Logica Navigazione Inclusa) ---
 
 /**
  * Popola il dropdown di selezione tavolo.
@@ -134,7 +134,9 @@ function populateTableSelect() {
         renderCart();
         
         // Ricarica il menu (già caricato, ma meglio per consistenza)
-        renderMenu(); 
+        // La funzione renderMenu ora accetta groupedMenu, quindi ricarichiamo i dati
+        const groupedMenu = groupItemsByCategory(menuData);
+        renderMenu(groupedMenu); 
     });
 }
 
@@ -156,7 +158,7 @@ async function loadMenu() {
         // 2. Renderizza la navigazione rapida
         renderCategoryNavigation(groupedMenu); 
         
-        // 3. Renderizza il menu completo
+        // 3. Renderizza il menu completo (sarà nascosto finché non si seleziona un tavolo)
         renderMenu(groupedMenu); 
 
     } catch (error) {
@@ -201,7 +203,7 @@ function renderCategoryNavigation(groupedItems) {
             if (target) { 
                 // Scroll fluido con offset per l'header fisso
                 window.scrollTo({
-                    top: target.offsetTop - 120, // Offset di sicurezza
+                    top: target.offsetTop - 120, // Offset di sicurezza (compensato dal CSS)
                     behavior: 'smooth'
                 });
             } 
@@ -329,3 +331,81 @@ function renderCart() {
     }
 
     totalPriceSpan.textContent = total.toFixed(2);
+}
+
+/**
+ * Invia l'ordine a Firestore.
+ */
+async function sendOrder(staffUser) {
+    if (Object.keys(cartItems).length === 0 || !currentTableId) {
+        alert("Carrello vuoto o nessun tavolo selezionato.");
+        return;
+    }
+
+    sendOrderBtn.disabled = true;
+    sendOrderBtn.textContent = 'Invio...';
+
+    const total = parseFloat(totalPriceSpan.textContent);
+    const orderDetails = Object.values(cartItems).map(item => ({
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price,
+        total: item.quantity * item.price
+    }));
+
+    const orderData = {
+        tableId: currentTableId,
+        staffId: staffUser.uid, // Associa l'ordine allo staff che l'ha preso
+        staffEmail: staffUser.email,
+        items: orderDetails,
+        total: total,
+        status: 'pending', 
+        timestamp: firebase.firestore.FieldValue.serverTimestamp() 
+    };
+
+    try {
+        await ordersCollection.add(orderData);
+        alert(`Ordine inviato con successo per ${currentTableId}!`);
+        
+        // Reset Carrello
+        cartItems = {};
+        renderCart();
+
+    } catch (error) {
+        console.error("Errore nell'invio dell'ordine: ", error);
+        alert("Errore nell'invio dell'ordine. Controlla la console.");
+    } finally {
+        sendOrderBtn.disabled = false;
+        sendOrderBtn.textContent = 'Invia Ordine';
+    }
+}
+
+
+// --- 6. INIZIALIZZAZIONE ---
+
+/**
+ * Avvia l'applicazione Staff Order-Taking.
+ */
+function initializeStaffApp(user) {
+    // 1. Carica il menu, che poi chiama renderCategoryNavigation e renderMenu
+    loadMenu(); 
+    
+    // 2. Popola i tavoli
+    populateTableSelect(); 
+
+    // 3. Aggiunge l'event listener per l'invio ordine
+    sendOrderBtn.addEventListener('click', () => sendOrder(user));
+
+    // 4. Aggiunge l'event listener per il logout
+    document.getElementById('logout-btn').addEventListener('click', handleLogout);
+    
+    // 5. Stato iniziale del carrello
+    renderCart();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Se siamo nella pagina di login, gestiamo il login
+    if (window.location.pathname.endsWith('staff-login.html')) {
+        document.getElementById('login-btn')?.addEventListener('click', handleStaffLogin);
+    }
+});
