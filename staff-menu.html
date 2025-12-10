@@ -12,16 +12,22 @@
 
     <header class="menu-header">
         <div class="header-content">
-            <h1>Presa Ordini Staff</h1>
             
-            <button id="logout-btn" style="position: absolute; top: 10px; right: 10px;">Logout</button>
+            <div class="header-main-row" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <h1>Presa Ordini Staff</h1>
+                <button id="logout-btn" class="simple-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button> 
+            </div>
             
-            <div style="margin-bottom: 15px; margin-top: 15px;">
-                <label for="table-select" style="font-weight: bold; color: #343a40;">Seleziona Tavolo:</label>
-                <select id="table-select" style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; min-width: 150px;">
-                    <option value="" disabled selected>-- Scegli Tavolo --</option>
-                </select>
-                <p>Tavolo Attuale: <span id="table-id" style="color: #dc3545; font-size: 1.2em;">NON SELEZIONATO</span></p>
+            <div class="header-table-controls" style="width: 100%; text-align: center; padding: 10px 0;">
+                <div style="display: inline-block;">
+                    <label for="table-select" style="font-weight: bold; color: #343a40;">Seleziona Tavolo:</label>
+                    <select id="table-select" style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; min-width: 150px;">
+                        <option value="" disabled selected>-- Scegli Tavolo --</option>
+                    </select>
+                </div>
+                <p style="margin-top: 5px;">Tavolo Attuale: <span id="table-id" style="color: var(--delete-color); font-size: 1.2em; font-weight: bold;">NON SELEZIONATO</span></p>
             </div>
         </div>
         
