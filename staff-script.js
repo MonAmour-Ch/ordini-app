@@ -125,18 +125,31 @@ function populateTableSelect() {
     }
 
     tableSelect.addEventListener('change', (e) => {
+        
+        // Se si seleziona di nuovo l'opzione vuota (non dovrebbe succedere se disabilitata)
+        if (e.target.value === '') {
+            currentTableId = null;
+            tableIdDisplay.textContent = 'Nessuno';
+            cartTableDisplay.textContent = 'Nessuno';
+            // Potresti voler bloccare di nuovo l'interfaccia qui, ma non è necessario dato il default.
+            return;
+        }
+
         currentTableId = e.target.value;
         
-        // CORREZIONE: Crea il nome del tavolo formattato (es. "Tavolo 15")
+        // CORREZIONE CRITICA: Dichiara displayId e gestisci la formattazione
         const displayId = currentTableId.replace('TAVOLO_', 'Tavolo ');
         
-        tableIdDisplay.textContent = displayId;
-        cartTableDisplay.textContent = displayId;
+        if (tableIdDisplay) tableIdDisplay.textContent = displayId;
+        if (cartTableDisplay) cartTableDisplay.textContent = displayId;
         
         // Sblocca l'interfaccia menu
-        mainContainer.style.pointerEvents = 'auto';
-        mainContainer.style.opacity = '1';
-        // Nasconde il messaggio iniziale
+        if (mainContainer) {
+            mainContainer.style.pointerEvents = 'auto';
+            mainContainer.style.opacity = '1';
+        }
+        
+        // Nasconde il messaggio iniziale (se presente)
         const initialMessage = mainContainer.querySelector('.loading-state');
         if (initialMessage) initialMessage.style.display = 'none';
 
