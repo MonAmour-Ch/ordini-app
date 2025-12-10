@@ -1,12 +1,12 @@
 // --- 1. CONFIGURAZIONE FIREBASE ---
 const firebaseConfig = {
-  apiKey: "AIzaSyC0SFan3-K074DG5moeqmu4mUgXtxCmTbg",
-  authDomain: "menu-6630f.firebaseapp.com",
-  projectId: "menu-6630f",
-  storageBucket: "menu-6630f.firebasestorage.app",
-  messagingSenderId: "250958312970",
-  appId: "1:250958312970:web:9a7929c07e8c4fa352d1f3",
-  measurementId: "G-GTQS2S4GNF"
+    apiKey: "AIzaSyC0SFan3-K074DG5moeqmu4mUgXtxCmTbg",
+    authDomain: "menu-6630f.firebaseapp.com",
+    projectId: "menu-6630f",
+    storageBucket: "menu-6630f.firebasestorage.app",
+    messagingSenderId: "250958312970",
+    appId: "1:250958312970:web:9a7929c07e8c4fa352d1f3",
+    measurementId: "G-GTQS2S4GNF"
 };
 
 // Inizializzazione Firebase
@@ -30,6 +30,9 @@ const totalPriceSpan = document.getElementById('total-price');
 const sendOrderBtn = document.getElementById('send-order-btn');
 const tableIdDisplay = document.getElementById('table-id');
 const cartTableDisplay = document.getElementById('cart-table-display');
+
+// NUOVA VARIABILE PER LA NAVIGAZIONE RAPIDA
+const navQuickLinks = document.getElementById('quick-links');
 
 // --- 3. GESTIONE AUTENTICAZIONE (Solo se su staff-menu.html) ---
 
@@ -121,7 +124,10 @@ function populateTableSelect() {
         // Sblocca l'interfaccia menu
         mainContainer.style.pointerEvents = 'auto';
         mainContainer.style.opacity = '1';
-        mainContainer.querySelector('h2').style.display = 'none'; // Nasconde il messaggio iniziale
+        // Nasconde il messaggio iniziale
+        const initialMessage = mainContainer.querySelector('.loading-state');
+        if (initialMessage) initialMessage.style.display = 'none';
+
         
         // Reset carrello quando si cambia tavolo
         cartItems = {};
@@ -137,12 +143,22 @@ function populateTableSelect() {
  */
 async function loadMenu() {
     try {
-        const snapshot = await menuCollection.get();
+        const snapshot = await menuCollection.orderBy('category').get();
         menuData = snapshot.docs.map(doc => ({
             id: doc.id,
+            price: parseFloat(doc.data().price), // Assicurati che il prezzo sia un numero
             ...doc.data()
         }));
-        renderMenu(); // Renderizza subito se il tavolo è già selezionato
+        
+        // 1. Raggruppa gli elementi per categoria
+        const groupedMenu = groupItemsByCategory(menuData);
+        
+        // 2. Renderizza la navigazione rapida
+        renderCategoryNavigation(groupedMenu); 
+        
+        // 3. Renderizza il menu completo
+        renderMenu(groupedMenu); 
+
     } catch (error) {
         console.error("Errore nel caricamento del menu: ", error);
         mainContainer.innerHTML = `<p style="color: red;">Impossibile caricare il menu. Riprova più tardi.</p>`;
@@ -150,13 +166,10 @@ async function loadMenu() {
 }
 
 /**
- * Renderizza l'intero menu in base ai dati memorizzati.
+ * Funzione di utilità per raggruppare gli articoli per categoria.
  */
-function renderMenu() {
-    if (!mainContainer || menuData.length === 0) return;
-
-    // 1. Raggruppa gli elementi per categoria
-    const groupedMenu = menuData.reduce((acc, item) => {
+function groupItemsByCategory(items) {
+    return items.reduce((acc, item) => {
         const category = item.category || 'Generico';
         if (!acc[category]) {
             acc[category] = [];
@@ -164,11 +177,55 @@ function renderMenu() {
         acc[category].push(item);
         return acc;
     }, {});
+}
+
+
+/**
+ * Genera i pulsanti di navigazione rapida (Quick Links) in base alle categorie.
+ */
+function renderCategoryNavigation(groupedItems) {
+    navQuickLinks.innerHTML = '';
+    const sortedCategories = Object.keys(groupedItems).sort();
+
+    sortedCategories.forEach(category => {
+        // Genera un ID pulito per l'ancoraggio (es. 'category-antipasti')
+        const cleanId = `category-${category.replace(/[^a-zA-Z0-9]+/g, '_').toLowerCase()}`;
+        
+        const button = document.createElement('button');
+        button.className = 'category-btn';
+        button.textContent = category;
+        
+        // COLLEGA L'EVENTO DI SCROLL
+        button.addEventListener('click', () => {
+            const target = document.getElementById(cleanId);
+            if (target) { 
+                // Scroll fluido con offset per l'header fisso
+                window.scrollTo({
+                    top: target.offsetTop - 120, // Offset di sicurezza
+                    behavior: 'smooth'
+                });
+            } 
+        }); 
+        
+        navQuickLinks.appendChild(button); 
+    }); 
+}
+
+
+/**
+ * Renderizza l'intero menu in base ai dati memorizzati.
+ */
+function renderMenu(groupedMenu) {
+    if (!mainContainer || Object.keys(groupedMenu).length === 0) return;
 
     // 2. Genera l'HTML del menu
-    mainContainer.innerHTML = '';
+    mainContainer.innerHTML = ''; // Pulisce il contenitore
+    
     Object.keys(groupedMenu).sort().forEach(category => {
         const section = document.createElement('section');
+        const cleanId = `category-${category.replace(/[^a-zA-Z0-9]+/g, '_').toLowerCase()}`;
+        section.id = cleanId; // ASSEGNAZIONE ID PER L'ANCORAGGIO
+        section.className = 'menu-category';
         section.innerHTML = `<h2>${category}</h2>`;
 
         const itemsContainer = document.createElement('div');
@@ -181,7 +238,7 @@ function renderMenu() {
             itemElement.innerHTML = `
                 <div>
                     <strong>${item.name}</strong>
-                    <span>€ ${item.price.toFixed(2)}</span>
+                    <span>€ ${parseFloat(item.price).toFixed(2)}</span>
                 </div>
                 <button data-id="${item.id}" 
                         data-name="${item.name}" 
@@ -255,10 +312,12 @@ function renderCart() {
             total += itemTotal;
 
             const listItem = document.createElement('li');
+            // Usiamo classi per un futuro CSS migliore
+            listItem.className = 'staff-cart-item'; 
             listItem.innerHTML = `
                 ${item.quantity} x ${item.name} 
                 (€ ${itemTotal.toFixed(2)})
-                <div style="float: right;">
+                <div class="staff-cart-controls">
                     <button class="cart-btn" onclick="updateCartQuantity('${item.id}', 1)">+</button>
                     <button class="cart-btn" onclick="updateCartQuantity('${item.id}', -1)">-</button>
                     <button class="cart-btn cart-remove" onclick="updateCartQuantity('${item.id}', -${item.quantity})">×</button>
@@ -270,81 +329,3 @@ function renderCart() {
     }
 
     totalPriceSpan.textContent = total.toFixed(2);
-}
-
-/**
- * Invia l'ordine a Firestore.
- */
-async function sendOrder(staffUser) {
-    if (Object.keys(cartItems).length === 0 || !currentTableId) {
-        alert("Carrello vuoto o nessun tavolo selezionato.");
-        return;
-    }
-
-    sendOrderBtn.disabled = true;
-    sendOrderBtn.textContent = 'Invio...';
-
-    const total = parseFloat(totalPriceSpan.textContent);
-    const orderDetails = Object.values(cartItems).map(item => ({
-        name: item.name,
-        quantity: item.quantity,
-        price: item.price,
-        total: item.quantity * item.price
-    }));
-
-    const orderData = {
-        tableId: currentTableId,
-        staffId: staffUser.uid, // Associa l'ordine allo staff che l'ha preso
-        staffEmail: staffUser.email,
-        items: orderDetails,
-        total: total,
-        status: 'pending', 
-        timestamp: firebase.firestore.FieldValue.serverTimestamp() 
-    };
-
-    try {
-        await ordersCollection.add(orderData);
-        alert(`Ordine inviato con successo per ${currentTableId}!`);
-        
-        // Reset Carrello
-        cartItems = {};
-        renderCart();
-
-    } catch (error) {
-        console.error("Errore nell'invio dell'ordine: ", error);
-        alert("Errore nell'invio dell'ordine. Controlla la console.");
-    } finally {
-        sendOrderBtn.disabled = false;
-        sendOrderBtn.textContent = 'Invia Ordine';
-    }
-}
-
-
-// --- 6. INIZIALIZZAZIONE ---
-
-/**
- * Avvia l'applicazione Staff Order-Taking.
- */
-function initializeStaffApp(user) {
-    // 1. Carica il menu
-    loadMenu(); 
-    
-    // 2. Popola i tavoli
-    populateTableSelect(); 
-
-    // 3. Aggiunge l'event listener per l'invio ordine
-    sendOrderBtn.addEventListener('click', () => sendOrder(user));
-
-    // 4. Aggiunge l'event listener per il logout
-    document.getElementById('logout-btn').addEventListener('click', handleLogout);
-    
-    // 5. Stato iniziale del carrello
-    renderCart();
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    // Se siamo nella pagina di login, gestiamo il login
-    if (window.location.pathname.endsWith('staff-login.html')) {
-        document.getElementById('login-btn')?.addEventListener('click', handleStaffLogin);
-    }
-});
