@@ -20,16 +20,20 @@
         </div>
         
         <nav id="quick-links" class="category-nav">
-            </nav>
+        </nav>
     </header>
 
-    <main id="menu-container">
-        <div class="loading-state">
-            <i class="fas fa-spinner fa-spin"></i>
-            <h2>Caricamento Menu...</h2>
-        </div>
-    </main>
+    <main> 
+        <section id="menu-container"> 
+            <div class="loading-state">
+                <i class="fas fa-spinner fa-spin"></i>
+                <h2>Caricamento Menu...</h2>
+            </div>
+        </section>
 
+        <div id="order-anchor-point" style="height: 1px;"></div> 
+
+    </main>
     <section id="cart-fixed-bar">
         <button id="toggle-cart-btn">
             <i class="fas fa-shopping-cart"></i>
@@ -43,7 +47,7 @@
             <h2><i class="fas fa-clipboard-list"></i> Riepilogo Ordine</h2>
             
             <ul id="cart-list" class="cart-items-list">
-                </ul>
+            </ul>
 
             <div class="cart-summary">
                 <p>Totale: **€ <span id="total-price">0.00</span>**</p>
@@ -54,13 +58,7 @@
             </button>
         </div>
     </div>
-<main>
-    <section id="menu-container">
-        </section>
-
-    <div id="order-anchor-point" style="height: 1px;"></div> 
-
-</main>
+    
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 
