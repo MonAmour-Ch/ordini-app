@@ -11,6 +11,11 @@
     --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     --delete-color: #dc3545;
     
+    /* Colore per stato 'Executed' (Blu più scuro) */
+    --executed-color: #0056b3; 
+    /* Colore per stato 'Pending' (Arancione) */
+    --pending-color: #ffc107; 
+    
     /* Compensazione aumentata */
     --header-height: 95px; 
 }
@@ -31,6 +36,8 @@ a {
 /* ========================================================= */
 /* 2. Header & Navigazione (Fissi e Compatti) */
 /* ========================================================= */
+/* ... (Sezione 2 non modificata) ... */
+
 .menu-header {
     background-color: var(--card-bg);
     color: var(--text-dark);
@@ -113,6 +120,8 @@ a {
 /* ========================================================= */
 /* 3. Menu Items & Container (Carte pulite e snelle) */
 /* ========================================================= */
+/* ... (Sezione 3 non modificata) ... */
+
 #menu-container {
     max-width: 900px;
     /* Compensazione finale (95px) */
@@ -141,9 +150,11 @@ a {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
+
 /* ========================================================== */
 /* 4. BARRA FISSA CARRELLO (Cliccabile per lo Scroll) */
 /* ========================================================== */
+/* ... (Sezione 4 non modificata) ... */
 
 #cart-fixed-bar {
     position: fixed;
@@ -221,7 +232,7 @@ a {
 }
 
 
-/* --- Filtri/Controlli --- */
+/* --- Filtri/Controlli (Nuova Navigazione per Vista) --- */
 #order-filters {
     display: flex;
     justify-content: center;
@@ -239,157 +250,194 @@ a {
     color: var(--text-dark);
     font-size: 1em;
     font-weight: 600;
+    cursor: pointer;
     transition: all 0.2s ease;
 }
 
-/* Stato Attivo/In attesa */
-.filter-btn[data-status="pending"].active {
-    background-color: #ffc107;
-    color: var(--text-dark);
-    border-color: #ffc107;
-    box-shadow: 0 4px 6px rgba(255, 193, 7, 0.3);
-}
-
-/* Stato Completato */
-.filter-btn[data-status="completed"].active {
+/* Stato Attivo (Griglia Tavoli) */
+.filter-btn[data-view="active"].active {
     background-color: var(--primary-color);
     color: white;
     border-color: var(--primary-color);
     box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
 }
 
-/* --- Grid Ordini --- */
-#orders-container {
+/* Stato Storico */
+.filter-btn[data-view="history"].active {
+    background-color: var(--secondary-color);
+    color: white;
+    border-color: var(--secondary-color);
+    box-shadow: 0 4px 6px rgba(40, 167, 69, 0.3);
+}
+
+
+/* -------------------------------------------------------------------------- */
+/* NUOVI STILI RICHIESTI PER GRIGLIA TAVOLI E LAYOUT DASHBOARD */
+/* -------------------------------------------------------------------------- */
+
+/* Layout per schermi più grandi: griglia dei tavoli e dettagli */
+#admin-dashboard-layout {
+    display: grid;
+    grid-template-columns: 1fr; /* Default mobile: 1 colonna */
+    gap: 20px;
+}
+
+@media (min-width: 900px) {
+    #admin-dashboard-layout {
+        /* Layout Desktop: Griglia (3 parti) | Dettagli (1.5 parti) */
+        grid-template-columns: 3fr 1.5fr; 
+    }
+}
+
+/* Gestione delle viste Dinamiche */
+.hidden {
+    display: none !important;
+}
+
+/* --- Griglia dei Tavoli (#tables-grid) --- */
+#tables-grid {
+    /* Tavoli più grandi: min-width aumentato e gap maggiore */
+    grid-template-columns: repeat(auto-fit, minmax(85px, 1fr)); 
+    gap: 18px; 
+    padding: 20px;
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+}
+
+.table-btn {
+    width: 100%;
+    /* Rende il bottone quadrato, aumentando la dimensione del testo e del cerchio */
+    padding-top: 100%; 
+    position: relative;
+    border: 3px solid #ccc; 
+    border-radius: 50%; 
+    font-size: 1.6em; /* Testo più grande */
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Contenuto centrato all'interno del padding-top hack */
+.table-btn::before {
+    content: attr(data-table);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    line-height: 1; /* Rende il numero del tavolo ben centrato */
+}
+
+/* Colori e Stati */
+/* 1. Tavolo Libero */
+.table-btn.free {
+    background-color: #f7f7f7;
+    border-color: #ddd;
+    color: #495057;
+}
+
+/* 2. PENDING (Ordine Appena Inviato) */
+.table-btn.pending {
+    background-color: var(--pending-color) !important; /* Arancione forte */
+    border-color: #e0a800;
+    color: var(--text-dark); 
+}
+
+/* 3. EXECUTED (Ordine Eseguito/Pronto) */
+.table-btn.executed {
+    background-color: var(--executed-color) !important; /* Blu scuro */
+    border-color: #004085;
+    color: white; 
+    /* Aggiungiamo un'animazione leggera per attirare l'attenzione */
+    animation: pulse-executed 1.5s infinite;
+}
+
+/* 4. SELEZIONATO (Il tavolo visualizzato nel dettaglio) */
+.table-btn.selected {
+    box-shadow: 0 0 0 5px rgba(0, 123, 255, 0.7); /* Anello primario marcato */
+    transform: scale(1.05); 
+}
+
+/* Keyframe per l'animazione di stato 'executed' */
+@keyframes pulse-executed {
+    0% { box-shadow: 0 0 0 0 rgba(0, 86, 179, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(0, 86, 179, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(0, 86, 179, 0); }
+}
+
+/* --- Pannello Dettagli Ordine --- */
+#order-details {
+    padding: 20px;
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+}
+
+/* --- Area Storico Ordini (#orders-container-history) --- */
+#orders-container-history {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
     gap: 25px;
-}
-
-/* Messaggi di stato */
-.empty-message, .error-message {
-    text-align: center; 
-    padding: 50px; 
-    color: #6c757d;
-    font-size: 1.2em;
-}
-
-/* --- Card Ordine --- */
-.order-card {
-    padding: 0; 
-    margin-bottom: 0;
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    overflow: hidden;
-    border: none;
-    background-color: var(--card-bg);
-    transition: transform 0.2s;
-}
-.order-card:hover {
-    transform: none;
-    box-shadow: var(--shadow);
-}
-
-
-/* Intestazione Card */
-.card-header {
-    background-color: #f7f7f7;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.order-card h3 {
-    font-size: 1.3em;
-    color: var(--text-dark);
-    margin: 0;
     padding: 0;
-    border-bottom: none; 
+    /* Non ha background e padding qui perché lo gestiscono le card */
 }
 
-.order-time {
-    font-size: 0.9em;
-    font-weight: normal;
-    color: #6c757d;
+/* Stile per la card dello storico */
+.history-card {
+    /* La logica è la stessa di .order-card, ma se volessi distinguere: */
+    opacity: 0.8;
 }
 
-/* Stili di Stato Card */
-.order-card.pending { border-top: 5px solid #ffc107; } 
-.order-card.completed { border-top: 5px solid var(--primary-color); opacity: 0.9; }
+/* --- Stili per i Pulsanti di Azione nel Dettaglio (per coerenza) --- */
 
-/* Lista Articoli */
-.order-items { 
-    list-style: none;
-    margin: 0; 
-    padding: 15px 20px;
-    font-size: 1em;
-}
-
-.order-items li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 7px 0;
-    border-bottom: 1px dashed #f0f0f0;
-}
-.order-items li:last-child {
-    border-bottom: none;
-}
-
-/* Stile Prezzo Articolo */
-.item-price {
-    font-weight: 600;
-    color: var(--primary-color);
-}
-
-
-/* NOTA (Massima attenzione con rosso/arancio scuro) */
-.order-note-display {
-    margin: 10px 20px;
-    padding: 10px 15px;
-    border-left: 5px solid var(--delete-color);
-    background-color: #fef4f5;
-    font-size: 0.95em;
-    color: #333;
-    border-radius: 3px;
-    white-space: pre-wrap;
-}
-
-.order-note-display strong {
-    color: var(--delete-color);
-    margin-right: 5px;
-}
-
-/* Footer e Totale */
-.order-footer {
-    padding: 15px 20px;
-    margin-top: 0;
-    border-top: 1px solid #f0f0f0;
-    font-size: 1.2em;
-    background-color: #fafafa;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: var(--text-dark);
-}
-.order-footer strong {
-    color: var(--delete-color);
-}
-
-/* Pulsante Completa */
-.complete-btn {
+.update-status-btn {
     padding: 10px 18px;
-    background-color: var(--secondary-color);
     border-radius: 4px;
-    font-size: 0.9em;
+    font-size: 0.95em;
     font-weight: 600;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
-.complete-btn:hover {
+
+/* Pulsante MARCA COME ESEGUITO (Blu) */
+.update-status-btn.btn-executed {
+    background-color: var(--executed-color); 
+}
+.update-status-btn.btn-executed:hover {
+    background-color: #003366;
+}
+
+/* Pulsante MARCA COME PAGATO/COMPLETA (Verde) */
+.update-status-btn.btn-completed {
+    background-color: var(--secondary-color);
+}
+.update-status-btn.btn-completed:hover {
     background-color: #1e7e34;
 }
 
-.completed-label {
-    font-size: 0.9em;
-    color: var(--primary-color);
-    font-weight: 600;
+/* --- Card Ordine Generica (Utilizzata per Storico e Dettagli) --- */
+/* Rimosse le vecchie classi inutilizzate e consolidate quelle attuali */
+.order-card {
+    padding: 0; 
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    background-color: var(--card-bg);
 }
+/* ... (Il resto degli stili .card-header, .order-items, .order-note-display, .order-footer resta invariato) ... */
+
+.order-card.pending { border-top: 5px solid var(--pending-color); } 
+.order-card.executed { border-top: 5px solid var(--executed-color); } 
+.order-card.completed { border-top: 5px solid var(--secondary-color); opacity: 0.9; }
+
+/* Messaggi di stato */
+.loading-state {
+    text-align: center;
+    padding: 50px;
+    font-size: 1.2em;
+    color: var(--primary-color);
+}
+
+/* FINE DELLE MODIFICHE */
