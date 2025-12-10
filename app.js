@@ -18,7 +18,6 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
 const params = new URLSearchParams(window.location.search);
 const tableFromUrl = params.get("table");
 
@@ -49,5 +48,6 @@ document.getElementById("orderForm").addEventListener("submit", async (e) => {
     console.error(error);
   }
 });
+
 
 
