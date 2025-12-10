@@ -23,13 +23,26 @@ let menuData = []; // Cache del menu
 let cartItems = {}; // Carrello {itemId: {name, price, quantity}}
 let currentTableId = null; // Tavolo selezionato dallo staff
 
-// --- 2. ELEMENTI DOM (Comuni a entrambi gli HTML) ---
+// --- 2. ELEMENTI DOM (Aggiornati per il layout a barra fissa) ---
 const mainContainer = document.getElementById('menu-container');
-const cartList = document.getElementById('cart-list');
-const totalPriceSpan = document.getElementById('total-price');
 const sendOrderBtn = document.getElementById('send-order-btn');
 const tableIdDisplay = document.getElementById('table-id');
-const cartTableDisplay = document.getElementById('cart-table-display');
+
+// Elementi del Carrello (Carrello Completo - #full-cart-details)
+const cartList = document.getElementById('cart-list'); // UL della lista articoli nel riepilogo completo
+const totalPriceSpanFull = document.getElementById('total-price-full'); // Totale nel riepilogo completo
+const cartTableDisplayFull = document.getElementById('cart-table-display-full'); // Tavolo nel riepilogo completo
+
+// Elementi della Barra Fissa in Fondo (#cart-fixed-bar-staff)
+const totalPriceSpanFixed = document.getElementById('total-price-fixed'); // Totale nella barra fissa
+const cartItemCountSpan = document.getElementById('cart-item-count'); // Conteggio nella barra fissa
+const cartFixedBarStaff = document.getElementById('cart-fixed-bar-staff');
+
+// Nuovi elementi di controllo UI
+const fullCartDetails = document.getElementById('full-cart-details');
+const toggleFullCartBtn = document.getElementById('toggle-full-cart-btn');
+const closeCartBtn = document.getElementById('close-cart-btn');
+
 
 // --- 3. GESTIONE AUTENTICAZIONE (Solo se su staff-menu.html) ---
 
@@ -105,7 +118,7 @@ function populateTableSelect() {
     const tableSelect = document.getElementById('table-select');
     if (!tableSelect) return;
 
-    // MODIFICA QUI: Esteso il range da 1 a 40
+    // Esteso il range da 1 a 40
     for (let i = 1; i <= 40; i++) { 
         const option = document.createElement('option');
         option.value = `TAVOLO_${i}`;
@@ -116,7 +129,8 @@ function populateTableSelect() {
     tableSelect.addEventListener('change', (e) => {
         currentTableId = e.target.value;
         tableIdDisplay.textContent = currentTableId;
-        cartTableDisplay.textContent = currentTableId;
+        // Aggiorna il display del tavolo nel riepilogo completo
+        if (cartTableDisplayFull) cartTableDisplayFull.textContent = currentTableId; 
         
         // Sblocca l'interfaccia menu
         mainContainer.style.pointerEvents = 'auto';
@@ -247,28 +261,31 @@ function updateCartQuantity(id, change) {
 }
 
 /**
- * Renderizza la lista del carrello e aggiorna il totale (OTTIZZATO PER MOBILE).
+ * Renderizza la lista del carrello e aggiorna il totale (Aggiornata per la barra fissa).
  */
 function renderCart() {
-    // Utilizza i riferimenti globali esistenti
-    if (!cartList || !totalPriceSpan || !sendOrderBtn) return;
+    // Aggiorna riferimenti DOM
+    if (!cartList || !totalPriceSpanFull || !totalPriceSpanFixed || !sendOrderBtn || !cartItemCountSpan) return;
     
     cartList.innerHTML = '';
     let total = 0;
+    let itemCount = 0;
     const cartItemsArray = Object.values(cartItems);
 
     if (cartItemsArray.length === 0) {
         cartList.innerHTML = '<li class="empty-cart-message">Il carrello è vuoto.</li>';
         sendOrderBtn.disabled = true;
+        cartFixedBarStaff.classList.add('hidden'); // Nasconde la barra fissa
     } else {
         cartItemsArray.forEach(item => {
             const itemTotal = item.price * item.quantity;
             total += itemTotal;
+            itemCount += item.quantity;
 
             const listItem = document.createElement('li');
             listItem.className = 'staff-cart-item-compact'; // Classe per CSS compatto
             
-            // NUOVA STRUTTURA: tutto su una riga e usa icone (richiede Font Awesome)
+            // Struttura compatta con icone
             listItem.innerHTML = `
                 <div class="item-quantity-controls">
                     <button class="cart-btn compact-btn" onclick="updateCartQuantity('${item.id}', -1)"><i class="fas fa-minus"></i></button>
@@ -286,9 +303,13 @@ function renderCart() {
             cartList.appendChild(listItem);
         });
         sendOrderBtn.disabled = false;
+        cartFixedBarStaff.classList.remove('hidden'); // Mostra la barra fissa
     }
 
-    totalPriceSpan.textContent = total.toFixed(2);
+    // Aggiorna tutti gli elementi del totale e del conteggio
+    totalPriceSpanFull.textContent = total.toFixed(2);
+    totalPriceSpanFixed.textContent = total.toFixed(2);
+    cartItemCountSpan.textContent = itemCount;
 }
 
 /**
@@ -296,7 +317,7 @@ function renderCart() {
  */
 async function sendOrder(staffUser) {
     // Utilizza i riferimenti globali esistenti
-    if (Object.keys(cartItems).length === 0 || !currentTableId || !sendOrderBtn || !totalPriceSpan) {
+    if (Object.keys(cartItems).length === 0 || !currentTableId || !sendOrderBtn || !totalPriceSpanFull) {
         alert("Carrello vuoto o nessun tavolo selezionato.");
         return;
     }
@@ -304,7 +325,8 @@ async function sendOrder(staffUser) {
     sendOrderBtn.disabled = true;
     sendOrderBtn.textContent = 'Invio...';
 
-    const total = parseFloat(totalPriceSpan.textContent);
+    // Usiamo totalPriceSpanFull per il totale
+    const total = parseFloat(totalPriceSpanFull.textContent); 
     const orderDetails = Object.values(cartItems).map(item => ({
         name: item.name,
         quantity: item.quantity,
@@ -326,6 +348,10 @@ async function sendOrder(staffUser) {
         await ordersCollection.add(orderData);
         alert(`Ordine inviato con successo per ${currentTableId}!`);
         
+        // Chiudi il carrello a schermo intero dopo l'invio
+        fullCartDetails.classList.add('hidden-cart');
+        document.body.classList.remove('no-scroll');
+
         // Reset Carrello
         cartItems = {};
         renderCart();
@@ -353,7 +379,6 @@ function initializeStaffApp(user) {
     populateTableSelect(); 
 
     // 3. Aggiunge l'event listener per l'invio ordine
-    // Controllo per assicurare che sendOrderBtn esista prima di aggiungere il listener
     if (sendOrderBtn) sendOrderBtn.addEventListener('click', () => sendOrder(user));
 
     // 4. Aggiunge l'event listener per il logout
@@ -362,12 +387,27 @@ function initializeStaffApp(user) {
     
     // 5. Stato iniziale del carrello
     renderCart();
+
+    // 6. Gestione Apertura/Chiusura Carrello Completo (Simile a Modal)
+    if (toggleFullCartBtn && closeCartBtn && fullCartDetails) {
+        // Funzione per mostrare il carrello completo
+        toggleFullCartBtn.addEventListener('click', () => {
+            fullCartDetails.classList.remove('hidden-cart');
+            fullCartDetails.scrollTop = 0; // Vai in cima al carrello (utile su mobile)
+            document.body.classList.add('no-scroll'); // Blocca lo scroll del body su mobile
+        });
+
+        // Funzione per nascondere il carrello completo
+        closeCartBtn.addEventListener('click', () => {
+            fullCartDetails.classList.add('hidden-cart');
+            document.body.classList.remove('no-scroll');
+        });
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     // Se siamo nella pagina di login, gestiamo il login
     if (window.location.pathname.endsWith('staff-login.html')) {
-        // Controllo per assicurare che login-btn esista prima di aggiungere il listener
         document.getElementById('login-btn')?.addEventListener('click', handleStaffLogin);
     }
 });
