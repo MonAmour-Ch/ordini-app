@@ -1,7 +1,7 @@
 /* --- 1. VARIABILI, RESET E FONDAMENTALI --- */
 :root {
     /* Colori principali */
-    --primary-color: #007bff; /* Blu per intestazioni e bordi */
+    --primary-color: #b22222; /* Blu per intestazioni e bordi */
     --secondary-color: #28a745; /* Verde per Aggiungi al carrello */
     --accent-color: #ffc107; /* Giallo/Arancio per totale e interattività carrello */
     --dark-bg: #343a40; /* Sfondo scuro per il carrello fisso */
