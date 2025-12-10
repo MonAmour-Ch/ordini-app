@@ -242,6 +242,15 @@ function renderOrderCard(order, orderId) {
         `<li>${item.quantity}x ${item.name} <span class="item-price">€${(item.quantity * item.price).toFixed(2)}</span></li>`
     ).join('');
     
+    // AGGIUNTO: Gestione della visualizzazione delle note
+    const noteText = order.notes ? order.notes.trim() : '';
+    const noteHtml = noteText
+        ? `<div class="order-note-display">
+               <strong><i class="fas fa-sticky-note"></i> NOTA:</strong> ${noteText}
+           </div>`
+        : ''; 
+    // FINE AGGIUNTA NOTE
+    
     // Contenuto dinamico del footer (Pulsante vs Etichetta Completato)
     let footerContent;
     if (order.status === 'pending') {
@@ -258,7 +267,7 @@ function renderOrderCard(order, orderId) {
         
         <ul class="order-items">${itemsHtml}</ul>
         
-        <div class="order-footer">
+        ${noteHtml} <div class="order-footer">
             <strong>TOTALE: €${order.total.toFixed(2)}</strong>
             ${footerContent}
         </div>
@@ -270,8 +279,8 @@ function renderOrderCard(order, orderId) {
         const completeButton = card.querySelector('.complete-btn');
         if (completeButton) {
              completeButton.addEventListener('click', () => {
-                updateOrderStatus(orderId, 'completed');
-            });
+                 updateOrderStatus(orderId, 'completed');
+             });
         }
     }
 
