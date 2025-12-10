@@ -11,12 +11,16 @@
     --shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Ombreggiatura più morbida */
     --delete-color: #dc3545; /* Rosso per eliminare */
     
-    /* Variabile per l'altezza approssimativa dell'header principale dello STAFF */
-    --staff-header-content-height: 90px;
+    /* Variabile per l'altezza totale di header + nav */
+    --header-height: 110px; 
 }
 
+/* Importa un font moderno se non è già nel tuo HTML (ad esempio via Google Fonts) */
+/* Se usi Google Fonts, aggiungi questo link nel tuo <head>: 
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"> 
+*/
 body {
-    font-family: 'Roboto', Arial, sans-serif;
+    font-family: 'Roboto', Arial, sans-serif; /* Font più moderno */
     background-color: var(--bg-light);
     color: var(--text-dark);
     line-height: 1.6;
@@ -30,14 +34,14 @@ a {
 }
 
 /* ========================================================= */
-/* 2. Header & Navigazione (Fissi e Compatti) - STAFF */
+/* 2. Header & Navigazione (Fissi e Compatti) */
 /* ========================================================= */
 .menu-header {
-    background-color: var(--card-bg); 
-    color: var(--text-dark); 
-    padding: 0;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); 
-    position: fixed; 
+    background-color: var(--card-bg); /* Sfondo Header chiaro */
+    color: var(--text-dark); /* Testo Header scuro */
+    padding: 10px 0; /* Ridotto il padding per renderlo più basso */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Ombra leggera */
+    position: fixed; /* Fissa in alto */
     top: 0;
     left: 0;
     width: 100%;
@@ -47,92 +51,49 @@ a {
 .header-content {
     max-width: 900px;
     margin: 0 auto;
-    padding: 10px 20px;
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center;
-    flex-wrap: wrap; 
+    padding: 0 20px;
+    text-align: center;
 }
 
-/* Stile base per il Titolo */
 .menu-header h1 {
-    font-size: 1.5em; 
+    font-size: 1.5em; /* Titolo più piccolo e compatto */
     font-weight: 700;
     color: var(--primary-color);
-    margin: 0;
+    margin: 0; /* Rimuovi margini predefiniti */
 }
-
-/* Stile per la riga principale Titolo + Logout/Cart */
-.header-main-row {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-/* Stile per il blocco Controlli Tavolo Staff */
-.header-table-controls {
-    width: 100%;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    text-align: left;
-}
-
-/* Stili per il pulsante Logout/Generico Staff */
-.simple-btn {
-    background: none;
-    border: 1px solid var(--text-dark);
-    color: var(--text-dark);
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    font-size: 0.9em;
-    font-weight: 500;
-}
-.simple-btn:hover {
-    background-color: var(--bg-light);
-}
-
 
 /* Navigazione Categorie (Quick Links) */
 .category-nav {
     display: flex;
     overflow-x: auto; 
     white-space: nowrap;
-    padding: 10px 20px;
-    background-color: var(--card-bg); 
+    padding: 10px 0;
+    background-color: var(--card-bg); /* Navigazione Chiara */
     border-bottom: 1px solid #eee;
-    width: 100%;
     
+    /* Blocco la nav subito sotto l'header principale */
     position: sticky;
-    top: var(--staff-header-content-height); 
+    top: 60px; /* Adatta questo valore all'altezza dell'header compattato */
     z-index: 900;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-/* Nasconde la scrollbar orizzontale su Webkit */
-.category-nav::-webkit-scrollbar {
-    display: none; 
 }
 
 .category-btn {
     display: inline-block;
-    padding: 8px 18px; 
+    padding: 8px 18px; /* Più imbottitura orizzontale */
     margin: 0 5px;
-    border: 1px solid #ccc;
-    border-radius: 25px; 
-    background-color: var(--bg-light); 
+    border-radius: 25px; /* Bordi più arrotondati (Pill shape) */
+    background-color: var(--bg-light); /* Sfondo bottone grigio chiaro */
     color: var(--text-dark);
     font-weight: 500;
     cursor: pointer;
-    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    transition: background-color 0.2s, color 0.2s;
     flex-shrink: 0; 
 }
 
 .category-btn:hover, .category-btn.active {
-    background-color: var(--primary-color); 
+    background-color: var(--primary-color); /* Blu acceso quando attivo */
     color: white;
-    border-color: var(--primary-color);
 }
 
 /* ========================================================= */
@@ -140,13 +101,11 @@ a {
 /* ========================================================= */
 #menu-container {
     max-width: 900px;
-    /* Compensa l'altezza totale dell'header fisso */
-    padding-top: 150px; 
+    /* Questo padding-top compensa l'header fisso + la nav di categoria */
+    padding-top: var(--header-height); 
     margin: 0 auto;
     padding-left: 20px;
     padding-right: 20px;
-    /* Assicura che l'area del menu sia visibile sopra il carrello fisso */
-    padding-bottom: 100px;
 }
 
 .menu-category h2 {
@@ -157,72 +116,35 @@ a {
     margin-bottom: 15px;
 }
 
-/* Stile per l'articolo del menu (usato per l'ordinazione staff) */
-.menu-item { 
+.menu-item-card {
     display: flex;
     justify-content: space-between;
     align-items: center;
     background: var(--card-bg);
-    padding: 18px; 
+    padding: 18px; /* Più spaziatura interna */
     margin-bottom: 12px;
-    border-radius: 12px; 
+    border-radius: 12px; /* Bordi più arrotondati */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
-.menu-item strong {
-    font-weight: 700;
-    font-size: 1.1em;
-}
-
-.menu-item span {
-    color: var(--primary-color);
-    font-weight: 700;
-    margin-left: 15px;
-}
-
-/* Pulsante Aggiungi (Add to Cart) */
-.add-to-cart-btn {
-    background-color: var(--secondary-color);
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 700;
-    transition: background-color 0.2s;
-    flex-shrink: 0;
-}
-
-.add-to-cart-btn:hover {
-    background-color: #1e7e34; /* Verde scuro al passaggio */
-}
-
 /* ========================================================== */
-/* 4. CARRELLO STAFF (Client Style: Barra Fissa + Modal) */
+/* 4. BARRA FISSA CARRELLO (Cliccabile per lo Scroll) */
 /* ========================================================== */
 
-/* Vecchio #cart-container laterale (obsoleto, ma lo nascondiamo se è rimasto nell'HTML) */
-#cart-container {
-    display: none !important;
-}
-
-/* BARRA FISSA IN FONDO (#cart-fixed-bar-staff) */
-#cart-fixed-bar-staff {
+#cart-fixed-bar {
     position: fixed;
     bottom: 0; 
     left: 0;
     width: 100%;
     background-color: var(--secondary-color); 
-    z-index: 1500;
+    z-index: 1000;
     box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.3); 
-    padding: 10px 15px; 
+    padding: 10px 15px; /* Compattato per altezza ridotta */
     text-align: center;
-}
-#cart-fixed-bar-staff.hidden {
-    display: none;
+    
 }
 
-#toggle-full-cart-btn {
+#toggle-cart-btn {
     width: 100%;
     background: none;
     border: none;
@@ -231,206 +153,16 @@ a {
     font-weight: 700;
     padding: 0;
     display: flex;
-    justify-content: center; 
+    justify-content: center;
     align-items: center;
     cursor: pointer; 
 }
-#toggle-full-cart-btn i {
-    margin-right: 10px;
+
+#cart-fixed-bar #cart-fixed-total {
+    margin-left: 10px;
 }
 
-/* SEZIONE CARRELLO COMPLETO (#full-cart-details) - DESKTOP/DEFAULT (A fine pagina) */
-#full-cart-details {
-    max-width: 900px;
-    margin: 40px auto 100px auto; 
-    padding: 20px;
-    background-color: var(--card-bg);
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    transition: all 0.4s ease-in-out; 
-    z-index: 2500; /* Alto per l'uso come modal */
+#toggle-cart-btn i {
+    margin-right: 5px;
 }
 
-/* Nascondi il carrello a fine pagina per default, deve essere chiamato dalla barra fissa */
-/* Nota: Su desktop, lo si può lasciare visibile o forzare il toggle in JS */
-#full-cart-details.hidden-cart {
-    display: none; /* Nascondi completamente su desktop se non è attivo */
-}
-
-
-#full-cart-details h2 {
-    color: var(--primary-color);
-    font-size: 1.5em;
-    margin-bottom: 15px;
-}
-
-#cart-list {
-    list-style: none;
-    padding: 0;
-    margin-bottom: 20px;
-}
-
-.total-summary-full {
-    font-size: 1.4em;
-    font-weight: bold;
-    color: var(--primary-color);
-    margin: 20px 0;
-    border-top: 1px solid #eee;
-    padding-top: 15px;
-}
-
-.main-action-btn {
-    /* Stile per Invia Ordine */
-    width: 100%;
-    background-color: var(--secondary-color);
-    color: white;
-    border: none;
-    padding: 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin-bottom: 10px;
-    transition: background-color 0.2s;
-}
-.main-action-btn:hover:not(:disabled) {
-    background-color: #1e7e34;
-}
-.main-action-btn:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
-
-#close-cart-btn {
-    width: 100%;
-    text-align: center;
-    display: none; /* Nascosto su desktop */
-}
-
-/* Stili per gli Articoli del Carrello Compatti (staff-cart-item-compact) */
-.staff-cart-item-compact {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 0;
-    border-bottom: 1px dotted #ccc;
-    font-size: 0.9em;
-}
-
-.item-quantity-controls {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-}
-
-.quantity-display {
-    padding: 0 5px;
-    font-weight: 700;
-    min-width: 20px; 
-    text-align: center;
-}
-
-.item-name-compact {
-    flex-grow: 1; 
-    margin: 0 8px;
-    white-space: nowrap; 
-    overflow: hidden;
-    text-overflow: ellipsis; 
-    font-size: 1em; 
-}
-
-.item-price-and-remove {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-}
-
-.item-total-price {
-    font-weight: 700;
-    margin-right: 10px;
-    color: var(--text-dark);
-}
-
-/* Stili per i Pulsanti di Controllo (Icone) */
-.cart-btn.compact-btn {
-    background-color: var(--card-bg);
-    border: 1px solid #ccc; 
-    color: var(--text-dark);
-    width: 28px; 
-    height: 28px;
-    line-height: 1; 
-    padding: 0;
-    margin: 0 2px;
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: background-color 0.1s;
-}
-
-.cart-btn.compact-btn:hover {
-    background-color: var(--bg-light);
-}
-
-.cart-remove.compact-btn {
-    border-color: var(--delete-color);
-    color: var(--delete-color);
-}
-.cart-remove.compact-btn:hover {
-    background-color: rgba(220, 53, 69, 0.1);
-}
-
-/* ========================================================== */
-/* 5. MEDIA QUERIES (Ottimizzazione Mobile) */
-/* ========================================================== */
-
-@media (max-width: 768px) {
-    
-    /* Regola il Container Menu per mobile */
-    #menu-container {
-        padding-top: 120px; /* Riduci il padding top su mobile */
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-    
-    /* Il carrello completo diventa un MODAL fisso a schermo intero su mobile */
-    #full-cart-details {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding-top: 20px;
-        z-index: 2500;
-        overflow-y: auto;
-        border-radius: 0;
-        background-color: var(--bg-light); 
-        
-        /* Nascondi il carrello fuori dallo schermo (in alto) per l'animazione */
-        transform: translateY(-100%);
-        transition: transform 0.4s ease-in-out;
-    }
-
-    /* Mostra il carrello completo quando viene tolta la classe hidden-cart */
-    #full-cart-details:not(.hidden-cart) {
-        transform: translateY(0);
-    }
-    
-    /* Mostra il pulsante di chiusura su mobile */
-    #close-cart-btn {
-        display: block;
-        margin-top: 15px;
-    }
-
-    /* Aggiunge padding extra in fondo al carrello per non nascondere il bottone sotto il footer */
-    #cart-inner-full {
-        padding-bottom: 50px; 
-    }
-    
-    /* Blocca lo scroll del body quando il carrello è aperto */
-    body.no-scroll {
-        overflow: hidden;
-    }
-}
