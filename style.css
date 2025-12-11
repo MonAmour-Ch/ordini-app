@@ -17,7 +17,7 @@
     --pending-color: #ffc107;   /* Giallo/Arancione per In attesa */
     
     /* Layout */
-    --header-height: 95px;    
+    --header-height: 95px;      
 }
 
 body {
@@ -25,7 +25,14 @@ body {
     background-color: var(--bg-light);
     color: var(--text-dark);
     line-height: 1.6;
-    padding-bottom: 80px;    
+    /* Adattato per la barra fissa staff */
+    padding-bottom: 80px;      
+    padding-top: 100px; /* Spazio per l'header fisso staff */
+}
+
+/* Impedisce lo scroll del corpo quando il carrello modale staff è aperto */
+body.no-scroll {
+    overflow: hidden;
 }
 
 a {
@@ -34,7 +41,7 @@ a {
 }
 
 /* ========================================================= */
-/* 2. Header & Navigazione */
+/* 2. Header & Navigazione (STAFF) */
 /* ========================================================= */
 
 .menu-header {
@@ -53,28 +60,59 @@ a {
     max-width: 900px;
     margin: 0 auto;
     padding: 0 20px;
-    text-align: center;
+    /* Rimosso text-align: center; per layout staff */
+}
+
+/* Stili specifici per l'interfaccia STAFF */
+.header-main-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
 }
 
 .menu-header h1 {
-    display: none;    
+    /* Reso visibile solo nell'interfaccia staff (se necessario, altrimenti nascondi come prima) */
+    display: block; 
     margin: 0;
+    font-size: 1.3em;
+    color: var(--primary-color);
 }
 
-.header-content p {
-    font-size: 1em;    
+.header-table-controls {
+    display: flex;
+    align-items: center;
+    font-size: 1em;
+    padding: 5px 0;
+}
+
+.header-table-controls label, 
+.header-table-controls p {
+    margin: 0;
     font-weight: 500;
-    color: var(--text-dark);
-    margin: 5px 0 5px;    
 }
 
-.header-content #table-id {
-    font-size: 1.3em;    
-    font-weight: 700;
-    color: var(--primary-color);    
-    display: inline-block;
-    margin-left: 5px;
+#table-select {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-left: 10px;
+    background-color: #fff;
 }
+
+.header-table-controls strong {
+    color: var(--delete-color); /* Rosso per evidenziare il tavolo */
+}
+
+.simple-btn {
+    background: none;
+    border: none;
+    color: var(--delete-color);
+    padding: 5px 10px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
 
 /* Navigazione Categorie (Quick Links) */
 .category-nav {
@@ -84,8 +122,8 @@ a {
     padding: 6px 0;    
     background-color: var(--card-bg);
     border-bottom: 1px solid #eee;
-    position: sticky;
-    top: 45px;    
+    /* Rimosso sticky per staff, è già sotto l'header principale */
+    /* top: 45px; */     
     z-index: 900;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
@@ -111,13 +149,13 @@ a {
     border-color: var(--primary-color);
 }
 
-/* ========================================================= */
-/* 3. Menu Items & Container */
-/* ========================================================= */
+/* ========================================================== */
+/* 3. Staff Menu & Opzioni (NUOVE CLASSI) */
+/* ========================================================== */
 
 #menu-container {
     max-width: 900px;
-    padding-top: var(--header-height);    
+    /* Rimosso padding-top: var(--header-height); visto il padding-top: 100px sul body */    
     margin: 0 auto;
     padding-left: 20px;
     padding-right: 20px;
@@ -133,15 +171,34 @@ a {
     border-bottom: 2px solid var(--primary-color);
 }
 
+/* Griglia per il menu staff su schermi più grandi */
+.category-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+    gap: 15px;
+}
+
+/* Stili per la Card Menu con Opzioni */
 .menu-item-card {
+    /* Stili Base */
+    background: var(--card-bg);
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 8px; /* Meno margine se siamo in griglia */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.item-info {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: var(--card-bg);
-    padding: 12px 15px;    
-    margin-bottom: 8px;    
-    border-radius: 8px;    
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    font-size: 1.1em;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #eee;
 }
 
 .item-info h3 {
@@ -151,26 +208,90 @@ a {
 }
 
 .item-info p {
-    margin: 2px 0 0 0;
+    margin: 0;
     font-size: 1.2em;
     font-weight: 700;
     color: var(--secondary-color);
 }
 
-.add-to-cart-btn {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 25px;
-    cursor: pointer;
-    font-size: 0.9em;
-    font-weight: 600;
-    transition: background-color 0.2s, opacity 0.3s;
+/* Stili per le Checkbox (Opzioni) */
+.item-options-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 5px 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
 }
 
-.add-to-cart-btn:hover:not(:disabled) {
-    background-color: #0056b3;
+.option-label {
+    background-color: #f0f0f0;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    line-height: 1.2;
+}
+
+.option-label input[type="checkbox"] {
+    margin-right: 5px;
+    /* Nasconde l'input nativo per usare l'icona FA */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    top: 1px;
+    flex-shrink: 0;
+}
+
+.option-label input[type="checkbox"]:checked {
+    background-color: var(--primary-color); 
+    border-color: var(--primary-color);
+}
+
+/* Aggiunge il segno di spunta se selezionato */
+.option-label input[type="checkbox"]:checked::after {
+    content: "\f00c"; /* Icona di spunta FontAwesome */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    color: #fff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 10px;
+}
+
+/* Effetto visivo al check */
+.option-label:has(input[type="checkbox"]:checked) {
+    background-color: #cce0ff; /* Sfondo light blue */
+    font-weight: bold;
+}
+
+.add-to-cart-btn {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    transition: background-color 0.2s;
+    width: 100%;
+}
+
+.add-to-cart-btn:hover {
+    background-color: #218838;
 }
 
 .add-to-cart-btn:disabled {
@@ -179,11 +300,23 @@ a {
     opacity: 0.7;
 }
 
-/* ========================================================== */
-/* 4. BARRA FISSA CARRELLO */
-/* ========================================================== */
+.loading-state {
+    text-align: center;
+    padding: 50px 0;
+    color: #6c757d;
+}
 
-#cart-fixed-bar {
+.loading-state i {
+    font-size: 3em;
+    margin-bottom: 15px;
+}
+
+/* ========================================================== */
+/* 4. BARRA FISSA CARRELLO (STAFF) */
+/* ========================================================== */
+/* Rinominato da #cart-fixed-bar a #cart-fixed-bar-staff come in HTML */
+
+#cart-fixed-bar-staff {
     position: fixed;
     bottom: 0;    
     left: 0;
@@ -191,12 +324,17 @@ a {
     background-color: var(--secondary-color);    
     z-index: 1000;
     box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.3);    
-    padding: 15px 15px;    
+    padding: 10px 15px; /* Spazio ridotto */
     text-align: center;
-    display: block;    
+    transition: transform 0.3s ease-in-out;
 }
 
-#toggle-cart-btn {
+#cart-fixed-bar-staff.hidden {
+    transform: translateY(100%);
+    opacity: 0;
+}
+
+#toggle-full-cart-btn {
     width: 100%;
     max-width: 400px;
     background: #fff;
@@ -214,31 +352,238 @@ a {
     transition: background-color 0.2s;
 }
 
-#toggle-cart-btn:hover {
+#toggle-full-cart-btn:hover {
     background-color: #eee;
 }
 
-#cart-fixed-bar .badge {
-    background: var(--delete-color);
-    color: white;
-    border-radius: 50%;
-    padding: 3px 8px;
-    font-size: 0.9em;
+#cart-fixed-bar-staff i {
     margin-right: 5px;
 }
 
-#cart-fixed-bar #cart-fixed-total {
-    margin-left: 10px;
+#total-price-fixed {
     color: var(--primary-color);
-    font-size: 1.1em;
+    font-weight: bold;
+    margin-left: 5px;
 }
 
-#toggle-cart-btn i {
-    margin-right: 5px;
-}
 
 /* ========================================================== */
-/* 5. BANNER ORDINE ATTIVO (Lato Cliente) */
+/* 5. CARRELLO COMPLETO (MODALE STAFF) */
+/* ========================================================== */
+
+#full-cart-details {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end; 
+    transition: opacity 0.3s;
+}
+
+#full-cart-details.hidden-cart {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#cart-inner-full {
+    background-color: #fff;
+    width: 100%;
+    max-height: 90%;
+    padding: 20px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    overflow-y: auto;
+    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.3);
+}
+
+#cart-list {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0;
+}
+
+.staff-cart-item-compact {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px dashed #eee;
+}
+
+.item-quantity-controls {
+    display: flex;
+    align-items: center;
+    min-width: 100px;
+}
+
+.quantity-display {
+    padding: 0 10px;
+    font-weight: bold;
+}
+
+/* Riutilizzo dei button style, ma con classi staff dedicate */
+.cart-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 4px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 1em;
+    line-height: 1;
+    transition: background-color 0.2s;
+    width: 30px;
+    height: 30px;
+    box-sizing: border-box;
+}
+
+.cart-decrement {
+    background: var(--delete-color);      
+}
+
+.cart-remove {
+    background-color: var(--delete-color);
+    color: white;
+    border: none;
+    margin-left: 10px;
+    padding: 5px 8px;
+    width: auto;
+}
+
+.item-name-compact {
+    flex-grow: 1;
+    margin: 0 10px;
+    font-weight: 500;
+}
+
+.item-total-price {
+    font-weight: bold;
+    color: var(--primary-color);
+    min-width: 60px;
+    text-align: right;
+}
+
+.item-options-display {
+    display: block;
+    color: #6c757d;
+    font-style: italic;
+    font-size: 0.85em;
+    margin-top: 2px;
+}
+
+
+/* Note Section */
+.order-notes-section {
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+#order-notes {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 5px;
+    resize: vertical;
+}
+
+.total-summary-full {
+    font-size: 1.4em;
+    font-weight: bold;
+    text-align: right;
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 2px solid var(--text-dark);
+}
+
+.main-action-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2em;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+#close-cart-btn {
+    display: block;
+    width: 100%;
+    background-color: transparent;
+    border: none;
+    color: #6c757d;
+    padding: 10px;
+    cursor: pointer;
+}
+
+/* Desktop View (Sidebar Cart) */
+@media (min-width: 900px) {
+    body {
+        /* Rimuovi padding-bottom desktop se il carrello è fisso */
+        padding-bottom: 0;
+    }
+    main {
+        padding: 20px;
+        margin-right: 320px; /* Spazio per il carrello fisso a destra */
+    }
+
+    #full-cart-details {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 320px;
+        height: 100%;
+        background-color: #fff;
+        box-shadow: -3px 0 10px rgba(0,0,0,0.1);
+        z-index: 1000;
+        display: block;
+        padding-top: 100px; /* Spazio per l'header fisso */
+        transition: transform 0.3s ease-in-out;
+        opacity: 1;
+        pointer-events: auto;
+    }
+    
+    #full-cart-details.hidden-cart {
+        /* Nascondi lateralmente */
+        transform: translateX(100%); 
+    }
+
+    /* Quando il carrello è visibile su desktop, non c'è trasformazione */
+    #full-cart-details:not(.hidden-cart) {
+        transform: translateX(0);
+    }
+    
+    #cart-inner-full {
+        width: 100%;
+        height: 100%;
+        max-height: none;
+        border-radius: 0;
+        overflow-y: auto;
+    }
+    
+    #cart-fixed-bar-staff {
+        display: none !important; /* Nasconde la barra mobile */
+    }
+    
+    #close-cart-btn {
+        display: none; /* Chiudi/apri non necessari su desktop */
+    }
+}
+
+
+/* ========================================================== */
+/* 6. BANNER ORDINE ATTIVO (Lato Cliente) */
 /* ========================================================== */
 
 .active-order-banner {
@@ -384,7 +729,7 @@ a {
 }
 
 /* ========================================================== */
-/* 6. MODALE CARRELLO (Cliente) */
+/* 7. MODALE CARRELLO (Cliente - Lasciato per riferimento) */
 /* ========================================================== */
 
 /* Sfondo scuro e fissa */
@@ -503,7 +848,7 @@ a {
 }
 
 /* ========================================================== */
-/* 7. CONTROLLI QUANTITÀ NEL CARRELLO (+ / -) */
+/* 8. CONTROLLI QUANTITÀ NEL CARRELLO (+ / -) (Cliente) */
 /* ========================================================== */
 
 .cart-item-controls {
@@ -512,22 +857,8 @@ a {
     gap: 5px;
 }
 
-.cart-btn {
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 4px 10px;
-    cursor: pointer;
-    border-radius: 4px;
-    font-weight: 700;
-    font-size: 1em;
-    line-height: 1;
-    transition: background-color 0.2s;
-}
+/* Stili .cart-btn sono definiti anche per lo staff, ma riadattati se necessario */
 
-.cart-btn:hover {
-    background-color: #0056b3;
-}
 
 .cart-decrement {
     background: var(--delete-color);    
@@ -544,7 +875,7 @@ a {
 }
 
 /* ========================================================== */
-/* 8. STILI PANNELLO ADMIN & LOGIN */
+/* 9. STILI PANNELLO ADMIN & LOGIN */
 /* ========================================================== */
 
 /* --- Layout Generale Admin --- */
