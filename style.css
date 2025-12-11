@@ -470,3 +470,146 @@ a {
     font-size: 1.2em;
     color: #6c757d;
 }
+
+/* ========================================================== */
+/* 6. BANNER ORDINE ATTIVO (Lato Cliente) */
+/* ========================================================== */
+
+.active-order-banner {
+    background: var(--card-bg);
+    margin: 100px 20px 20px 20px; /* Top margin per non essere coperto dall'header fisso */
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    border-left: 5px solid var(--primary-color);
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.order-status-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.order-status-header h3 {
+    margin: 0;
+    font-size: 1.3em;
+    color: var(--text-dark);
+}
+
+.status-badge {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9em;
+    white-space: nowrap;
+}
+
+.status-badge.status-pending {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.status-badge.status-executed {
+    background: #cce5ff;
+    color: #004085;
+    border: 1px solid #b8daff;
+}
+
+.order-items-list {
+    margin: 15px 0;
+    padding: 15px;
+    background: var(--bg-light);
+    border-radius: 8px;
+}
+
+.order-item-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px dashed #dee2e6;
+    align-items: center;
+}
+
+.order-item-row:last-child {
+    border-bottom: none;
+}
+
+.order-item-row span:first-child {
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+.order-item-row span:last-child {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.order-notes {
+    background: #fff3cd;
+    padding: 12px 15px;
+    border-radius: 6px;
+    margin: 15px 0;
+    font-size: 0.95em;
+    border-left: 4px solid #ffc107;
+}
+
+.order-notes strong {
+    color: #856404;
+}
+
+.order-total {
+    font-size: 1.3em;
+    text-align: right;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 2px solid #dee2e6;
+    color: var(--text-dark);
+}
+
+.order-info {
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    margin-top: 15px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    font-size: 0.9em;
+}
+
+/* Responsive per mobile */
+@media (max-width: 600px) {
+    .active-order-banner {
+        margin: 95px 10px 15px 10px;
+        padding: 15px;
+    }
+    
+    .order-status-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .order-status-header h3 {
+        font-size: 1.1em;
+    }
+    
+    .status-badge {
+        align-self: flex-start;
+    }
+}
