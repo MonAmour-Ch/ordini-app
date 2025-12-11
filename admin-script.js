@@ -22,6 +22,11 @@ let currentView = 'active';
 let selectedTableId = null;
 const TOTAL_TABLES = 35;
 
+// 🔊 Suono per i nuovi ordini
+const newOrderSound = new Audio('sounds/new-order.mp3');
+newOrderSound.volume = 0.8;
+let initializedSound = false;
+
 const STATUS_COLORS = {
     pending: 'pending',
     executed: 'executed',
@@ -43,6 +48,7 @@ function handleAdminLogin() {
 
     loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
+
         const email = emailInput.value;
         const password = passwordInput.value;
 
@@ -51,7 +57,6 @@ function handleAdminLogin() {
         loginBtn.textContent = 'Accesso...';
 
         auth.signInWithEmailAndPassword(email, password)
-            .then(() => console.log("Login Admin riuscito."))
             .catch(() => {
                 errorMessage.textContent = 'Accesso negato. Credenziali non valide.';
             })
@@ -63,9 +68,7 @@ function handleAdminLogin() {
 }
 
 function handleAdminLogout() {
-    auth.signOut()
-        .then(() => console.log("Logout Admin riuscito."))
-        .catch(() => alert("Errore durante il logout. Riprova."));
+    auth.signOut().catch(() => alert("Errore durante il logout."));
 }
 
 auth.onAuthStateChanged(user => {
@@ -93,9 +96,7 @@ function formatTimestampToTime(timestamp, includeDate = false) {
     return date.toLocaleTimeString('it-IT', options);
 }
 
-function initializeAdminDashboard(user) {
-    console.log(`Dashboard Admin avviata per: ${user.email}`);
-
+function initializeAdminDashboard() {
     const logoutBtn = document.getElementById('admin-logout-btn');
     if (logoutBtn) logoutBtn.addEventListener('click', handleAdminLogout);
 
@@ -120,6 +121,7 @@ function setupViewFilters() {
             button.classList.add('active');
 
             currentView = newView;
+
             if (newView === 'history') {
                 dashboardLayout.classList.add('hidden');
                 historyContainer.classList.remove('hidden');
@@ -133,19 +135,18 @@ function setupViewFilters() {
 }
 
 // ====================================================================
-// 4. LOGICA TAVOLI
+// 4. LOGICA TAVOLI E ORDINI
 // ====================================================================
 
 function displayOrderDetails(order) {
-    if (!orderDetailsContainer) return;
+    const time = formatTimestampToTime(order.timestamp);
 
-    const timeToDisplay = formatTimestampToTime(order.timestamp);
     const itemsHtml = order.items.map(item =>
         `<li>${item.quantity}x ${item.name} <span class="item-price">€${(item.quantity * item.price).toFixed(2)}</span></li>`
     ).join('');
 
     const noteHtml = order.notes
-        ? `<div class="order-note-display"><strong><i class="fas fa-sticky-note"></i> NOTA:</strong> ${order.notes.trim()}</div>`
+        ? `<div class="order-note-display"><strong><i class="fas fa-sticky-note"></i> NOTA:</strong> ${order.notes}</div>`
         : '';
 
     const buttonConfig = {
@@ -156,7 +157,7 @@ function displayOrderDetails(order) {
     orderDetailsContainer.innerHTML = `
         <div class="card-header">
             <h3>Ordine Tavolo ${order.tableId}</h3>
-            <span class="order-time">Ricevuto alle ${timeToDisplay}</span>
+            <span class="order-time">Ricevuto alle ${time}</span>
         </div>
         <ul class="order-items">${itemsHtml}</ul>
         ${noteHtml}
@@ -172,8 +173,7 @@ function displayOrderDetails(order) {
 }
 
 function displayTableFree(tableNumber) {
-    if (!orderDetailsContainer) return;
-    orderDetailsContainer.innerHTML = `<p class="empty-message">Tavolo ${tableNumber} libero. Nessun ordine attivo.</p>`;
+    orderDetailsContainer.innerHTML = `<p class="empty-message">Tavolo ${tableNumber} libero.</p>`;
 }
 
 function handleTableClick(e) {
@@ -183,7 +183,7 @@ function handleTableClick(e) {
     const tableNumber = button.dataset.table;
     selectedTableId = tableNumber;
 
-    document.querySelectorAll('.table-btn').forEach(btn => btn.classList.remove('selected'));
+    document.querySelectorAll('.table-btn').forEach(b => b.classList.remove('selected'));
 
     const order = activeTableOrders[tableNumber];
     if (order) {
@@ -198,39 +198,41 @@ function handleStatusButtonClick(e) {
     const button = e.target.closest('.update-status-btn');
     if (!button) return;
 
-    const orderId = button.dataset.orderId;
-    const newStatus = button.dataset.newStatus;
-
-    if (orderId && newStatus) updateOrderStatus(orderId, newStatus);
+    updateOrderStatus(button.dataset.orderId, button.dataset.newStatus);
 }
 
 async function updateOrderStatus(orderId, newStatus) {
-    const updateData = { status: newStatus };
-    if (newStatus === 'completed')
-        updateData.completionTime = firebase.firestore.FieldValue.serverTimestamp();
+    const update = { status: newStatus };
 
-    try {
-        await db.collection('orders').doc(orderId).update(updateData);
-    } catch {
-        alert("Impossibile aggiornare lo stato dell'ordine.");
-    }
+    if (newStatus === 'completed')
+        update.completionTime = firebase.firestore.FieldValue.serverTimestamp();
+
+    await db.collection('orders').doc(orderId).update(update)
+        .catch(() => alert("Impossibile aggiornare lo stato."));
 }
 
 function renderTableGrid() {
-    if (!tablesGridContainer) return;
     tablesGridContainer.innerHTML = '';
-
     for (let i = 1; i <= TOTAL_TABLES; i++) {
         const btn = document.createElement('button');
-        btn.className = `table-btn free`;
+        btn.className = 'table-btn free';
         btn.dataset.table = String(i);
         tablesGridContainer.appendChild(btn);
     }
 }
 
+// ====================================================================
+// 🔊 LISTENER ORDINI IN TEMPO REALE CON SUONO
+// ====================================================================
+
 function listenForActiveOrders() {
-    const pendingQuery = db.collection('orders').where('status', '==', 'pending').orderBy('timestamp', 'asc');
-    const executedQuery = db.collection('orders').where('status', '==', 'executed').orderBy('timestamp', 'asc');
+    const pendingQuery = db.collection('orders')
+        .where('status', '==', 'pending')
+        .orderBy('timestamp', 'asc');
+
+    const executedQuery = db.collection('orders')
+        .where('status', '==', 'executed')
+        .orderBy('timestamp', 'asc');
 
     const processSnapshots = () => {
         Promise.all([pendingQuery.get(), executedQuery.get()])
@@ -239,41 +241,39 @@ function listenForActiveOrders() {
 
                 pendingSnap.forEach(doc => newOrders[doc.data().tableId] = { ...doc.data(), docId: doc.id });
                 executedSnap.forEach(doc => {
-                    const data = doc.data();
-                    if (!newOrders[data.tableId] ||
-                        data.timestamp.toDate() >= newOrders[data.tableId].timestamp.toDate())
-                        newOrders[data.tableId] = { ...data, docId: doc.id };
+                    const d = doc.data();
+                    if (!newOrders[d.tableId] || d.timestamp.toDate() >= newOrders[d.tableId].timestamp.toDate())
+                        newOrders[d.tableId] = { ...d, docId: doc.id };
                 });
 
                 activeTableOrders = newOrders;
                 updateTableGridAppearance();
 
                 if (selectedTableId) {
-                    const order = activeTableOrders[selectedTableId];
-                    order ? displayOrderDetails(order) : displayTableFree(selectedTableId);
+                    const ord = activeTableOrders[selectedTableId];
+                    ord ? displayOrderDetails(ord) : displayTableFree(selectedTableId);
                 }
             });
     };
 
-    pendingQuery.onSnapshot(processSnapshots);
-    executedQuery.onSnapshot(processSnapshots);
-}
+    pendingQuery.onSnapshot(snapshot => {
+        if (initializedSound) {
+            snapshot.docChanges().forEach(change => {
+                if (change.type === 'added') newOrderSound.play().catch(() => {});
+            });
+        }
+        processSnapshots();
+        initializedSound = true;
+    });
 
-function updateTableGridAppearance() {
-    for (let i = 1; i <= TOTAL_TABLES; i++) {
-        const tableNumber = String(i);
-        const btn = tablesGridContainer.querySelector(`[data-table="${tableNumber}"]`);
-        if (!btn) continue;
-
-        Object.values(STATUS_COLORS).forEach(c => btn.classList.remove(c));
-        btn.classList.remove('selected');
-
-        const order = activeTableOrders[tableNumber];
-        btn.classList.add(order ? order.status : STATUS_COLORS.free);
-
-        if (tableNumber === selectedTableId && order)
-            btn.classList.add('selected');
-    }
+    executedQuery.onSnapshot(snapshot => {
+        if (initializedSound) {
+            snapshot.docChanges().forEach(change => {
+                if (change.type === 'added') newOrderSound.play().catch(() => {});
+            });
+        }
+        processSnapshots();
+    });
 }
 
 // ====================================================================
@@ -297,10 +297,10 @@ async function fetchHistoryOrders() {
             return;
         }
 
-        snapshot.forEach(doc => renderHistoryCard(doc.data(), doc.id));
+        snapshot.forEach(doc => renderHistoryCard(doc.data()));
 
     } catch {
-        historyContainer.innerHTML = '<p class="error-message">Errore nel caricamento dello storico.</p>';
+        historyContainer.innerHTML = '<p class="error-message">Errore caricamento storico.</p>';
     }
 }
 
@@ -309,7 +309,7 @@ function renderHistoryCard(order) {
     card.className = 'order-card completed history-card';
 
     const time = formatTimestampToTime(order.completionTime, true);
-    const items = order.items.map(i =>
+    const itemsHtml = order.items.map(i =>
         `<li>${i.quantity}x ${i.name} <span class="item-price">€${(i.quantity * i.price).toFixed(2)}</span></li>`
     ).join('');
 
@@ -322,13 +322,12 @@ function renderHistoryCard(order) {
             <h3>Tavolo: ${order.tableId}</h3>
             <span class="order-time">Chiuso: ${time}</span>
         </div>
-        <ul class="order-items">${items}</ul>
+        <ul class="order-items">${itemsHtml}</ul>
         ${noteHtml}
         <div class="order-footer">
             <strong>TOTALE: €${order.total.toFixed(2)}</strong>
             <span class="completed-label"><i class="fas fa-check-circle"></i> Ordine Pagato</span>
-        </div>
-    `;
+        </div>`;
 
     historyContainer.appendChild(card);
 }
