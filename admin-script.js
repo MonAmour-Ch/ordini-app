@@ -23,7 +23,7 @@ let selectedTableId = null;
 const TOTAL_TABLES = 35;
 
 // 🔊 Suono per i nuovi ordini
-const newOrderSound = new Audio('sounds/new-order.mp3');
+const newOrderSound = new Audio('new-order.mp3');
 newOrderSound.volume = 0.8;
 let initializedSound = false;
 
