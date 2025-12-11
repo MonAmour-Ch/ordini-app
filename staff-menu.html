@@ -15,6 +15,103 @@
 
     <style>
         /* ========================================= */
+        /* CORREZIONI HEADER MOBILE - INIZIO */
+        /* ========================================= */
+
+        /* Rende l'intero header fisso in alto */
+        .menu-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #f8f9fa; /* Sfondo chiaro per nascondere lo scroll sottostante */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 100; /* Alto z-index per essere sopra il menu */
+        }
+
+        /* Allinea i contenuti principali (Titolo e Logout) */
+        .header-content {
+            padding: 10px 15px 5px 15px; /* Riduci il padding verticale */
+        }
+        .header-main-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        /* Riduci la dimensione del titolo su mobile */
+        .menu-header h1 {
+            font-size: 1.3em; /* Più compatto */
+            margin: 0;
+        }
+
+        /* Compattiamo i controlli del tavolo in una sola riga se possibile */
+        .header-table-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.9em;
+            padding: 5px 0;
+        }
+
+        .header-table-controls label,
+        .header-table-controls p {
+            margin: 0;
+        }
+        .header-table-controls p {
+            margin-left: 10px !important;
+        }
+
+        /* Quick Links orizzontali e compatti */
+        .category-nav {
+            display: flex;
+            overflow-x: auto; /* Permette lo scroll orizzontale */
+            padding: 5px 15px 5px 15px;
+            gap: 10px;
+            white-space: nowrap; /* Impedisce che i bottoni vadano a capo */
+            border-top: 1px solid #ddd;
+            /* Rimuovi la barra di scorrimento su mobile per estetica */
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+
+        .category-nav::-webkit-scrollbar {
+            display: none; /* Chrome, Safari and Opera */
+        }
+
+        .category-btn {
+            /* Assumi che i bottoni siano già stilizzati nel tuo style.css */
+            flex-shrink: 0; /* Impedisce che si rimpiccioliscano */
+            padding: 6px 10px; /* Bottone più piccolo */
+            font-size: 0.85em;
+        }
+
+        /* Contenuto principale: deve scendere sotto l'header fisso */
+        main {
+            /* Valore approssimativo dell'altezza totale dell'header compattato */
+            padding-top: 120px; /* REGOLARE SE NECESSARIO (circa 120px in mobile) */
+            padding-bottom: 70px; /* Spazio per la barra fissa del carrello in basso */
+        }
+
+        @media (min-width: 768px) {
+            /* Su desktop, l'header può essere più grande, e l'header-table-controls può essere più spazioso */
+            .menu-header h1 {
+                font-size: 1.5em;
+            }
+            main {
+                padding-top: 100px; /* Riduci il padding su desktop se l'header è meno compatto ma più largo */
+            }
+            .category-nav {
+                justify-content: center; /* Centra i link su desktop */
+            }
+        }
+        
+        /* ========================================= */
+        /* CORREZIONI HEADER MOBILE - FINE */
+        /* ========================================= */
+
+        /* ========================================= */
         /* Stili Critici per Carrello (Risoluzione Bug) */
         /* ========================================= */
 
@@ -84,7 +181,7 @@
         
         /* --- STILE PULSANTE CHIUSURA AGGIUNTO --- */
         .close-cart-desktop-btn {
-            position: absolute; 
+            position: absolute; 
             top: 10px;
             right: 10px;
             background: none;
@@ -109,11 +206,11 @@
             }
             #cart-inner-full h2 {
                 /* Margine per non sovrapporsi al pulsante X */
-                padding-right: 30px; 
+                padding-right: 30px; 
             }
         }
         /* --------------------------------------------- */
-        
+        
         /* Stili per la lista del carrello */
         #cart-list {
             list-style: none;
@@ -252,16 +349,16 @@
             </div>
             
             <div class="header-table-controls">
-                <label for="table-select">Seleziona Tavolo:</label>
+                <label for="table-select">Tavolo:</label>
                 <select id="table-select"></select>
-                <p style="display: inline-block; margin-left: 15px;">Ordine per Tavolo: <strong><span id="table-id">NESSUNO</span></strong></p>
+                <p style="display: inline-block;">Ordine: <strong><span id="table-id">NESSUNO</span></strong></p>
             </div>
         </div>
         
         <nav id="quick-links" class="category-nav">
         </nav>
     </header>
-    <main>  
+    <main>  
         <section id="menu-container" style="pointer-events: none; opacity: 0.5;"> 
             <div class="loading-state">
                 <i class="fas fa-hand-pointer"></i>
