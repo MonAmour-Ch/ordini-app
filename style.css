@@ -615,18 +615,6 @@ a {
         display: block; /* Mostra su desktop */
     }
 }
-📋 Come Usare l'HTML e JavaScript
-1. Modifica HTML (Esempio)
-Dovrai assicurarti che il contenitore .active-order-banner abbia il pulsante al suo interno.
-
-HTML
-
-<div class="active-order-banner" id="active-order-banner-id">
-    <button class="close-banner-btn" aria-label="Chiudi riepilogo ordine">&times;</button>
-    
-    <div class="order-status-header">
-        </div>
-    </div>
 
 /* ========================================================== */
 /* 6. BANNER ORDINE ATTIVO (Lato Cliente) */
