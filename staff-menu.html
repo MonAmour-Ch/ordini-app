@@ -11,8 +11,95 @@
     
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 85 C20 60, 10 45, 10 30 C10 15, 20 5, 32 5 C40 5, 45 10, 50 18 C55 10, 60 5, 68 5 C80 5, 90 15, 90 30 C90 45, 80 60, 50 85 Z' fill='%23ed1c24'/%3E%3C/svg%3E">
     
+    <link rel="stylesheet" href="style.css"> 
+
     <style>
-        /* Stili per la Card Menu */
+        /* ========================================= */
+        /* Stili Critici per Carrello (Risoluzione Bug) */
+        /* ========================================= */
+
+        /* Nascondi lo scrollbar principale quando il carrello è aperto */
+        body.no-scroll {
+            overflow: hidden;
+        }
+
+        /* BARRA CARRELLO FISSA IN BASSO */
+        #cart-fixed-bar-staff {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #007bff; /* Colore Primario */
+            color: white;
+            padding: 10px;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            z-index: 50; /* Sotto il carrello full */
+        }
+        #cart-fixed-bar-staff.hidden {
+            display: none; /* Nasconde quando il carrello è vuoto (gestito da JS) */
+        }
+        #toggle-full-cart-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.1em;
+            cursor: pointer;
+            width: 100%;
+            padding: 5px;
+        }
+
+        /* RIEPILOGO CARRELLO COMPLETO (MODAL/SIDEBAR) */
+        #full-cart-details {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000; /* Assicurati che sia sopra ogni cosa */
+            background-color: rgba(0, 0, 0, 0.5); /* Overlay scuro */
+            transition: transform 0.3s ease-out; /* Per animazione */
+        }
+        #full-cart-details.hidden-cart {
+            /* Nascondimento completo */
+            transform: translateX(100%);
+            /* Uso pointer-events: none per disabilitare l'interazione */
+            pointer-events: none; 
+        }
+
+        #cart-inner-full {
+            /* Contenitore interno del riepilogo (la "sidebar" bianca) */
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%; /* Larghezza mobile */
+            max-width: 400px; /* Larghezza desktop */
+            height: 100%;
+            background-color: white;
+            padding: 20px;
+            box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+        
+        /* Stili per la lista del carrello */
+        #cart-list {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+
+        .staff-cart-item-compact {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px dashed #eee;
+        }
+        
+        /* ========================================= */
+        /* Stili per la Card Menu (Già presenti) */
+        /* ========================================= */
+
         .menu-item-card {
             background-color: #fff;
             border: 1px solid #ddd;
@@ -118,11 +205,10 @@
             margin-top: 2px;
         }
         
-        /* Aggiungi qui gli stili generici mancanti dal tuo file style.css */
+        /* Altri stili generici che potresti avere nel tuo style.css (header, layout, bottoni, ecc.) */
         /* ... */
 
     </style>
-    <link rel="stylesheet" href="style.css"> 
 </head>
 <body>
     <header class="menu-header">
@@ -140,7 +226,7 @@
         </div>
         
         <nav id="quick-links" class="category-nav">
-            </nav>
+        </nav>
     </header>
     <main>  
         <section id="menu-container" style="pointer-events: none; opacity: 0.5;"> 
@@ -160,11 +246,11 @@
     </section>
     
     <section id="full-cart-details" class="hidden-cart">
-        <div id="cart-inner-full">
+        <div id="cart-inner-full"> 
             <h2>Riepilogo Ordine Completo (Tavolo <span id="cart-table-display-full">...</span>)</h2>
             
             <ul id="cart-list">
-                </ul>
+            </ul>
             
             <div class="order-notes-section">
                 <label for="order-notes">Note per l'Ordine (Allergie, modifiche...):</label>
