@@ -13,8 +13,8 @@
     --delete-color: #dc3545;
     
     /* Stati Ordine */
-    --executed-color: #0056b3;  
-    --pending-color: #ffc107;   
+    --executed-color: #0056b3;  /* Blu scuro per Eseguito */
+    --pending-color: #ffc107;   /* Giallo/Arancione per In attesa */
     
     /* Layout */
     --header-height: 95px;  
@@ -121,7 +121,7 @@ a {
     margin: 0 auto;
     padding-left: 20px;
     padding-right: 20px;
-    transition: opacity 0.5s ease; /* Transizione per disabilitazione */
+    transition: opacity 0.5s ease;
 }
 
 .menu-category h2 {
@@ -193,7 +193,7 @@ a {
     box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.3);  
     padding: 15px 15px;  
     text-align: center;
-    display: block; 
+    display: block;  
 }
 
 #toggle-cart-btn {
@@ -243,7 +243,7 @@ a {
 
 .active-order-banner {
     max-width: 900px;
-    margin: 100px auto 20px auto; /* Centra il banner sotto l'header fisso */
+    margin: 100px auto 20px auto; 
     padding: 20px;
     border-radius: 12px;
     box-shadow: var(--shadow);
@@ -389,25 +389,25 @@ a {
 
 /* Sfondo scuro e fissa */
 .modal {
-    display: none; 
-    position: fixed; 
-    z-index: 2000; 
+    display: none;  
+    position: fixed;  
+    z-index: 2000;  
     left: 0;
     top: 0;
-    width: 100%; 
-    height: 100%; 
-    overflow-y: auto; 
-    background-color: rgba(0,0,0,0.6); 
+    width: 100%;  
+    height: 100%;  
+    overflow-y: auto;  
+    background-color: rgba(0,0,0,0.6);  
     backdrop-filter: blur(3px);
 }
 
 /* Contenuto centrato */
 .modal-content {
     background-color: var(--card-bg);
-    margin: 5% auto; 
+    margin: 5% auto;  
     padding: 25px;
     border-radius: 10px;
-    width: 95%; 
+    width: 95%;  
     max-width: 450px;
     box-shadow: var(--shadow);
     position: relative;
@@ -530,7 +530,7 @@ a {
 }
 
 .cart-decrement {
-    background: var(--delete-color); 
+    background: var(--delete-color);  
 }
 
 .cart-decrement:hover {
@@ -544,7 +544,7 @@ a {
 }
 
 /* ========================================================== */
-/* 8. STILI PANNELLO ADMIN (Inclusi per completezza del CSS originale) */
+/* 8. STILI PANNELLO ADMIN & LOGIN */
 /* ========================================================== */
 
 /* --- Layout Generale Admin --- */
@@ -581,6 +581,56 @@ a {
 
 #admin-logout-btn:hover {
     background: #c82333;
+}
+
+/* --- Login Admin (Aggiunto) --- */
+#admin-login-form {
+    max-width: 350px;
+    margin: 100px auto;
+    padding: 30px;
+    background: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+}
+
+#admin-login-form h2 {
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 25px;
+}
+
+#admin-login-form input[type="email"],
+#admin-login-form input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+#admin-login-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1em;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#admin-login-btn:hover:not(:disabled) {
+    background: #0056b3;
+}
+
+#error-message {
+    color: var(--delete-color);
+    text-align: center;
+    margin-bottom: 15px;
+    font-weight: 500;
 }
 
 /* --- Filtri/Controlli --- */
@@ -641,8 +691,8 @@ a {
 /* --- Griglia dei Tavoli (#tables-grid) --- */
 #tables-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(60px, 60px)); 
-    gap: 12px; 
+    grid-template-columns: repeat(auto-fill, minmax(60px, 60px));  
+    gap: 12px;  
     padding: 20px;
     background-color: var(--card-bg);
     border-radius: 12px;
@@ -652,11 +702,11 @@ a {
 
 .table-btn {
     width: 100%;
-    padding-top: 100%; /* Forza l'aspetto quadrato */
+    padding-top: 100%; 
     position: relative;
     border: 2px solid #ccc;
     border-radius: 50%;  
-    font-size: 1.0em; 
+    font-size: 1.0em;  
     font-weight: 800;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
@@ -679,17 +729,24 @@ a {
     color: #495057;
 }
 
+/* 💡 OTTIMIZZAZIONE PENDING: Colore più caldo per urgenza e animazione */
 .table-btn.pending {
-    background-color: var(--pending-color) !important;  
-    border-color: #e0a800;
+    background-color: #ffead0; /* Colore più caldo per l'urgenza */ 
+    border-color: var(--pending-color); /* Giallo/Arancione */
     color: var(--text-dark);  
+    animation: pulse-pending 1s infinite alternate; 
+}
+
+@keyframes pulse-pending {
+    from { box-shadow: 0 0 5px rgba(255, 193, 7, 0.6); }
+    to { box-shadow: 0 0 15px rgba(255, 69, 0, 0.9); } /* Passa all'arancio scuro */
 }
 
 .table-btn.executed {
-    background-color: var(--executed-color) !important;  
+    background-color: var(--executed-color); 
     border-color: #004085;
     color: white;  
-    animation: pulse-executed 1.5s infinite;
+    animation: none; /* Mantieni solo l'animazione di selezione */
 }
 
 .table-btn.selected {
@@ -697,11 +754,15 @@ a {
     transform: scale(1.05);  
 }
 
+/* Animazione per lo stato "executed" (se mantenuta, altrimenti rimuovi): */
+/* Ho disattivato questa, ma se vuoi riattivarla rimuovi 'animation: none' sopra */
+/*
 @keyframes pulse-executed {
     0% { box-shadow: 0 0 0 0 rgba(0, 86, 179, 0.4); }
     70% { box-shadow: 0 0 0 10px rgba(0, 86, 179, 0); }
     100% { box-shadow: 0 0 0 0 rgba(0, 86, 179, 0); }
 }
+*/
 
 /* --- Pannello Dettagli Ordine & Storico --- */
 #order-details {
@@ -780,12 +841,28 @@ a {
     color: var(--text-dark);
 }
 
-.order-card .empty-message {
+/* Messaggi di Stato (Aggiunto/Ottimizzato) */
+.empty-message,
+.error-message {
     text-align: center;
-    padding: 40px 20px;
-    color: #6c757d;
-    font-style: italic;
+    padding: 30px 20px;
+    font-size: 1.1em;
+    border-radius: 8px;
+    margin-top: 20px;
 }
+
+.empty-message {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    border: 1px dashed #dee2e6;
+}
+
+.error-message {
+    background-color: #f8d7da; 
+    color: #721c24; 
+    border: 1px solid #f5c6cb;
+}
+
 
 /* Linee colorate in base allo stato */
 .order-card.pending {  
@@ -827,12 +904,4 @@ a {
 
 .update-status-btn.btn-completed:hover {
     background-color: #1e7e34;
-}
-
-/* Messaggi di stato */
-.loading-state {
-    text-align: center;
-    padding: 50px;
-    font-size: 1.2em;
-    color: #6c757d;
 }
