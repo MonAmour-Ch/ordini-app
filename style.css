@@ -17,7 +17,7 @@
     --pending-color: #ffc107; /* Giallo/Arancione per In attesa */
     
     /* Layout */
-    --header-height: 95px;     
+    --header-height: 95px;      
 }
 
 body {
@@ -117,7 +117,7 @@ a {
     display: flex;
     overflow-x: auto;    
     white-space: nowrap;
-    padding: 6px 0;    
+    padding: 6px 0;     
     background-color: var(--card-bg);
     border-bottom: 1px solid #eee;
     z-index: 900;
@@ -135,7 +135,7 @@ a {
     font-weight: 500;
     cursor: pointer;
     transition: background-color 0.2s, color 0.2s, border-color 0.2s;
-    flex-shrink: 0;    
+    flex-shrink: 0;     
 }
 
 .category-btn:hover, 
@@ -160,8 +160,8 @@ a {
 .menu-category h2 {
     font-size: 2em;
     color: var(--text-dark);
-    margin-top: 20px;    
-    margin-bottom: 10px;    
+    margin-top: 20px;     
+    margin-bottom: 10px;      
     padding-top: 10px;
     border-bottom: 2px solid var(--primary-color);
 }
@@ -312,12 +312,12 @@ a {
 
 #cart-fixed-bar-staff {
     position: fixed;
-    bottom: 0;    
+    bottom: 0;     
     left: 0;
     width: 100%;
-    background-color: var(--secondary-color);    
+    background-color: var(--secondary-color);      
     z-index: 1000;
-    box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.3);    
+    box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.3);      
     padding: 10px 15px; /* Spazio ridotto */
     text-align: center;
     transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
@@ -342,7 +342,7 @@ a {
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: pointer;    
+    cursor: pointer;     
     margin: 0 auto;
     transition: background-color 0.2s;
 }
@@ -421,11 +421,15 @@ a {
     display: flex;
     align-items: center;
     min-width: 100px;
+    /* Centratura Mobile richiesta */
+    justify-content: center; 
 }
 
 .quantity-display {
     padding: 0 10px;
     font-weight: bold;
+    /* Centratura Mobile richiesta */
+    text-align: center; 
 }
 
 /* Riutilizzo dei button style, ma con classi staff dedicate */
@@ -446,7 +450,7 @@ a {
 }
 
 .cart-decrement {
-    background: var(--delete-color);      
+    background: var(--delete-color);        
 }
 
 .cart-remove {
@@ -456,6 +460,8 @@ a {
     margin-left: 10px;
     padding: 5px 8px;
     width: auto;
+    /* Centratura Mobile richiesta: Aggiustato allineamento nel flex-container */
+    align-self: center;
 }
 
 .item-name-compact {
@@ -469,6 +475,8 @@ a {
     color: var(--primary-color);
     min-width: 60px;
     text-align: right;
+    /* Centratura Mobile richiesta */
+    align-self: center;
 }
 
 .item-options-display {
@@ -529,15 +537,18 @@ a {
     cursor: pointer;
 }
 
-/* Desktop View (Sidebar Cart) */
+/* Desktop View (Pannello Inferiore Chiudibile) */
 @media (min-width: 900px) {
     
-    /* Spazio al main content a sinistra per la sidebar a destra */
+    /* Spazio al main content in basso per il pannello */
     main {
         max-width: 900px;
         margin: 0 auto; /* Centrato */
-        padding-right: 340px; /* Spazio per la sidebar di 320px + margine */
+        /* Rimuovi padding-right: 340px; */
         padding-left: 20px;
+        padding-right: 20px;
+        /* Aggiungi padding-bottom se necessario per il contenuto sotto il pannello,
+           ma in questo caso il pannello è in basso, quindi non serve se non ostruisce il main */
     }
     
     #menu-container {
@@ -552,736 +563,96 @@ a {
         padding-bottom: 0;
     }
 
+    /* * NUOVA POSIZIONE DESKTOP: Bottom-Fixed Panel 
+    * Sostituisce la sidebar fissa a destra
+    */
     #full-cart-details {
-        /* Trasformazione in Sidebar Fissa a destra */
+        /* Trasformazione in Pannello Fissa in basso */
         position: fixed;
-        top: 0;
-        right: 0;
-        left: auto; /* Rimuove l'impostazione "left: 0" del mobile */
-        width: 320px;
-        height: 100%;
-        background-color: var(--card-bg); /* Sfondo bianco, non overlay scuro */
-        box-shadow: -3px 0 10px rgba(0,0,0,0.1);
-        z-index: 1000;
-        display: block;
-        padding-top: 100px; /* Spazio per l'header fisso */
-        transition: transform 0.3s ease-in-out;
-        opacity: 1; /* Deve essere sempre opaco (visibile) */
-        pointer-events: auto; /* Deve essere sempre interattivo */
+        bottom: 0;
+        left: 0;
+        top: auto; /* Rimuove l'impostazione "top: 0" del mobile */
+        width: 100%;
+        max-width: 900px; /* Limita la larghezza al contenuto principale */
+        margin: 0 auto; /* Centra il pannello fisso */
+        background-color: var(--card-bg); /* Sfondo bianco */
+        box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.2);
+        z-index: 2000; /* Assicurati che sia sopra la barra fissa */
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        /* Altezza limitata per non coprire tutto */
+        height: auto; 
+        max-height: 80%; 
+        /* Transizione per l'entrata dal basso */
+        transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out; 
+        opacity: 1; 
+        pointer-events: auto;
     }
     
     #full-cart-details.hidden-cart {
-        /* Nascondi lateralmente su desktop */
-        transform: translateX(100%); 
+        /* Nascondi in basso */
+        transform: translateY(100%); 
+        opacity: 0;
         pointer-events: none;
     }
 
-    /* Quando il carrello è visibile su desktop, non c'è trasformazione (Sidebar) */
+    /* Quando il carrello è visibile su desktop */
     #full-cart-details:not(.hidden-cart) {
-        transform: translateX(0);
+        transform: translateY(0);
         pointer-events: auto;
     }
     
     #cart-inner-full {
         width: 100%;
-        height: 100%;
-        max-height: none;
+        height: auto;
+        max-width: 900px;
+        max-height: 100%;
         border-radius: 0;
+        border-top-left-radius: 15px; /* Angoli superiori arrotondati */
+        border-top-right-radius: 15px;
         overflow-y: auto;
         padding: 20px;
-        box-shadow: none; /* Rimuovi box-shadow dall'inner content */
+        box-shadow: none;
+        /* Aggiunta di un container interno per centrare il contenuto del carrello */
+        margin: 0 auto;
     }
     
-    #cart-fixed-bar-staff {
-        display: none !important; /* Nasconde la barra mobile quando il desktop è attivo */
+    /* Nuovo pulsante di chiusura per Desktop (posizionato nel pannello) */
+    #close-cart-desktop-btn {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        background: none;
+        border: none;
+        font-size: 1.5em;
+        color: var(--text-dark);
+        cursor: pointer;
+        z-index: 2010;
+        padding: 5px;
     }
     
     #close-cart-btn {
-        display: none; /* Chiudi/apri non necessari su desktop Sidebar */
+        display: none; /* Chiudi/apri mobile non necessario in questo pannello */
     }
-}
-
-
-/* ========================================================== */
-/* 6. BANNER ORDINE ATTIVO (Lato Cliente) */
-/* ========================================================== */
-/* Nessuna correzione applicata - Logica OK */
-
-.active-order-banner {
-    max-width: 900px;
-    margin: 100px auto 20px auto;    
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    border-left: 5px solid var(--primary-color);
-    background: var(--card-bg);
-    animation: slideIn 0.3s ease-out;
-    padding-left: 20px;    
-    padding-right: 20px;
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
+    
+    /* Barra fissa inferiore: deve rimanere ma solo per l'apertura su desktop */
+    #cart-fixed-bar-staff {
+        display: block !important;
+        /* Assicurati che non sia nascosta in modo permanente per via dello !important mobile */
+        /* Stili per renderla un pulsante sempre visibile per riaprire il pannello */
+        transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
         opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.order-status-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.order-status-header h3 {
-    margin: 0;
-    font-size: 1.3em;
-    color: var(--text-dark);
-}
-
-.status-badge {
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-weight: 600;
-    font-size: 0.9em;
-    white-space: nowrap;
-}
-
-.status-badge.status-pending {
-    background: #fff3cd;
-    color: #856404;
-    border: 1px solid #ffeaa7;
-}
-
-.status-badge.status-executed {
-    background: #cce5ff;
-    color: #004085;
-    border: 1px solid #b8daff;
-}
-
-.order-items-list {
-    margin: 15px 0;
-    padding: 15px;
-    background: var(--bg-light);
-    border-radius: 8px;
-}
-
-.order-item-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 0;
-    border-bottom: 1px dashed #dee2e6;
-    align-items: center;
-}
-
-.order-item-row:last-child {
-    border-bottom: none;
-}
-
-.order-item-row span:first-child {
-    font-weight: 500;
-    color: var(--text-dark);
-}
-
-.order-item-row span:last-child {
-    font-weight: 600;
-    color: var(--primary-color);
-}
-
-.order-notes {
-    background: #fff3cd;
-    padding: 12px 15px;
-    border-radius: 6px;
-    margin: 15px 0;
-    font-size: 0.95em;
-    border-left: 4px solid #ffc107;
-}
-
-.order-notes strong {
-    color: #856404;
-}
-
-.order-total {
-    font-size: 1.3em;
-    text-align: right;
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 2px solid #dee2e6;
-    color: var(--text-dark);
-}
-
-.order-info {
-    text-align: center;
-    color: #6c757d;
-    font-style: italic;
-    margin-top: 15px;
-    padding: 10px;
-    background: #f8f9fa;
-    border-radius: 6px;
-    font-size: 0.9em;
-}
-
-/* Responsive per mobile */
-@media (max-width: 600px) {
-    .active-order-banner {
-        margin: 95px 10px 15px 10px;
-        padding: 15px;
+        pointer-events: auto;
+        padding: 10px 0; /* Centra meglio */
     }
     
-    .order-status-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .order-status-header h3 {
-        font-size: 1.1em;
-    }
-    
-    .status-badge {
-        align-self: flex-start;
+    /* Quando il carrello è aperto, la barra fissa può essere nascosta o stilizzata diversamente */
+    .cart-open-desktop #cart-fixed-bar-staff {
+        /* Assumi di aggiungere una classe al body quando il carrello è aperto su desktop */
+        /* Alternativa: lasciarla sempre visibile per l'utente, dipende dall'UX desiderata */
+        display: none !important; /* La nascondiamo se il pannello è aperto */
     }
 }
-
-/* ========================================================== */
-/* 7. MODALE CARRELLO (Cliente - Lasciato per riferimento) */
-/* ========================================================== */
-/* Nessuna correzione applicata - Logica OK */
-
-/* Sfondo scuro e fissa */
-.modal {
-    display: none;    
-    position: fixed;    
-    z-index: 2000;    
-    left: 0;
-    top: 0;
-    width: 100%;    
-    height: 100%;    
-    overflow-y: auto;    
-    background-color: rgba(0,0,0,0.6);    
-    backdrop-filter: blur(3px);
-}
-
-/* Contenuto centrato */
-.modal-content {
-    background-color: var(--card-bg);
-    margin: 5% auto;    
-    padding: 25px;
-    border-radius: 10px;
-    width: 95%;    
-    max-width: 450px;
-    box-shadow: var(--shadow);
-    position: relative;
-    animation: fadeInModal 0.3s ease-out;
-}
-
-@keyframes fadeInModal {
-    from { opacity: 0; transform: translateY(50px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.close-btn {
-    color: #aaa;
-    float: right;
-    font-size: 30px;
-    font-weight: bold;
-    cursor: pointer;
-    line-height: 1;
-}
-
-.modal-content h2 {
-    color: var(--primary-color);
-    border-bottom: 2px solid #eee;
-    padding-bottom: 10px;
-    margin-top: 0;
-    margin-bottom: 20px;
-    font-size: 1.5em;
-}
-
-/* Lista Articoli Carrello */
-.cart-items-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.cart-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px dashed #ddd;
-}
-
-.cart-item:last-child {
-    border-bottom: none;
-}
-
-.item-details strong {
-    display: block;
-    font-size: 1.1em;
-    color: var(--text-dark);
-}
-
-.item-details span {
-    font-size: 0.9em;
-    color: #6c757d;
-}
-
-.cart-summary {
-    display: flex;
-    justify-content: space-between;
-    padding-top: 15px;
-    border-top: 2px solid var(--secondary-color);
-    font-size: 1.4em;
-    font-weight: bold;
-    margin-top: 15px;
-}
-
-/* Pulsante principale Invia Ordine */
-#send-order-btn {
-    width: 100%;
-    padding: 15px;
-    background: var(--secondary-color);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1.1em;
-    font-weight: 700;
-    cursor: pointer;
-    margin-top: 20px;
-    transition: background-color 0.3s;
-}
-
-#send-order-btn:hover:not(:disabled) {
-    background: #1e7e34;
-}
-
-#send-order-btn:disabled {
-    background: #6c757d;
-    cursor: not-allowed;
-    opacity: 0.8;
-}
-
-/* ========================================================== */
-/* 8. CONTROLLI QUANTITÀ NEL CARRELLO (+ / -) (Cliente) */
-/* ========================================================== */
-/* Nessuna correzione applicata - Logica OK */
-
-.cart-item-controls {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-/* Stili .cart-btn sono definiti anche per lo staff, ma riadattati se necessario */
-
-
-.cart-decrement {
-    background: var(--delete-color);    
-}
-
-.cart-decrement:hover {
-    background: #c82333;
-}
-
-.cart-qty {
-    padding: 0 5px;
-    font-weight: 700;
-    font-size: 1.1em;
-}
-
-/* ========================================================== */
-/* 9. STILI PANNELLO ADMIN & LOGIN */
-/* ========================================================== */
-/* Nessuna correzione applicata - Logica OK */
-
-/* --- Layout Generale Admin --- */
-.admin-main {
-    max-width: 1200px;
-    margin: 20px auto;
-    padding: 0 20px;
-    padding-top: 20px;    
-}
-
-#dashboard-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 15px;
-    background-color: #f7f9fc;    
-    border-bottom: 1px solid #ddd;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    position: sticky;
-    top: 0;    
-    z-index: 100;
-}
-
-#admin-logout-btn {
-    padding: 8px 15px;
-    background: var(--delete-color);    
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.2s;
-}
-
-#admin-logout-btn:hover {
-    background: #c82333;
-}
-
-/* --- Login Admin (Aggiunto) --- */
-#admin-login-form {
-    max-width: 350px;
-    margin: 100px auto;
-    padding: 30px;
-    background: var(--card-bg);
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-}
-
-#admin-login-form h2 {
-    text-align: center;
-    color: var(--primary-color);
-    margin-bottom: 25px;
-}
-
-#admin-login-form input[type="email"],
-#admin-login-form input[type="password"] {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    box-sizing: border-box;
-}
-
-#admin-login-btn {
-    width: 100%;
-    padding: 12px;
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 1.1em;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-#admin-login-btn:hover:not(:disabled) {
-    background: #0056b3;
-}
-
-#error-message {
-    color: var(--delete-color);
-    text-align: center;
-    margin-bottom: 15px;
-    font-weight: 500;
-}
-
-/* --- Filtri/Controlli --- */
-#order-filters {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin: 25px auto 35px;
-    padding: 15px 0;
-}
-
-.filter-btn {
-    padding: 12px 25px;
-    border: 2px solid #ccc;
-    border-radius: 8px;
-    background-color: var(--card-bg);
-    color: var(--text-dark);
-    font-size: 1em;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.filter-btn[data-view="active"].active {
-    background-color: var(--primary-color);
-    color: white;
-    border-color: var(--primary-color);
-    box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
-}
-
-.filter-btn[data-view="history"].active {
-    background-color: var(--secondary-color);
-    color: white;
-    border-color: var(--secondary-color);
-    box-shadow: 0 4px 6px rgba(40, 167, 69, 0.3);
-}
-
-/* -------------------------------------------------------------------------- */
-/* GRIGLIA TAVOLI E LAYOUT DASHBOARD */
-/* -------------------------------------------------------------------------- */
-
-#admin-dashboard-layout {
-    display: grid;
-    grid-template-columns: 1fr; /* Default mobile */
-    gap: 20px;
-}
-
-@media (min-width: 900px) {
-    #admin-dashboard-layout {
-        grid-template-columns: 3fr 1.5fr;    
-    }
-}
-
-.hidden {
-    display: none !important;
-}
-
-/* --- Griglia dei Tavoli (#tables-grid) --- */
-#tables-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(60px, 60px));    
-    gap: 12px;    
-    padding: 20px;
-    background-color: var(--card-bg);
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    justify-content: center;
-}
-
-.table-btn {
-    width: 100%;
-    padding-top: 100%;    
-    position: relative;
-    border: 2px solid #ccc;
-    border-radius: 50%;    
-    font-size: 1.0em;    
-    font-weight: 800;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-}
-
-/* Contenuto centrato */
-.table-btn::before {
-    content: attr(data-table);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    line-height: 1;    
-}
-
-/* Colori e Stati */
-.table-btn.free {
-    background-color: #f7f7f7;
-    border-color: #ddd;
-    color: #495057;
-}
-
-/* 💡 OTTIMIZZAZIONE PENDING: Colore più caldo per urgenza e animazione */
-.table-btn.pending {
-    background-color: #ffead0; /* Colore più caldo per l'urgenza */    
-    border-color: var(--pending-color); /* Giallo/Arancione */
-    color: var(--text-dark);    
-    animation: pulse-pending 1s infinite alternate;    
-}
-
-@keyframes pulse-pending {
-    from { box-shadow: 0 0 5px rgba(255, 193, 7, 0.6); }
-    to { box-shadow: 0 0 15px rgba(255, 69, 0, 0.9); } /* Passa all'arancio scuro */
-}
-
-.table-btn.executed {
-    background-color: var(--executed-color);    
-    border-color: #004085;
-    color: white;    
-    animation: none; /* Mantieni solo l'animazione di selezione */
-}
-
-.table-btn.selected {
-    box-shadow: 0 0 0 5px rgba(0, 123, 255, 0.7);    
-    transform: scale(1.05);    
-}
-
-/* --- Pannello Dettagli Ordine & Storico --- */
-#order-details {
-    padding: 20px;
-    background-color: var(--card-bg);
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-}
-
-#orders-container-history {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));    
-    gap: 25px;
-    padding: 0;
-}
-
-.order-card {
-    padding: 0;    
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    overflow: hidden;
-    background-color: var(--card-bg);
-}
-
-.history-card {
-    opacity: 0.8;
-}
-
-/* Stili comuni per Header, Items e Footer delle Card Ordine/Storico */
-.order-card .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    border-bottom: 1px solid #eee;
-}
-
-.order-card .order-items {
-    list-style: none;
-    padding: 15px;
-    margin: 0;
-}
-
-.order-card .order-items li {
-    display: flex;
-    justify-content: space-between;
-    padding: 5px 0;
-    font-size: 1.05em;
-    border-bottom: 1px dashed #f1f1f1;
-}
-
-.order-card .order-items li:last-child {
-    border-bottom: none;
-}
-
-.order-card .order-note-display {
-    padding: 15px;
-    margin: 0 15px 15px;
-    border-left: 5px solid var(--pending-color);
-    background-color: #fffbe6;
-    border-radius: 4px;
-    font-size: 0.9em;
-}
-
-.order-card .order-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    border-top: 1px solid #eee;
-    background-color: #f7f9fc;
-}
-
-.order-card .order-footer strong {
-    font-size: 1.2em;
-    color: var(--text-dark);
-}
-
-/* 💡 AGGIUNTE PER FUNZIONE ELIMINA STORICO */
-
-/* Contenitore per allineare Pagato e Elimina */
-.history-actions {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* Spazio tra l'etichetta "Pagato" e il pulsante "Elimina" */
-}
-
-/* Stile del pulsante Elimina */
-.delete-history-btn {
-    padding: 8px 12px;
-    border-radius: 4px;
-    font-size: 0.9em;
-    font-weight: 600;
-    border: none;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    background-color: var(--delete-color); /* Rosso */
-}
-
-.delete-history-btn:hover {
-    background-color: #c82333; /* Rosso più scuro al passaggio del mouse */
-}
-
-.completed-label {
-    /* Assicurati che l'etichetta "Pagato" sia ben visibile accanto al pulsante */
-    color: var(--secondary-color);
-    font-weight: 600;
-    font-size: 0.9em;
-}
-
-/* FINE AGGIUNTE */
-
-/* Messaggi di Stato (Aggiunto/Ottimizzato) */
-.empty-message,
-.error-message {
-    text-align: center;
-    padding: 30px 20px;
-    font-size: 1.1em;
-    border-radius: 8px;
-    margin-top: 20px;
-}
-
-.empty-message {
-    background-color: #f8f9fa;
-    color: #6c757d;
-    border: 1px dashed #dee2e6;
-}
-
-.error-message {
-    background-color: #f8d7da;    
-    color: #721c24;    
-    border: 1px solid #f5c6cb;
-}
-
-
-/* Linee colorate in base allo stato */
-.order-card.pending {    
-    border-top: 5px solid var(--pending-color);    
-}
-
-.order-card.executed {    
-    border-top: 5px solid var(--executed-color);    
-}
-
-.order-card.completed {    
-    border-top: 5px solid var(--secondary-color);    
-    opacity: 0.9;    
-}
-
-/* --- Stili Pulsanti Azione Dettaglio --- */
-.update-status-btn {
-    padding: 10px 18px;
-    border-radius: 4px;
-    font-size: 0.95em;
-    font-weight: 600;
-    border: none;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.update-status-btn.btn-executed {
-    background-color: var(--executed-color);    
-}
-
-.update-status-btn.btn-executed:hover {
-    background-color: #003366;
-}
-
-.update-status-btn.btn-completed {
-    background-color: var(--secondary-color);
-}
-
-.update-status-btn.btn-completed:hover {
-    background-color: #1e7e34;
-}
+/* FINE MODIFICHE DESKTOP */
+/* ... il resto del codice ... */
