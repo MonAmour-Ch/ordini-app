@@ -35,7 +35,7 @@ const STATUS_COLORS = {
 };
 
 // ====================================================================
-// 2. AUTENTICAZIONE (Modifiche Qui)
+// 2. AUTENTICAZIONE
 // ====================================================================
 
 function handleAdminLogin() {
@@ -114,7 +114,7 @@ auth.onAuthStateChanged(async user => {
             }
         } else if (isLoginPage && userRole === 'admin') {
             // Utente è Admin e si trova sulla pagina di login -> Reindirizza alla dashboard
-             window.location.href = 'admin.html';
+            window.location.href = 'admin.html';
         }
         
     } else {
@@ -127,7 +127,7 @@ auth.onAuthStateChanged(async user => {
 });
 
 // ====================================================================
-// 3. DASHBOARD (Piccola modifica)
+// 3. DASHBOARD
 // ====================================================================
 
 function formatTimestampToTime(timestamp, includeDate = false) {
@@ -139,7 +139,6 @@ function formatTimestampToTime(timestamp, includeDate = false) {
     return date.toLocaleTimeString('it-IT', options);
 }
 
-// 💡 La funzione riceve il ruolo, ma non lo usa qui poiché è solo per Admin
 function initializeAdminDashboard(userRole) { 
     const logoutBtn = document.getElementById('admin-logout-btn');
     if (logoutBtn) logoutBtn.addEventListener('click', handleAdminLogout);
@@ -268,8 +267,7 @@ function renderTableGrid() {
 }
 
 /**
- * 💡 NUOVA FUNZIONE PER AGGIORNARE L'ASPETTO DELLA GRIGLIA DEI TAVOLI
- * Assegna la classe CSS (pending, executed, free) corretta a ogni tavolo
+ * 💡 FUNZIONE PER AGGIORNARE L'ASPETTO DELLA GRIGLIA DEI TAVOLI
  */
 function updateTableGridAppearance() {
     const tableButtons = tablesGridContainer.querySelectorAll('.table-btn');
@@ -308,12 +306,11 @@ function updateTableGridAppearance() {
 
 
 // ====================================================================
-// 🔊 LISTENER ORDINI IN TEMPO REALE CON SUONO - VERSIONE CORRETTA
+// 🔊 LISTENER ORDINI IN TEMPO REALE CON SUONO
 // ====================================================================
 
 function listenForActiveOrders() {
-    // 💡 Ascolta tutti gli ordini che NON sono 'completed'
-    // Questo listener unico garantisce che i dati siano sempre sincronizzati
+    // Ascolta tutti gli ordini che NON sono 'completed'
     db.collection('orders')
         .where('status', 'in', ['pending', 'executed'])
         .onSnapshot(snapshot => {
@@ -325,7 +322,6 @@ function listenForActiveOrders() {
                 const tableId = orderData.tableId;
 
                 // Conserva solo l'ordine più recente per un dato tavolo
-                // Assicurati di confrontare correttamente i timestamp di Firebase
                 if (!newOrders[tableId] || orderData.timestamp.toDate() > newOrders[tableId].timestamp.toDate()) {
                     newOrders[tableId] = orderData;
                 }
@@ -362,8 +358,31 @@ function listenForActiveOrders() {
 
 
 // ====================================================================
-// 5. STORICO ORDINI
+// 5. STORICO ORDINI (FUNZIONALITÀ DI ELIMINAZIONE INCLUSA)
 // ====================================================================
+
+/**
+ * Funzione per ELIMINARE un ordine specifico dallo storico (Completed).
+ * @param {string} orderId L'ID del documento dell'ordine in Firestore.
+ */
+async function deleteOrderFromHistory(orderId) {
+    if (!confirm('Sei sicuro di voler eliminare permanentemente questo ordine dallo storico? Questa azione è irreversibile.')) {
+        return;
+    }
+
+    try {
+        // Esegue l'eliminazione del documento
+        await db.collection('orders').doc(orderId).delete();
+        
+        // Ricarica lo storico dopo l'eliminazione
+        fetchHistoryOrders();
+        alert('Ordine eliminato con successo.');
+    } catch (error) {
+        console.error("Errore durante l'eliminazione dell'ordine:", error);
+        alert("Impossibile eliminare l'ordine. Verifica i permessi o la connessione.");
+    }
+}
+
 
 async function fetchHistoryOrders() {
     historyContainer.innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Caricamento...</div>';
@@ -382,7 +401,11 @@ async function fetchHistoryOrders() {
             return;
         }
 
-        snapshot.forEach(doc => renderHistoryCard(doc.data()));
+        // Passa i dati dell'ordine INCLUSO l'ID del documento (docId)
+        snapshot.forEach(doc => renderHistoryCard({ ...doc.data(), docId: doc.id }));
+        
+        // Imposta l'handler per i pulsanti di eliminazione dopo il rendering
+        setupHistoryDeleteHandler();
 
     } catch {
         historyContainer.innerHTML = '<p class="error-message">Errore caricamento storico.</p>';
@@ -390,6 +413,7 @@ async function fetchHistoryOrders() {
 }
 
 function renderHistoryCard(order) {
+    // order deve contenere order.docId
     const card = document.createElement('div');
     card.className = 'order-card completed history-card';
 
@@ -411,11 +435,36 @@ function renderHistoryCard(order) {
         ${noteHtml}
         <div class="order-footer">
             <strong>TOTALE: €${order.total.toFixed(2)}</strong>
-            <span class="completed-label"><i class="fas fa-check-circle"></i> Ordine Pagato</span>
+            <div class="history-actions">
+                <span class="completed-label"><i class="fas fa-check-circle"></i> Pagato</span>
+                <button class="delete-history-btn" data-order-id="${order.docId}">
+                    <i class="fas fa-trash"></i> Elimina
+                </button>
+            </div>
         </div>`;
 
     historyContainer.appendChild(card);
 }
+
+/**
+ * Imposta l'handler per i click sui pulsanti di eliminazione.
+ */
+function setupHistoryDeleteHandler() {
+    // Usiamo la delegazione degli eventi per intercettare il click
+    historyContainer.removeEventListener('click', handleHistoryContainerClick);
+    historyContainer.addEventListener('click', handleHistoryContainerClick);
+}
+
+function handleHistoryContainerClick(e) {
+    const button = e.target.closest('.delete-history-btn');
+    if (!button) return;
+
+    const orderId = button.dataset.orderId;
+    if (orderId) {
+        deleteOrderFromHistory(orderId);
+    }
+}
+
 
 // ====================================================================
 // 6. DOM READY
