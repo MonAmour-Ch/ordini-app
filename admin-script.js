@@ -27,6 +27,7 @@ const newOrderSound = new Audio('new-order.mp3');
 newOrderSound.volume = 0.8;
 let initializedSound = false;
 
+// 💡 CORREZIONE: Manteniamo le classi CSS mappate
 const STATUS_COLORS = {
     pending: 'pending',
     executed: 'executed',
@@ -181,13 +182,15 @@ function handleTableClick(e) {
     if (!button) return;
 
     const tableNumber = button.dataset.table;
-    selectedTableId = tableNumber;
-
+    
+    // Rimuovi la selezione precedente e aggiungi quella corrente
     document.querySelectorAll('.table-btn').forEach(b => b.classList.remove('selected'));
+    button.classList.add('selected');
+    
+    selectedTableId = tableNumber;
 
     const order = activeTableOrders[tableNumber];
     if (order) {
-        button.classList.add('selected');
         displayOrderDetails(order);
     } else {
         displayTableFree(tableNumber);
@@ -217,64 +220,104 @@ function renderTableGrid() {
         const btn = document.createElement('button');
         btn.className = 'table-btn free';
         btn.dataset.table = String(i);
+        btn.textContent = `Tavolo ${i}`; // Aggiunto per visualizzazione
         tablesGridContainer.appendChild(btn);
     }
 }
 
+/**
+ * 💡 NUOVA FUNZIONE PER AGGIORNARE L'ASPETTO DELLA GRIGLIA DEI TAVOLI
+ * Assegna la classe CSS (pending, executed, free) corretta a ogni tavolo
+ */
+function updateTableGridAppearance() {
+    const tableButtons = tablesGridContainer.querySelectorAll('.table-btn');
+    
+    tableButtons.forEach(button => {
+        const tableId = button.dataset.table;
+        const order = activeTableOrders[tableId];
+
+        // Rimuovi tutte le classi di stato (incluso 'free')
+        Object.values(STATUS_COLORS).forEach(color => button.classList.remove(color));
+        
+        // Mantieni lo stato "selected" solo se era già selezionato prima di applicare il nuovo stato
+        const isSelected = button.classList.contains('selected');
+        button.classList.remove('selected');
+
+
+        if (order) {
+            // Aggiungi la classe di stato in base all'ordine attivo
+            const statusClass = STATUS_COLORS[order.status] || 'pending';
+            button.classList.add(statusClass);
+            
+            // Se questo tavolo è quello selezionato, ripristina la classe 'selected'
+            if (selectedTableId === tableId || isSelected) {
+                button.classList.add('selected');
+            }
+        } else {
+            // Tavolo libero
+            button.classList.add('free');
+            // Se il tavolo appena liberato era quello selezionato, deseleziona
+            if (selectedTableId === tableId) {
+                 selectedTableId = null;
+            }
+        }
+    });
+}
+
+
 // ====================================================================
-// 🔊 LISTENER ORDINI IN TEMPO REALE CON SUONO
+// 🔊 LISTENER ORDINI IN TEMPO REALE CON SUONO - VERSIONE CORRETTA
 // ====================================================================
 
 function listenForActiveOrders() {
-    const pendingQuery = db.collection('orders')
-        .where('status', '==', 'pending')
-        .orderBy('timestamp', 'asc');
+    // 💡 Ascolta tutti gli ordini che NON sono 'completed'
+    // Questo listener unico garantisce che i dati siano sempre sincronizzati
+    db.collection('orders')
+        .where('status', 'in', ['pending', 'executed'])
+        .onSnapshot(snapshot => {
+            const newOrders = {};
 
-    const executedQuery = db.collection('orders')
-        .where('status', '==', 'executed')
-        .orderBy('timestamp', 'asc');
+            // 1. Trova l'ordine attivo (più recente) per ogni tavolo
+            snapshot.forEach(doc => {
+                const orderData = { ...doc.data(), docId: doc.id };
+                const tableId = orderData.tableId;
 
-    const processSnapshots = () => {
-        Promise.all([pendingQuery.get(), executedQuery.get()])
-            .then(([pendingSnap, executedSnap]) => {
-                const newOrders = {};
-
-                pendingSnap.forEach(doc => newOrders[doc.data().tableId] = { ...doc.data(), docId: doc.id });
-                executedSnap.forEach(doc => {
-                    const d = doc.data();
-                    if (!newOrders[d.tableId] || d.timestamp.toDate() >= newOrders[d.tableId].timestamp.toDate())
-                        newOrders[d.tableId] = { ...d, docId: doc.id };
-                });
-
-                activeTableOrders = newOrders;
-                updateTableGridAppearance();
-
-                if (selectedTableId) {
-                    const ord = activeTableOrders[selectedTableId];
-                    ord ? displayOrderDetails(ord) : displayTableFree(selectedTableId);
+                // Conserva solo l'ordine più recente per un dato tavolo
+                // Assicurati di confrontare correttamente i timestamp di Firebase
+                if (!newOrders[tableId] || orderData.timestamp.toDate() > newOrders[tableId].timestamp.toDate()) {
+                    newOrders[tableId] = orderData;
                 }
             });
-    };
+            
+            // 2. Gestione del suono per i NUOVI ordini in sospeso ('added')
+            if (initializedSound) {
+                snapshot.docChanges().forEach(change => {
+                    if (change.type === 'added' && change.doc.data().status === 'pending') {
+                        // Verifica che l'ordine aggiunto sia l'ordine attivo per quel tavolo
+                        const data = change.doc.data();
+                        if (newOrders[data.tableId] && newOrders[data.tableId].docId === change.doc.id) {
+                            newOrderSound.play().catch(() => {});
+                        }
+                    }
+                });
+            }
+            initializedSound = true;
 
-    pendingQuery.onSnapshot(snapshot => {
-        if (initializedSound) {
-            snapshot.docChanges().forEach(change => {
-                if (change.type === 'added') newOrderSound.play().catch(() => {});
-            });
-        }
-        processSnapshots();
-        initializedSound = true;
-    });
+            // 3. Aggiorna lo stato globale
+            activeTableOrders = newOrders;
+            
+            // 4. Aggiorna l'interfaccia utente (GRIGLIA E DETTAGLI)
+            updateTableGridAppearance();
 
-    executedQuery.onSnapshot(snapshot => {
-        if (initializedSound) {
-            snapshot.docChanges().forEach(change => {
-                if (change.type === 'added') newOrderSound.play().catch(() => {});
-            });
-        }
-        processSnapshots();
-    });
+            if (selectedTableId) {
+                const ord = activeTableOrders[selectedTableId];
+                ord ? displayOrderDetails(ord) : displayTableFree(selectedTableId);
+            }
+        }, error => {
+            console.error("Errore nell'ascolto degli ordini attivi:", error);
+        });
 }
+
 
 // ====================================================================
 // 5. STORICO ORDINI
