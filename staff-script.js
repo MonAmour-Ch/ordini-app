@@ -61,7 +61,6 @@ const DOM = {
 
 /**
  * Crea un ID univoco per l'articolo del carrello basato su ID e Opzioni selezionate.
- * Questo permette di tracciare articoli uguali ma con opzioni diverse separatamente.
  * @param {string} baseId L'ID dell'articolo (es. Birra).
  * @param {Array<string>} selectedOptions Array di stringhe opzione (es. ["media", "fredda"]).
  * @returns {string} ID univoco.
@@ -85,6 +84,7 @@ function getSelectedOptions(itemElement) {
     checkboxes.forEach(checkbox => {
         const optionName = checkbox.dataset.optionName;
         // Prezzo base è sempre 0, per le opzioni si usa data-extra-price (se presente)
+        // Usiamo parseFloat con fallback 0 per sicurezza sul tipo di dato.
         const extraPrice = parseFloat(checkbox.dataset.extraPrice || 0); 
         selected.push({
             name: optionName,
@@ -96,19 +96,56 @@ function getSelectedOptions(itemElement) {
 
 
 // =========================================================
-// 4. GESTIONE AUTENTICAZIONE (Invariata)
+// 4. GESTIONE AUTENTICAZIONE (DEFINIZIONI AGGIUNTE)
 // =========================================================
+
+/**
+ * Gestisce il logout dell'utente (lo staff).
+ * Questa funzione è stata aggiunta per risolvere: ReferenceError: handleLogout is not defined
+ */
+function handleLogout() {
+    auth.signOut().then(() => {
+        console.log("Utente disconnesso con successo.");
+        // Reindirizza l'utente alla pagina di login o ricarica
+        window.location.href = 'staff-login.html'; 
+    }).catch((error) => {
+        console.error("Errore durante il logout:", error);
+        alert("Errore durante il logout. Riprova.");
+    });
+}
+
+/**
+ * Funzione di esempio per il login (da implementare sul file staff-login.html)
+ */
+function handleStaffLogin(event) {
+    event.preventDefault();
+    const email = document.getElementById('email-input').value;
+    const password = document.getElementById('password-input').value;
+
+    auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            console.log("Login staff riuscito:", userCredential.user.email);
+            // Reindirizzamento gestito da onAuthStateChanged
+        })
+        .catch((error) => {
+            console.error("Errore di login:", error.message);
+            alert("Errore di login: " + error.message);
+        });
+}
+
 
 auth.onAuthStateChanged(user => {
     // ... (Logica di reindirizzamento Auth come prima)
     if (window.location.pathname.endsWith('staff-menu.html') && user) {
         initializeStaffApp(user);
+    } else if (window.location.pathname.endsWith('staff-menu.html') && !user) {
+        // Se non autenticato e sulla pagina del menu, reindirizza al login
+        window.location.href = 'staff-login.html'; 
+    } else if (window.location.pathname.endsWith('staff-login.html') && user) {
+        // Se autenticato e sulla pagina di login, reindirizza al menu
+        window.location.href = 'staff-menu.html';
     }
 });
-
-// Le funzioni `handleStaffLogin` e `handleLogout` rimangono invariate.
-
-// ... (Incolla handleStaffLogin e handleLogout qui se necessario) ...
 
 
 // =========================================================
@@ -247,7 +284,11 @@ function renderMenu() {
                 item.options.forEach((option, index) => {
                     const optionId = `${item.id}-${option.name.replace(/\s/g, '')}`;
                     // Il prezzo extra è solo per la visualizzazione/calcolo
-                    const priceLabel = option.price > 0 ? ` (+€${option.price.toFixed(2)})` : '';
+                    const optionPrice = parseFloat(option.price);
+                    // Controllo di sicurezza: se option.price non è un numero, usa 0
+                    const safePrice = isNaN(optionPrice) ? 0 : optionPrice; 
+                    
+                    const priceLabel = safePrice > 0 ? ` (+€${safePrice.toFixed(2)})` : '';
                     
                     itemHtml += `
                         <label for="${optionId}" class="option-label">
@@ -255,7 +296,7 @@ function renderMenu() {
                                 id="${optionId}" 
                                 name="options-${item.id}" 
                                 data-option-name="${option.name}"
-                                data-extra-price="${option.price || 0}"
+                                data-extra-price="${safePrice}"
                                 ${index === 0 ? 'checked' : ''} 
                             >
                             ${option.name}${priceLabel}
@@ -314,6 +355,7 @@ function renderMenu() {
     cartLinkBtn.innerHTML = '<i class="fas fa-receipt"></i> Riepilogo Ordine';
     cartLinkBtn.addEventListener('click', () => {
         // Logica per apertura carrello
+        if (DOM.toggleFullCartBtn) DOM.toggleFullCartBtn.click();
     });
     DOM.quickLinksNav.appendChild(cartLinkBtn);
 }
@@ -453,7 +495,8 @@ async function sendOrder(staffUser) {
     DOM.sendOrderBtn.textContent = 'Invio...';
 
     const orderNotes = DOM.orderNotesInput ? DOM.orderNotesInput.value.trim() : '';
-    const total = parseFloat(DOM.totalPriceSpanFull.textContent);
+    // Usa il valore del totale dal DOM o ricalcola per sicurezza
+    const total = parseFloat(DOM.totalPriceSpanFull.textContent) || Object.values(cartItems).reduce((sum, item) => sum + item.price * item.quantity, 0); 
     
     // Mappa i dati del carrello per l'invio al database
     const orderDetails = Object.values(cartItems).map(item => ({
@@ -478,11 +521,15 @@ async function sendOrder(staffUser) {
 
     try {
         await ordersCollection.add(orderData);
-        alert(`Ordine inviato con successo per ${currentTableId}!`);
+        alert(`Ordine inviato con successo per il tavolo ${currentTableId}!`);
         
-        DOM.fullCartDetails.classList.add('hidden-cart');
-        document.body.classList.remove('no-scroll');
+        // Chiudi il carrello a schermo intero (se aperto)
+        if (DOM.fullCartDetails) {
+            DOM.fullCartDetails.classList.add('hidden-cart');
+            document.body.classList.remove('no-scroll');
+        }
 
+        // Reset Carrello
         cartItems = {};
         renderCart();
         if (DOM.orderNotesInput) DOM.orderNotesInput.value = ''; 
@@ -506,8 +553,10 @@ function initializeStaffApp(user) {
     populateTableSelect(); 
 
     if (DOM.sendOrderBtn) DOM.sendOrderBtn.addEventListener('click', () => sendOrder(user));
+    
+    // QUI SI RISOLVE L'ERRORE: handleLogout è ora definita globalmente (sezione 4)
     const logoutBtn = document.getElementById('logout-btn');
-    if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
+    if (logoutBtn) logoutBtn.addEventListener('click', handleLogout); // Linea 510 (circa)
     
     renderCart();
 
@@ -537,6 +586,7 @@ function initializeStaffApp(user) {
 document.addEventListener('DOMContentLoaded', () => {
     // Logica di gestione login (come prima)
     if (window.location.pathname.endsWith('staff-login.html')) {
+        // La funzione handleStaffLogin DEVE esistere in staff-login.html
         document.getElementById('login-btn')?.addEventListener('click', handleStaffLogin);
     }
 });
