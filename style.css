@@ -61,15 +61,15 @@ a {
     margin: 0;
 }
 
-.header-content #table-display {
-    font-size: 1.3em;  
+.header-content p {
+    font-size: 1em;  
     font-weight: 500;
     color: var(--text-dark);
     margin: 5px 0 5px;  
 }
 
-.header-content #table-display span {
-    font-size: 1.6em;  
+.header-content #table-id {
+    font-size: 1.3em;  
     font-weight: 700;
     color: var(--primary-color);  
     display: inline-block;
@@ -94,12 +94,13 @@ a {
     display: inline-block;
     padding: 8px 15px;
     margin: 0 4px;
+    border: 1px solid #ddd;
     border-radius: 25px;
     background-color: var(--bg-light);
     color: var(--text-dark);
     font-weight: 500;
     cursor: pointer;
-    transition: background-color 0.2s, color 0.2s;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
     flex-shrink: 0;  
 }
 
@@ -107,6 +108,7 @@ a {
 .category-btn.active {
     background-color: var(--primary-color);
     color: white;
+    border-color: var(--primary-color);
 }
 
 /* ========================================================= */
@@ -119,6 +121,7 @@ a {
     margin: 0 auto;
     padding-left: 20px;
     padding-right: 20px;
+    transition: opacity 0.5s ease; /* Transizione per disabilitazione */
 }
 
 .menu-category h2 {
@@ -126,6 +129,8 @@ a {
     color: var(--text-dark);
     margin-top: 20px;  
     margin-bottom: 10px;  
+    padding-top: 10px;
+    border-bottom: 2px solid var(--primary-color);
 }
 
 .menu-item-card {
@@ -133,10 +138,45 @@ a {
     justify-content: space-between;
     align-items: center;
     background: var(--card-bg);
-    padding: 8px 15px;  
-    margin-bottom: 6px;  
+    padding: 12px 15px;  
+    margin-bottom: 8px;  
     border-radius: 8px;  
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.item-info h3 {
+    margin: 0;
+    font-size: 1.1em;
+    font-weight: 600;
+}
+
+.item-info p {
+    margin: 2px 0 0 0;
+    font-size: 1.2em;
+    font-weight: 700;
+    color: var(--secondary-color);
+}
+
+.add-to-cart-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 600;
+    transition: background-color 0.2s, opacity 0.3s;
+}
+
+.add-to-cart-btn:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+.add-to-cart-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.7;
 }
 
 /* ========================================================== */
@@ -153,24 +193,44 @@ a {
     box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.3);  
     padding: 15px 15px;  
     text-align: center;
+    display: block; 
 }
 
 #toggle-cart-btn {
     width: 100%;
-    background: none;
+    max-width: 400px;
+    background: #fff;
     border: none;
-    color: white;
-    font-size: 1.3rem;
+    color: var(--text-dark);
+    font-size: 1.1rem;
     font-weight: 700;
-    padding: 0;
+    padding: 10px 20px;
+    border-radius: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;  
+    margin: 0 auto;
+    transition: background-color 0.2s;
+}
+
+#toggle-cart-btn:hover {
+    background-color: #eee;
+}
+
+#cart-fixed-bar .badge {
+    background: var(--delete-color);
+    color: white;
+    border-radius: 50%;
+    padding: 3px 8px;
+    font-size: 0.9em;
+    margin-right: 5px;
 }
 
 #cart-fixed-bar #cart-fixed-total {
     margin-left: 10px;
+    color: var(--primary-color);
+    font-size: 1.1em;
 }
 
 #toggle-cart-btn i {
@@ -178,7 +238,313 @@ a {
 }
 
 /* ========================================================== */
-/* 5. STILI PANNELLO ADMIN (Griglia Tavoli Ultra-Compatta) */
+/* 5. BANNER ORDINE ATTIVO (Lato Cliente) */
+/* ========================================================== */
+
+.active-order-banner {
+    max-width: 900px;
+    margin: 100px auto 20px auto; /* Centra il banner sotto l'header fisso */
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    border-left: 5px solid var(--primary-color);
+    background: var(--card-bg);
+    animation: slideIn 0.3s ease-out;
+    padding-left: 20px; 
+    padding-right: 20px;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.order-status-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.order-status-header h3 {
+    margin: 0;
+    font-size: 1.3em;
+    color: var(--text-dark);
+}
+
+.status-badge {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9em;
+    white-space: nowrap;
+}
+
+.status-badge.status-pending {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.status-badge.status-executed {
+    background: #cce5ff;
+    color: #004085;
+    border: 1px solid #b8daff;
+}
+
+.order-items-list {
+    margin: 15px 0;
+    padding: 15px;
+    background: var(--bg-light);
+    border-radius: 8px;
+}
+
+.order-item-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px dashed #dee2e6;
+    align-items: center;
+}
+
+.order-item-row:last-child {
+    border-bottom: none;
+}
+
+.order-item-row span:first-child {
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+.order-item-row span:last-child {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.order-notes {
+    background: #fff3cd;
+    padding: 12px 15px;
+    border-radius: 6px;
+    margin: 15px 0;
+    font-size: 0.95em;
+    border-left: 4px solid #ffc107;
+}
+
+.order-notes strong {
+    color: #856404;
+}
+
+.order-total {
+    font-size: 1.3em;
+    text-align: right;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 2px solid #dee2e6;
+    color: var(--text-dark);
+}
+
+.order-info {
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    margin-top: 15px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    font-size: 0.9em;
+}
+
+/* Responsive per mobile */
+@media (max-width: 600px) {
+    .active-order-banner {
+        margin: 95px 10px 15px 10px;
+        padding: 15px;
+    }
+    
+    .order-status-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .order-status-header h3 {
+        font-size: 1.1em;
+    }
+    
+    .status-badge {
+        align-self: flex-start;
+    }
+}
+
+/* ========================================================== */
+/* 6. MODALE CARRELLO (Cliente) */
+/* ========================================================== */
+
+/* Sfondo scuro e fissa */
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 2000; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow-y: auto; 
+    background-color: rgba(0,0,0,0.6); 
+    backdrop-filter: blur(3px);
+}
+
+/* Contenuto centrato */
+.modal-content {
+    background-color: var(--card-bg);
+    margin: 5% auto; 
+    padding: 25px;
+    border-radius: 10px;
+    width: 95%; 
+    max-width: 450px;
+    box-shadow: var(--shadow);
+    position: relative;
+    animation: fadeInModal 0.3s ease-out;
+}
+
+@keyframes fadeInModal {
+    from { opacity: 0; transform: translateY(50px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.modal-content h2 {
+    color: var(--primary-color);
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.5em;
+}
+
+/* Lista Articoli Carrello */
+.cart-items-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px dashed #ddd;
+}
+
+.cart-item:last-child {
+    border-bottom: none;
+}
+
+.item-details strong {
+    display: block;
+    font-size: 1.1em;
+    color: var(--text-dark);
+}
+
+.item-details span {
+    font-size: 0.9em;
+    color: #6c757d;
+}
+
+.cart-summary {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 15px;
+    border-top: 2px solid var(--secondary-color);
+    font-size: 1.4em;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+/* Pulsante principale Invia Ordine */
+#send-order-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
+
+#send-order-btn:hover:not(:disabled) {
+    background: #1e7e34;
+}
+
+#send-order-btn:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
+/* ========================================================== */
+/* 7. CONTROLLI QUANTITÀ NEL CARRELLO (+ / -) */
+/* ========================================================== */
+
+.cart-item-controls {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.cart-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 4px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 1em;
+    line-height: 1;
+    transition: background-color 0.2s;
+}
+
+.cart-btn:hover {
+    background-color: #0056b3;
+}
+
+.cart-decrement {
+    background: var(--delete-color); 
+}
+
+.cart-decrement:hover {
+    background: #c82333;
+}
+
+.cart-qty {
+    padding: 0 5px;
+    font-weight: 700;
+    font-size: 1.1em;
+}
+
+/* ========================================================== */
+/* 8. STILI PANNELLO ADMIN (Inclusi per completezza del CSS originale) */
 /* ========================================================== */
 
 /* --- Layout Generale Admin --- */
@@ -422,17 +788,17 @@ a {
 }
 
 /* Linee colorate in base allo stato */
-.order-card.pending { 
-    border-top: 5px solid var(--pending-color); 
+.order-card.pending {  
+    border-top: 5px solid var(--pending-color);  
 }
 
-.order-card.executed { 
-    border-top: 5px solid var(--executed-color); 
+.order-card.executed {  
+    border-top: 5px solid var(--executed-color);  
 }
 
-.order-card.completed { 
-    border-top: 5px solid var(--secondary-color); 
-    opacity: 0.9; 
+.order-card.completed {  
+    border-top: 5px solid var(--secondary-color);  
+    opacity: 0.9;  
 }
 
 /* --- Stili Pulsanti Azione Dettaglio --- */
@@ -469,147 +835,4 @@ a {
     padding: 50px;
     font-size: 1.2em;
     color: #6c757d;
-}
-
-/* ========================================================== */
-/* 6. BANNER ORDINE ATTIVO (Lato Cliente) */
-/* ========================================================== */
-
-.active-order-banner {
-    background: var(--card-bg);
-    margin: 100px 20px 20px 20px; /* Top margin per non essere coperto dall'header fisso */
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    border-left: 5px solid var(--primary-color);
-    animation: slideIn 0.3s ease-out;
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.order-status-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.order-status-header h3 {
-    margin: 0;
-    font-size: 1.3em;
-    color: var(--text-dark);
-}
-
-.status-badge {
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-weight: 600;
-    font-size: 0.9em;
-    white-space: nowrap;
-}
-
-.status-badge.status-pending {
-    background: #fff3cd;
-    color: #856404;
-    border: 1px solid #ffeaa7;
-}
-
-.status-badge.status-executed {
-    background: #cce5ff;
-    color: #004085;
-    border: 1px solid #b8daff;
-}
-
-.order-items-list {
-    margin: 15px 0;
-    padding: 15px;
-    background: var(--bg-light);
-    border-radius: 8px;
-}
-
-.order-item-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 0;
-    border-bottom: 1px dashed #dee2e6;
-    align-items: center;
-}
-
-.order-item-row:last-child {
-    border-bottom: none;
-}
-
-.order-item-row span:first-child {
-    font-weight: 500;
-    color: var(--text-dark);
-}
-
-.order-item-row span:last-child {
-    font-weight: 600;
-    color: var(--primary-color);
-}
-
-.order-notes {
-    background: #fff3cd;
-    padding: 12px 15px;
-    border-radius: 6px;
-    margin: 15px 0;
-    font-size: 0.95em;
-    border-left: 4px solid #ffc107;
-}
-
-.order-notes strong {
-    color: #856404;
-}
-
-.order-total {
-    font-size: 1.3em;
-    text-align: right;
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 2px solid #dee2e6;
-    color: var(--text-dark);
-}
-
-.order-info {
-    text-align: center;
-    color: #6c757d;
-    font-style: italic;
-    margin-top: 15px;
-    padding: 10px;
-    background: #f8f9fa;
-    border-radius: 6px;
-    font-size: 0.9em;
-}
-
-/* Responsive per mobile */
-@media (max-width: 600px) {
-    .active-order-banner {
-        margin: 95px 10px 15px 10px;
-        padding: 15px;
-    }
-    
-    .order-status-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .order-status-header h3 {
-        font-size: 1.1em;
-    }
-    
-    .status-badge {
-        align-self: flex-start;
-    }
 }
