@@ -160,11 +160,13 @@ function initializeAdminDashboard(user) {
 
     // 4. Configura gli event listener per i click sui tavoli
     if (tablesGridContainer) {
-        tablesGridContainer.addEventListener('click', handleTableClick);
+        // handleTableClick ORA È DEFINITA PIÙ IN ALTO nella Sezione 4
+        tablesGridContainer.addEventListener('click', handleTableClick); 
     }
 
     // 5. Event listener per l'aggiornamento dello stato (pulsanti nel pannello di dettaglio)
     if(orderDetailsContainer) {
+        // handleStatusButtonClick ORA È DEFINITA PIÙ IN ALTO nella Sezione 4
         orderDetailsContainer.addEventListener('click', handleStatusButtonClick);
     }
 }
@@ -202,8 +204,144 @@ function setupViewFilters() {
 
 
 // ====================================================================
-// 4. LOGICA DASHBOARD - VISTA TAVOLI
+// 4. LOGICA DASHBOARD - VISTA TAVOLI (FUNZIONI SPOSTATE IN ALTO)
 // ====================================================================
+
+// --- FUNZIONI DI GESTIONE DEI DETTAGLI E STATO (SPOSTATE QUI PER L'HOISTING) ---
+
+/**
+ * Visualizza i dettagli dell'ordine selezionato nel pannello di dettaglio.
+ */
+function displayOrderDetails(order) {
+    if (!orderDetailsContainer) return;
+
+    const timeToDisplay = formatTimestampToTime(order.timestamp, false);
+    
+    const itemsHtml = order.items.map(item => 
+        `<li>${item.quantity}x ${item.name} <span class="item-price">€${(item.quantity * item.price).toFixed(2)}</span></li>`
+    ).join('');
+    
+    const noteText = order.notes ? order.notes.trim() : '';
+    const noteHtml = noteText
+        ? `<div class="order-note-display"><strong><i class="fas fa-sticky-note"></i> NOTA:</strong> ${noteText}</div>`
+        : '';
+
+    // Contenuto dinamico del pulsante
+    let buttonText;
+    let newStatusOnNextClick;
+    let buttonClass; 
+    
+    if (order.status === 'pending') {
+        buttonText = 'MARCA COME ESEGUITO';
+        newStatusOnNextClick = 'executed';
+        buttonClass = 'btn-executed'; 
+    } else if (order.status === 'executed') {
+        buttonText = 'MARCA COME PAGATO (COMPLETA)';
+        newStatusOnNextClick = 'completed';
+        buttonClass = 'btn-completed'; 
+    } else {
+        buttonText = 'STATO SCONOSCIUTO';
+        newStatusOnNextClick = '';
+        buttonClass = 'btn-default';
+    }
+
+    orderDetailsContainer.innerHTML = `
+        <div class="card-header">
+            <h3>Ordine #${order.docId.substring(0, 6)} - Tavolo ${order.tableId}</h3>
+            <span class="order-time">Ricevuto alle ${timeToDisplay}</span>
+        </div>
+        
+        <ul class="order-items">${itemsHtml}</ul>
+        
+        ${noteHtml} 
+        
+        <div class="order-footer">
+            <strong>TOTALE: €${order.total.toFixed(2)}</strong>
+            <button class="update-status-btn ${buttonClass}" 
+                    data-order-id="${order.docId}" 
+                    data-current-status="${order.status}" 
+                    data-new-status="${newStatusOnNextClick}">
+                <i class="fas fa-check"></i> ${buttonText}
+            </button>
+        </div>
+    `;
+}
+
+/**
+ * Visualizza il messaggio "Tavolo libero" nel pannello di dettaglio.
+ */
+function displayTableFree(tableNumber) {
+      if (!orderDetailsContainer) return;
+      orderDetailsContainer.innerHTML = `<p class="empty-message">Tavolo ${tableNumber} libero. Nessun ordine attivo.</p>`;
+}
+
+/**
+ * Gestisce il click su un tavolo della griglia.
+ */
+function handleTableClick(e) {
+    const button = e.target.closest('.table-btn');
+    if (!button) return;
+
+    const tableNumber = button.dataset.table;
+    selectedTableId = tableNumber;
+
+    // 1. Gestione della selezione visiva
+    document.querySelectorAll('.table-btn').forEach(btn => btn.classList.remove('selected'));
+    // Controlliamo se il tavolo ha un ordine attivo prima di selezionarlo
+    if(activeTableOrders[tableNumber]) {
+         button.classList.add('selected');
+    }
+
+    const activeOrder = activeTableOrders[tableNumber];
+
+    if (activeOrder) {
+        // 2. Mostra i dettagli dell'ordine
+        displayOrderDetails(activeOrder);
+    } else {
+        // 2. Tavolo Libero
+        displayTableFree(tableNumber);
+    }
+}
+
+/**
+ * Gestisce il click sui pulsanti di aggiornamento dello stato (dal pannello di dettaglio).
+ */
+function handleStatusButtonClick(e) {
+    const button = e.target.closest('.update-status-btn');
+    if (!button) return;
+
+    const orderId = button.dataset.orderId;
+    const newStatus = button.dataset.newStatus;
+
+    if (orderId && newStatus) {
+        updateOrderStatus(orderId, newStatus);
+    }
+}
+
+/**
+ * Aggiorna lo stato di un ordine su Firestore.
+ * @param {string} orderId L'ID del documento Firestore.
+ * @param {string} newStatus Lo stato da impostare ('executed' o 'completed').
+ */
+async function updateOrderStatus(orderId, newStatus) {
+    const updateData = { status: newStatus };
+    
+    // Aggiungi l'ora di completamento solo se lo stato finale è 'completed'
+    if (newStatus === 'completed') {
+        updateData.completionTime = firebase.firestore.FieldValue.serverTimestamp();
+    }
+
+    try {
+        await db.collection('orders').doc(orderId).update(updateData);
+        console.log(`Ordine ${orderId} segnato come ${newStatus}.`);
+        // La vista si aggiornerà automaticamente grazie a listenForActiveOrders()
+    } catch (error) {
+        console.error("Errore nell'aggiornamento dello stato:", error);
+        alert("Impossibile aggiornare lo stato dell'ordine. (Controlla le regole di scrittura admin)");
+    }
+}
+
+// --- FUNZIONI DI BASE GRIGLIA E LISTENER (Rimanenti) ---
 
 /**
  * Genera la griglia vuota dei tavoli nell'HTML la prima volta.
@@ -237,7 +375,6 @@ function listenForActiveOrders() {
     }
 
     // Ascolta tutti gli ordini dove lo stato NON è 'completed'
-    // ATTENZIONE: Questa query con where + orderBy('status') richiede un indice in Firestore.
     const query = db.collection('orders')
       .where('status', '!=', 'completed')
       .orderBy('status', 'asc') // Ordina pending prima di executed
@@ -315,74 +452,6 @@ function updateTableGridAppearance() {
     }
 }
 
-
-/**
- * Visualizza i dettagli dell'ordine selezionato nel pannello di dettaglio.
- */
-function displayOrderDetails(order) {
-    if (!orderDetailsContainer) return;
-
-    const timeToDisplay = formatTimestampToTime(order.timestamp, false);
-    
-    const itemsHtml = order.items.map(item => 
-        `<li>${item.quantity}x ${item.name} <span class="item-price">€${(item.quantity * item.price).toFixed(2)}</span></li>`
-    ).join('');
-    
-    const noteText = order.notes ? order.notes.trim() : '';
-    const noteHtml = noteText
-        ? `<div class="order-note-display"><strong><i class="fas fa-sticky-note"></i> NOTA:</strong> ${noteText}</div>`
-        : '';
-
-    // Contenuto dinamico del pulsante
-    let buttonText;
-    let newStatusOnNextClick;
-    let buttonClass; // NUOVA CLASSE PER LO STILE CSS
-    
-    if (order.status === 'pending') {
-        buttonText = 'MARCA COME ESEGUITO';
-        newStatusOnNextClick = 'executed';
-        buttonClass = 'btn-executed'; // Definito in style.css
-    } else if (order.status === 'executed') {
-        buttonText = 'MARCA COME PAGATO (COMPLETA)';
-        newStatusOnNextClick = 'completed';
-        buttonClass = 'btn-completed'; // Definito in style.css
-    } else {
-        buttonText = 'STATO SCONOSCIUTO';
-        newStatusOnNextClick = '';
-        buttonClass = 'btn-default';
-    }
-
-    orderDetailsContainer.innerHTML = `
-        <div class="card-header">
-            <h3>Ordine #${order.docId.substring(0, 6)} - Tavolo ${order.tableId}</h3>
-            <span class="order-time">Ricevuto alle ${timeToDisplay}</span>
-        </div>
-        
-        <ul class="order-items">${itemsHtml}</ul>
-        
-        ${noteHtml} 
-        
-        <div class="order-footer">
-            <strong>TOTALE: €${order.total.toFixed(2)}</strong>
-            <button class="update-status-btn ${buttonClass}" 
-                    data-order-id="${order.docId}" 
-                    data-current-status="${order.status}" 
-                    data-new-status="${newStatusOnNextClick}">
-                <i class="fas fa-check"></i> ${buttonText}
-            </button>
-        </div>
-    `;
-}
-
-/**
- * Visualizza il messaggio "Tavolo libero" nel pannello di dettaglio.
- */
-function displayTableFree(tableNumber) {
-      if (!orderDetailsContainer) return;
-      orderDetailsContainer.innerHTML = `<p class="empty-message">Tavolo ${tableNumber} libero. Nessun ordine attivo.</p>`;
-}
-
-// ... (handleTableClick, handleStatusButtonClick, updateOrderStatus restano quasi uguali) ...
 
 // ====================================================================
 // 5. LOGICA DASHBOARD - STORICO ORDINI (NUOVO)
