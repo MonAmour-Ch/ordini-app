@@ -35,7 +35,7 @@ const STATUS_COLORS = {
 };
 
 // ====================================================================
-// 2. AUTENTICAZIONE
+// 2. AUTENTICAZIONE (Modifiche Qui)
 // ====================================================================
 
 function handleAdminLogin() {
@@ -72,20 +72,62 @@ function handleAdminLogout() {
     auth.signOut().catch(() => alert("Errore durante il logout."));
 }
 
-auth.onAuthStateChanged(user => {
+/**
+ * 💡 FUNZIONE CHIAVE: Verifica il ruolo e reindirizza se non Admin.
+ * Ritorna il ruolo dell'utente se ha successo.
+ */
+async function checkUserRole(user) {
+    if (!user) return null;
+
+    try {
+        const userDocRef = db.collection('users').doc(user.uid);
+        const doc = await userDocRef.get();
+
+        if (doc.exists) {
+            return doc.data().role;
+        }
+    } catch (error) {
+        console.error("Errore nel recupero del ruolo:", error);
+    }
+    return null; // Ritorna null se il documento non esiste o in caso di errore
+}
+
+
+// 💡 Modifica del Listener Principale: Aggiunge la verifica del ruolo
+auth.onAuthStateChanged(async user => {
     const isAdminPage = window.location.pathname.endsWith('admin.html');
     const isLoginPage = window.location.pathname.endsWith('admin-login.html');
 
     if (user) {
-        if (isLoginPage) window.location.href = 'admin.html';
-        if (isAdminPage) initializeAdminDashboard(user);
+        // 1. Utente loggato: Verifica il ruolo
+        const userRole = await checkUserRole(user);
+        
+        if (isAdminPage) {
+            if (userRole === 'admin') {
+                // L'utente è Admin e sulla pagina Admin -> Inizializza
+                initializeAdminDashboard(userRole);
+            } else {
+                // L'utente è loggato (Staff o sconosciuto) ma NON è Admin -> LOGOUT FORZATO E RITORNO AL LOGIN
+                console.warn(`Tentativo di accesso non autorizzato del ruolo: ${userRole}`);
+                await auth.signOut();
+                window.location.href = 'admin-login.html';
+            }
+        } else if (isLoginPage && userRole === 'admin') {
+            // Utente è Admin e si trova sulla pagina di login -> Reindirizza alla dashboard
+             window.location.href = 'admin.html';
+        }
+        
     } else {
-        if (isAdminPage) window.location.href = 'admin-login.html';
+        // 2. Utente NON loggato
+        if (isAdminPage) {
+            // Non loggato e sulla pagina Admin -> Vai al Login
+            window.location.href = 'admin-login.html';
+        }
     }
 });
 
 // ====================================================================
-// 3. DASHBOARD
+// 3. DASHBOARD (Piccola modifica)
 // ====================================================================
 
 function formatTimestampToTime(timestamp, includeDate = false) {
@@ -97,7 +139,8 @@ function formatTimestampToTime(timestamp, includeDate = false) {
     return date.toLocaleTimeString('it-IT', options);
 }
 
-function initializeAdminDashboard() {
+// 💡 La funzione riceve il ruolo, ma non lo usa qui poiché è solo per Admin
+function initializeAdminDashboard(userRole) { 
     const logoutBtn = document.getElementById('admin-logout-btn');
     if (logoutBtn) logoutBtn.addEventListener('click', handleAdminLogout);
 
