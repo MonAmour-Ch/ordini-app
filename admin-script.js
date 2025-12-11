@@ -2,8 +2,11 @@
 // 1. CONFIGURAZIONE FIREBASE E INIZIALIZZAZIONE
 // ====================================================================
 
-// --- Configurazione (Include solo i campi necessari per App/Auth/Firestore) ---
+// --- Configurazione (Devi INSERIRE i tuoi valori reali) ---
 const firebaseConfig = {
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // ! QUI DEVI INSERIRE LA TUA VERA CONFIGURAZIONE !
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     apiKey: "AIzaSyC0SFan3-K074DG5moeqmu4mUgXtxCmTbg",
     authDomain: "menu-6630f.firebaseapp.com",
     projectId: "menu-6630f",
@@ -34,14 +37,61 @@ const STATUS_COLORS = {
     free: 'free'           
 };
 
+
 // ====================================================================
-// 2. GESTIONE AUTENTICAZIONE (AUTH) - OK
+// 2. GESTIONE AUTENTICAZIONE (AUTH)
 // ====================================================================
 
-// Funzioni handleAdminLogin, handleAdminLogout, auth.onAuthStateChanged
-// ... (codice omesso per brevità, assumendo sia rimasto invariato e funzionante) ...
+/**
+ * Gestisce il processo di login per admin-login.html.
+ */
+function handleAdminLogin() {
+    const loginForm = document.getElementById('admin-login-form');
+    const emailInput = document.getElementById('admin-email');
+    const passwordInput = document.getElementById('admin-password');
+    const loginBtn = document.getElementById('admin-login-btn');
+    const errorMessage = document.getElementById('error-message');
 
-// Rimosso il codice omesso per brevità, usa il tuo codice originale qui
+    if (!loginForm || !loginBtn) return;
+
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const email = emailInput.value;
+        const password = passwordInput.value;
+        
+        errorMessage.textContent = '';
+        loginBtn.disabled = true;
+        loginBtn.textContent = 'Accesso...';
+
+        auth.signInWithEmailAndPassword(email, password)
+            .then(() => {
+                console.log("Login Admin riuscito.");
+            })
+            .catch(error => {
+                console.error("Errore di Login Admin:", error.message);
+                errorMessage.textContent = 'Accesso negato. Credenziali non valide.';
+            })
+            .finally(() => {
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Accedi';
+            });
+    });
+}
+
+/**
+ * Funzione di Logout per admin.html.
+ * (Questa è la funzione che mancava!)
+ */
+function handleAdminLogout() {
+    auth.signOut().then(() => {
+        // Logout riuscito. onAuthStateChanged reindirizzerà a admin-login.html.
+        console.log("Logout Admin riuscito. Reindirizzamento...");
+    }).catch(error => {
+        console.error("Errore durante il Logout:", error);
+        alert("Errore durante il logout. Riprova.");
+    });
+}
 
 // --- Listener Globale di Stato Autenticazione ---
 auth.onAuthStateChanged(user => {
@@ -60,6 +110,7 @@ auth.onAuthStateChanged(user => {
         }
     }
 });
+
 
 // ====================================================================
 // 3. LOGICA DASHBOARD (CORE)
@@ -87,9 +138,10 @@ function formatTimestampToTime(timestamp, includeDate = false) {
 function initializeAdminDashboard(user) {
     console.log(`Dashboard Admin avviata per: ${user.email}`);
 
+    // Collega l'evento di Logout (Ora la funzione è definita sopra!)
     const logoutBtn = document.getElementById('admin-logout-btn');
     if(logoutBtn) {
-        logoutBtn.addEventListener('click', handleAdminLogout);
+        logoutBtn.addEventListener('click', handleAdminLogout); 
     }
     
     setupViewFilters();
@@ -117,9 +169,12 @@ function setupViewFilters() {
             const newView = button.getAttribute('data-view');
             if (newView === currentView) return; 
 
-            filterContainer.querySelector('.active').classList.remove('active');
+            // Aggiorna la classe 'active'
+            const activeBtn = filterContainer.querySelector('.active');
+            if (activeBtn) activeBtn.classList.remove('active');
             button.classList.add('active');
 
+            // Cambia la vista
             currentView = newView;
             if (newView === 'history') {
                 dashboardLayout.classList.add('hidden');
@@ -285,7 +340,6 @@ function renderTableGrid() {
 
 /**
  * Ascolta in tempo reale TUTTI gli ordini non ancora completati (pending, executed).
- * Utilizza Promise.all per unire due query di stato, aggirando il limite del where !=.
  */
 function listenForActiveOrders() {
     if (unsubscribeOrders) {
@@ -305,10 +359,9 @@ function listenForActiveOrders() {
 
     console.log("Avvio listener per gli ordini attivi...");
     
-    // Unisce i due listener
-    unsubscribeOrders = pendingQuery.onSnapshot(() => {
-        // Quando c'è un aggiornamento, recupera entrambi i set di dati in una transazione leggera
-        Promise.all([pendingQuery.get(), executedQuery.get()])
+    // Funzione per unire e processare gli snapshot
+    const processSnapshots = () => {
+         Promise.all([pendingQuery.get(), executedQuery.get()])
             .then(([pendingSnapshot, executedSnapshot]) => {
                 const newActiveOrders = {};
 
@@ -318,11 +371,11 @@ function listenForActiveOrders() {
                     newActiveOrders[order.tableId] = { ...order, docId: doc.id };
                 });
 
-                // Processa gli ordini Executed (sovr scrivono se sono più recenti, ma in teoria non dovrebbero esserci sovrapposizioni)
+                // Processa gli ordini Executed (sovrascrive se l'ordine è più recente, garantisce un solo stato)
                 executedSnapshot.forEach(doc => {
                     const order = doc.data();
-                    // Controlliamo che sia l'ordine più recente (solo per sicurezza, in genere un tavolo ha un solo ordine attivo)
-                    if (!newActiveOrders[order.tableId] || order.timestamp.toDate() > newActiveOrders[order.tableId].timestamp.toDate()) {
+                    // Prendiamo l'ordine in stato più avanzato o più recente
+                    if (!newActiveOrders[order.tableId] || order.timestamp.toDate() >= newActiveOrders[order.tableId].timestamp.toDate() || newActiveOrders[order.tableId].status === 'pending') {
                         newActiveOrders[order.tableId] = { ...order, docId: doc.id };
                     }
                 });
@@ -336,56 +389,27 @@ function listenForActiveOrders() {
                         displayOrderDetails(activeTableOrders[selectedTableId]);
                     } else {
                         displayTableFree(selectedTableId);
-                        selectedTableId = null; 
+                        // Non resettiamo selectedTableId a null, per mantenere il tavolo "selezionato"
+                        // se un cameriere lo sta osservando mentre si libera.
                     }
                 }
             })
             .catch(error => {
-                 console.error("Errore nel ricevere gli ordini attivi:", error);
+                 console.error("Errore nel ricevere gli ordini attivi tramite Promise.all:", error);
             });
-    }, error => {
+    };
+
+
+    // Attacca i listener e chiama processSnapshots per ogni cambiamento
+    pendingQuery.onSnapshot(processSnapshots, error => {
          console.error("Errore nel listener Pending:", error);
     });
-
-    // BONUS: aggiungiamo un secondo listener per 'executed' per coprire tutti i cambiamenti
-    // Senza riutilizzare 'unsubscribeOrders', altrimenti sovrascriveremmo.
-    executedQuery.onSnapshot(() => {
-        // Questo listener scatenerà la logica di aggiornamento (che è già gestita dal Promise.all nel primo listener)
-        // Per semplicità, richiamiamo la stessa logica di unione dati qui:
-        Promise.all([pendingQuery.get(), executedQuery.get()])
-            .then(([pendingSnapshot, executedSnapshot]) => {
-                const newActiveOrders = {};
-                
-                pendingSnapshot.forEach(doc => {
-                    const order = doc.data();
-                    newActiveOrders[order.tableId] = { ...order, docId: doc.id };
-                });
-                
-                executedSnapshot.forEach(doc => {
-                    const order = doc.data();
-                    if (!newActiveOrders[order.tableId] || order.timestamp.toDate() > newActiveOrders[order.tableId].timestamp.toDate()) {
-                        newActiveOrders[order.tableId] = { ...order, docId: doc.id };
-                    }
-                });
-
-                activeTableOrders = newActiveOrders;
-                updateTableGridAppearance();
-
-                if (selectedTableId) {
-                    if (activeTableOrders[selectedTableId]) {
-                        displayOrderDetails(activeTableOrders[selectedTableId]);
-                    } else {
-                        displayTableFree(selectedTableId);
-                        selectedTableId = null; 
-                    }
-                }
-            })
-             .catch(error => {
-                 console.error("Errore nel ricevere gli ordini attivi:", error);
-            });
-    }, error => {
+    
+    executedQuery.onSnapshot(processSnapshots, error => {
          console.error("Errore nel listener Executed:", error);
     });
+    
+    // Non c'è bisogno di una variabile unsubscribe singola, i due listener rimarranno attivi.
 }
 
 /**
@@ -409,6 +433,8 @@ function updateTableGridAppearance() {
         Object.values(STATUS_COLORS).forEach(statusClass => {
             tableButton.classList.remove(statusClass);
         });
+        
+        // Rimuovi la selezione, sarà riapplicata dopo
         tableButton.classList.remove('selected'); 
 
         if (activeOrder) {
@@ -426,7 +452,7 @@ function updateTableGridAppearance() {
 
 
 // ====================================================================
-// 5. LOGICA DASHBOARD - STORICO ORDINI (NUOVO) - OK
+// 5. LOGICA DASHBOARD - STORICO ORDINI
 // ====================================================================
 
 /**
@@ -438,7 +464,7 @@ async function fetchHistoryOrders() {
     historyContainer.innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Caricamento storico...</div>';
 
     try {
-        // Query per ordini completati, ordinati dal più recente (RICHIEDE INDICE COMPOSTO)
+        // Query per ordini completati (RICHIEDE INDICE COMPOSTO: status ASC, completionTime DESC)
         const snapshot = await db.collection('orders')
           .where('status', '==', 'completed')
           .orderBy('completionTime', 'desc') 
@@ -460,7 +486,6 @@ async function fetchHistoryOrders() {
 
     } catch (error) {
         console.error("Errore nel caricamento dello storico:", error);
-        // Se la query fallisce per l'indice mancante, Firestore loggherà il link per crearlo.
         historyContainer.innerHTML = '<p class="error-message">Errore nel caricamento dello storico ordini. (Controlla la console per creare l\'indice Firestone: status, completionTime)</p>';
     }
 }
@@ -504,11 +529,13 @@ function renderHistoryCard(order, orderId) {
 
 
 // ====================================================================
-// 6. INIZIALIZZAZIONE DOM GLOBALE - OK
+// 6. INIZIALIZZAZIONE DOM GLOBALE
 // ====================================================================
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Si attiva solo la funzione di login se l'URL corrisponde
     if (window.location.pathname.endsWith('admin-login.html')) {
         handleAdminLogin();
     }
+    // L'avvio completo della dashboard è gestito da onAuthStateChanged
 });
