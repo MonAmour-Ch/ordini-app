@@ -1,8 +1,8 @@
 /* ========================================================= */
-/* 1. Reset & Base */
+/* 1. Reset & Base (Aggiornamento Colori e Font) */
 /* ========================================================= */
 :root {
-    /* Colori */
+    /* NUOVI COLORI: Blu Moderno e Verde/Giallo per Accenti */
     --primary-color: #007bff;
     --secondary-color: #28a745;
     --text-dark: #343a40;
@@ -11,12 +11,8 @@
     --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     --delete-color: #dc3545;
     
-    /* Stati Ordine */
-    --executed-color: #0056b3;  
-    --pending-color: #ffc107;   
-    
-    /* Layout */
-    --header-height: 95px;  
+    /* Compensazione aumentata */
+    --header-height: 95px; 
 }
 
 body {
@@ -24,7 +20,7 @@ body {
     background-color: var(--bg-light);
     color: var(--text-dark);
     line-height: 1.6;
-    padding-bottom: 80px;  
+    padding-bottom: 80px; 
 }
 
 a {
@@ -33,13 +29,13 @@ a {
 }
 
 /* ========================================================= */
-/* 2. Header & Navigazione */
+/* 2. Header & Navigazione (Fissi e Compatti) */
 /* ========================================================= */
-
 .menu-header {
     background-color: var(--card-bg);
     color: var(--text-dark);
-    padding: 4px 0;  
+    /* Padding minimo */
+    padding: 4px 0; 
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     position: fixed;
     top: 0;
@@ -55,22 +51,26 @@ a {
     text-align: center;
 }
 
+/* NASCONDI IL VECCHIO TITOLO SE PRESENTE (Se non lo hai rimosso dall'HTML) */
 .menu-header h1 {
-    display: none;  
+    display: none; /* Rimuove lo spazio e la scritta "Bar Order App" */
     margin: 0;
 }
 
+/* NUOVI STILI PER IL NUMERO DEL TAVOLO */
 .header-content #table-display {
-    font-size: 1.3em;  
+    /* Stile generale per la dicitura "Tavolo: 12" */
+    font-size: 1.3em; 
     font-weight: 500;
     color: var(--text-dark);
-    margin: 5px 0 5px;  
+    margin: 5px 0 5px; /* Aggiunge un po' di margine verticale per centrare */
 }
 
 .header-content #table-display span {
-    font-size: 1.6em;  
+    /* Stile specifico per il numero (più grande e in evidenza) */
+    font-size: 1.6em; 
     font-weight: 700;
-    color: var(--primary-color);  
+    color: var(--primary-color); 
     display: inline-block;
     margin-left: 5px;
 }
@@ -78,14 +78,16 @@ a {
 /* Navigazione Categorie (Quick Links) */
 .category-nav {
     display: flex;
-    overflow-x: auto;  
+    overflow-x: auto; 
     white-space: nowrap;
-    padding: 6px 0;  
+    /* Padding verticale ridotto */
+    padding: 6px 0; 
     background-color: var(--card-bg);
     border-bottom: 1px solid #eee;
     
     position: sticky;
-    top: 45px;  
+    /* Adattato in base all'altezza effettiva del nuovo header (solo Tavolo) */
+    top: 45px; /* Leggermente aumentato per sicurezza */
     z-index: 900;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
@@ -100,7 +102,7 @@ a {
     font-weight: 500;
     cursor: pointer;
     transition: background-color 0.2s, color 0.2s;
-    flex-shrink: 0;  
+    flex-shrink: 0; 
 }
 
 .category-btn:hover, .category-btn.active {
@@ -109,12 +111,12 @@ a {
 }
 
 /* ========================================================= */
-/* 3. Menu Items & Container */
+/* 3. Menu Items & Container (Carte pulite e snelle) */
 /* ========================================================= */
-
 #menu-container {
     max-width: 900px;
-    padding-top: var(--header-height);  
+    /* Compensazione finale (95px) */
+    padding-top: var(--header-height); 
     margin: 0 auto;
     padding-left: 20px;
     padding-right: 20px;
@@ -123,8 +125,9 @@ a {
 .menu-category h2 {
     font-size: 2em;
     color: var(--text-dark);
-    margin-top: 20px;  
-    margin-bottom: 10px;  
+    border-bottom: none; 
+    margin-top: 20px; 
+    margin-bottom: 10px; 
 }
 
 .menu-item-card {
@@ -132,27 +135,27 @@ a {
     justify-content: space-between;
     align-items: center;
     background: var(--card-bg);
-    padding: 8px 15px;  
-    margin-bottom: 6px;  
-    border-radius: 8px;  
+    padding: 8px 15px; 
+    margin-bottom: 6px; 
+    border-radius: 8px; 
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
-
 /* ========================================================== */
-/* 4. BARRA FISSA CARRELLO */
+/* 4. BARRA FISSA CARRELLO (Cliccabile per lo Scroll) */
 /* ========================================================== */
 
 #cart-fixed-bar {
     position: fixed;
-    bottom: 0;  
+    bottom: 0; 
     left: 0;
     width: 100%;
-    background-color: var(--secondary-color);  
+    background-color: var(--secondary-color); 
     z-index: 1000;
-    box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.3);  
-    padding: 15px 15px;  
+    box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.3); 
+    padding: 15px 15px; 
     text-align: center;
+    
 }
 
 #toggle-cart-btn {
@@ -166,7 +169,7 @@ a {
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: pointer;  
+    cursor: pointer; 
 }
 
 #cart-fixed-bar #cart-fixed-total {
@@ -178,7 +181,7 @@ a {
 }
 
 /* ========================================================== */
-/* 5. STILI PANNELLO ADMIN (Griglia Tavoli Ultra-Compatta) */
+/* 5. STILI PANNELLO ADMIN (DESIGN MODERNO E FUNZIONALE) */
 /* ========================================================== */
 
 /* --- Layout Generale Admin --- */
@@ -186,7 +189,7 @@ a {
     max-width: 1200px;
     margin: 20px auto;
     padding: 0 20px;
-    padding-top: 20px;  
+    padding-top: 20px; 
 }
 
 #dashboard-header {
@@ -194,17 +197,18 @@ a {
     justify-content: space-between;
     align-items: center;
     padding: 10px 15px;
-    background-color: #f7f9fc;  
+    background-color: #f7f9fc; 
     border-bottom: 1px solid #ddd;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     position: sticky;
-    top: 0;  
+    top: 0; 
     z-index: 100;
 }
 
+/* Stili per il pulsante Logout */
 #admin-logout-btn {
     padding: 8px 15px;
-    background: var(--delete-color);  
+    background: var(--delete-color); 
     color: white;
     border: none;
     border-radius: 5px;
@@ -224,6 +228,7 @@ a {
     gap: 15px;
     margin: 25px auto 35px;
     padding: 15px 0;
+    border-bottom: none;
 }
 
 .filter-btn {
@@ -234,27 +239,28 @@ a {
     color: var(--text-dark);
     font-size: 1em;
     font-weight: 600;
-    cursor: pointer;
     transition: all 0.2s ease;
 }
 
-.filter-btn[data-view="active"].active {
+/* Stato Attivo/In attesa */
+.filter-btn[data-status="pending"].active {
+    background-color: #ffc107;
+    color: var(--text-dark);
+    border-color: #ffc107;
+    box-shadow: 0 4px 6px rgba(255, 193, 7, 0.3);
+}
+
+/* Stato Completato */
+.filter-btn[data-status="completed"].active {
     background-color: var(--primary-color);
     color: white;
     border-color: var(--primary-color);
     box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
 }
 
-.filter-btn[data-view="history"].active {
-    background-color: var(--secondary-color);
-    color: white;
-    border-color: var(--secondary-color);
-    box-shadow: 0 4px 6px rgba(40, 167, 69, 0.3);
-}
-
 
 /* -------------------------------------------------------------------------- */
-/* GRIGLIA TAVOLI E LAYOUT DASHBOARD */
+/* GRIGLIA TAVOLI E LAYOUT DASHBOARD (Sezione Aggiunta/Modificata) */
 /* -------------------------------------------------------------------------- */
 
 #admin-dashboard-layout {
@@ -265,6 +271,7 @@ a {
 
 @media (min-width: 900px) {
     #admin-dashboard-layout {
+        /* Assumendo che la griglia dei tavoli sia a sinistra e i dettagli/storico a destra */
         grid-template-columns: 3fr 1.5fr;  
     }
 }
@@ -275,8 +282,8 @@ a {
 
 /* --- Griglia dei Tavoli (#tables-grid) --- */
 #tables-grid {
-    /* MODIFICATO: Aumento la dimensione minima a 40px e massima a 55px */
-    grid-template-columns: repeat(auto-fit, minmax(40px, 55px)); 
+    /* NUOVA MODIFICA: Intervallo ottimizzato (45px-60px) per funzionalità e compattezza */
+    grid-template-columns: repeat(auto-fit, minmax(45px, 60px)); 
     gap: 8px; 
     padding: 20px;
     background-color: var(--card-bg);
@@ -288,10 +295,9 @@ a {
     width: 100%;
     padding-top: 100%; /* Forza l'aspetto quadrato */
     position: relative;
-    border: 2px solid #ccc; /* RIDOTTO: 2px */
+    border: 2px solid #ccc;
     border-radius: 50%;  
-    /* FONT: Mantenuto a 1.0em */
-    font-size: 1.0em; 
+    font-size: 1.0em; /* Mantenuto 1.0em */
     font-weight: 800;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
@@ -307,7 +313,7 @@ a {
     line-height: 1;  
 }
 
-/* Colori e Stati */
+/* Colori e Stati (Assumendo classi .free, .pending, .executed, .selected) */
 .table-btn.free {
     background-color: #f7f7f7;
     border-color: #ddd;
@@ -315,13 +321,13 @@ a {
 }
 
 .table-btn.pending {
-    background-color: var(--pending-color) !important;  
+    background-color: #ffc107 !important;  
     border-color: #e0a800;
     color: var(--text-dark);  
 }
 
 .table-btn.executed {
-    background-color: var(--executed-color) !important;  
+    background-color: var(--primary-color) !important; 
     border-color: #004085;
     color: white;  
     animation: pulse-executed 1.5s infinite;
@@ -345,120 +351,140 @@ a {
     border-radius: 12px;
     box-shadow: var(--shadow);
 }
+/* La griglia degli ordini (storico) è lasciata come da codice fornito */
 
-#orders-container-history {
+/* --- Grid Ordini --- */
+#orders-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));  
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
     gap: 25px;
-    padding: 0;
-}
-
-.order-card {
-    padding: 0;  
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    overflow: hidden;
-    background-color: var(--card-bg);
-}
-
-.history-card {
-    opacity: 0.8;
-}
-
-/* Stili comuni per Header, Items e Footer delle Card Ordine/Storico */
-.order-card .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    border-bottom: 1px solid #eee;
-}
-
-.order-card .order-items {
-    list-style: none;
-    padding: 15px;
-    margin: 0;
-}
-
-.order-card .order-items li {
-    display: flex;
-    justify-content: space-between;
-    padding: 5px 0;
-    font-size: 1.05em;
-    border-bottom: 1px dashed #f1f1f1;
-}
-
-.order-card .order-items li:last-child {
-    border-bottom: none;
-}
-
-.order-card .order-note-display {
-    padding: 15px;
-    margin: 0 15px 15px;
-    border-left: 5px solid var(--pending-color);
-    background-color: #fffbe6;
-    border-radius: 4px;
-    font-size: 0.9em;
-}
-
-.order-card .order-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    border-top: 1px solid #eee;
-    background-color: #f7f9fc;
-}
-
-.order-card .order-footer strong {
-    font-size: 1.2em;
-    color: var(--text-dark);
-}
-
-.order-card .empty-message {
-    text-align: center;
-    padding: 40px 20px;
-    color: #6c757d;
-    font-style: italic;
-}
-
-/* Linee colorate in base allo stato */
-.order-card.pending { border-top: 5px solid var(--pending-color); }  
-.order-card.executed { border-top: 5px solid var(--executed-color); }  
-.order-card.completed { border-top: 5px solid var(--secondary-color); opacity: 0.9; }
-
-
-/* --- Stili Pulsanti Azione Dettaglio --- */
-
-.update-status-btn {
-    padding: 10px 18px;
-    border-radius: 4px;
-    font-size: 0.95em;
-    font-weight: 600;
-    border: none;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.update-status-btn.btn-executed {
-    background-color: var(--executed-color);  
-}
-.update-status-btn.btn-executed:hover {
-    background-color: #003366;
-}
-
-.update-status-btn.btn-completed {
-    background-color: var(--secondary-color);
-}
-.update-status-btn.btn-completed:hover {
-    background-color: #1e7e34;
 }
 
 /* Messaggi di stato */
-.loading-state {
-    text-align: center;
-    padding: 50px;
+.empty-message, .error-message {
+    text-align: center; 
+    padding: 50px; 
+    color: #6c757d;
     font-size: 1.2em;
+}
+
+/* --- Card Ordine --- */
+.order-card {
+    padding: 0; 
+    margin-bottom: 0;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    border: none;
+    background-color: var(--card-bg);
+    transition: transform 0.2s;
+}
+.order-card:hover {
+    transform: none;
+    box-shadow: var(--shadow);
+}
+
+
+/* Intestazione Card */
+.card-header {
+    background-color: #f7f7f7;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.order-card h3 {
+    font-size: 1.3em;
+    color: var(--text-dark);
+    margin: 0;
+    padding: 0;
+    border-bottom: none; 
+}
+
+.order-time {
+    font-size: 0.9em;
+    font-weight: normal;
+    color: #6c757d;
+}
+
+/* Stili di Stato Card */
+.order-card.pending { border-top: 5px solid #ffc107; } 
+.order-card.completed { border-top: 5px solid var(--primary-color); opacity: 0.9; }
+
+/* Lista Articoli */
+.order-items { 
+    list-style: none;
+    margin: 0; 
+    padding: 15px 20px;
+    font-size: 1em;
+}
+
+.order-items li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 0;
+    border-bottom: 1px dashed #f0f0f0;
+}
+.order-items li:last-child {
+    border-bottom: none;
+}
+
+/* Stile Prezzo Articolo */
+.item-price {
+    font-weight: 600;
     color: var(--primary-color);
+}
+
+
+/* NOTA (Massima attenzione con rosso/arancio scuro) */
+.order-note-display {
+    margin: 10px 20px;
+    padding: 10px 15px;
+    border-left: 5px solid var(--delete-color);
+    background-color: #fef4f5;
+    font-size: 0.95em;
+    color: #333;
+    border-radius: 3px;
+    white-space: pre-wrap;
+}
+
+.order-note-display strong {
+    color: var(--delete-color);
+    margin-right: 5px;
+}
+
+/* Footer e Totale */
+.order-footer {
+    padding: 15px 20px;
+    margin-top: 0;
+    border-top: 1px solid #f0f0f0;
+    font-size: 1.2em;
+    background-color: #fafafa;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-dark);
+}
+.order-footer strong {
+    color: var(--delete-color);
+}
+
+/* Pulsante Completa */
+.complete-btn {
+    padding: 10px 18px;
+    background-color: var(--secondary-color);
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-weight: 600;
+}
+.complete-btn:hover {
+    background-color: #1e7e34;
+}
+
+.completed-label {
+    font-size: 0.9em;
+    color: var(--primary-color);
+    font-weight: 600;
 }
