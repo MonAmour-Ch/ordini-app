@@ -132,7 +132,7 @@ function populateTableSelect() {
     // --- 2. POPOLA LE OPZIONI (Solo numeri 1-40) ---
     for (let i = 1; i <= 40; i++) { 
         const option = document.createElement('option');
-        option.value = `TAVOLO_${i}`;
+        option.value = `${i}`; // MODIFICATO: Usa solo il numero come valore
         option.textContent = `${i}`; // MODIFICATO: Mostra solo il numero
         tableSelect.appendChild(option);
     }
