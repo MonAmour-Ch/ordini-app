@@ -220,7 +220,6 @@ function renderTableGrid() {
         const btn = document.createElement('button');
         btn.className = 'table-btn free';
         btn.dataset.table = String(i);
-        btn.textContent = `Tavolo ${i}`; // Aggiunto per visualizzazione
         tablesGridContainer.appendChild(btn);
     }
 }
