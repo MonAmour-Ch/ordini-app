@@ -1,8 +1,8 @@
 /* ========================================================= */
-/* 1. Reset & Base (Aggiornamento Colori e Font) */
+/* 1. Reset & Base */
 /* ========================================================= */
 :root {
-    /* NUOVI COLORI: Blu Moderno e Verde/Giallo per Accenti */
+    /* Colori */
     --primary-color: #007bff;
     --secondary-color: #28a745;
     --text-dark: #343a40;
@@ -11,12 +11,11 @@
     --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     --delete-color: #dc3545;
     
-    /* Colore per stato 'Executed' (Blu più scuro) */
+    /* Stati Ordine */
     --executed-color: #0056b3; 
-    /* Colore per stato 'Pending' (Arancione) */
     --pending-color: #ffc107; 
     
-    /* Compensazione aumentata */
+    /* Layout */
     --header-height: 95px; 
 }
 
@@ -34,13 +33,12 @@ a {
 }
 
 /* ========================================================= */
-/* 2. Header & Navigazione (Fissi e Compatti) */
+/* 2. Header & Navigazione */
 /* ========================================================= */
 
 .menu-header {
     background-color: var(--card-bg);
     color: var(--text-dark);
-    /* Padding minimo */
     padding: 4px 0; 
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     position: fixed;
@@ -57,23 +55,19 @@ a {
     text-align: center;
 }
 
-/* NASCONDI IL VECCHIO TITOLO SE PRESENTE (Se non lo hai rimosso dall'HTML) */
 .menu-header h1 {
-    display: none; /* Rimuove lo spazio e la scritta "Bar Order App" */
+    display: none; 
     margin: 0;
 }
 
-/* NUOVI STILI PER IL NUMERO DEL TAVOLO */
 .header-content #table-display {
-    /* Stile generale per la dicitura "Tavolo: 12" */
     font-size: 1.3em; 
     font-weight: 500;
     color: var(--text-dark);
-    margin: 5px 0 5px; /* Aggiunge un po' di margine verticale per centrare */
+    margin: 5px 0 5px; 
 }
 
 .header-content #table-display span {
-    /* Stile specifico per il numero (più grande e in evidenza) */
     font-size: 1.6em; 
     font-weight: 700;
     color: var(--primary-color); 
@@ -86,14 +80,12 @@ a {
     display: flex;
     overflow-x: auto; 
     white-space: nowrap;
-    /* Padding verticale ridotto */
     padding: 6px 0; 
     background-color: var(--card-bg);
     border-bottom: 1px solid #eee;
     
     position: sticky;
-    /* Adattato in base all'altezza effettiva del nuovo header (solo Tavolo) */
-    top: 45px; /* Leggermente aumentato per sicurezza */
+    top: 45px; 
     z-index: 900;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
@@ -117,12 +109,11 @@ a {
 }
 
 /* ========================================================= */
-/* 3. Menu Items & Container (Carte pulite e snelle) */
+/* 3. Menu Items & Container */
 /* ========================================================= */
 
 #menu-container {
     max-width: 900px;
-    /* Compensazione finale (95px) */
     padding-top: var(--header-height); 
     margin: 0 auto;
     padding-left: 20px;
@@ -132,7 +123,6 @@ a {
 .menu-category h2 {
     font-size: 2em;
     color: var(--text-dark);
-    border-bottom: none; 
     margin-top: 20px; 
     margin-bottom: 10px; 
 }
@@ -150,7 +140,7 @@ a {
 
 
 /* ========================================================== */
-/* 4. BARRA FISSA CARRELLO (Cliccabile per lo Scroll) */
+/* 4. BARRA FISSA CARRELLO */
 /* ========================================================== */
 
 #cart-fixed-bar {
@@ -163,7 +153,6 @@ a {
     box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.3); 
     padding: 15px 15px; 
     text-align: center;
-    
 }
 
 #toggle-cart-btn {
@@ -189,7 +178,7 @@ a {
 }
 
 /* ========================================================== */
-/* 5. STILI PANNELLO ADMIN (DESIGN MODERNO E FUNZIONALE) */
+/* 5. STILI PANNELLO ADMIN (Griglia Tavoli Ultra-Compatta) */
 /* ========================================================== */
 
 /* --- Layout Generale Admin --- */
@@ -213,7 +202,6 @@ a {
     z-index: 100;
 }
 
-/* Stili per il pulsante Logout */
 #admin-logout-btn {
     padding: 8px 15px;
     background: var(--delete-color); 
@@ -229,14 +217,13 @@ a {
 }
 
 
-/* --- Filtri/Controlli (Nuova Navigazione per Vista) --- */
+/* --- Filtri/Controlli --- */
 #order-filters {
     display: flex;
     justify-content: center;
     gap: 15px;
     margin: 25px auto 35px;
     padding: 15px 0;
-    border-bottom: none;
 }
 
 .filter-btn {
@@ -251,7 +238,6 @@ a {
     transition: all 0.2s ease;
 }
 
-/* Stato Attivo (Griglia Tavoli) */
 .filter-btn[data-view="active"].active {
     background-color: var(--primary-color);
     color: white;
@@ -259,7 +245,6 @@ a {
     box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
 }
 
-/* Stato Storico */
 .filter-btn[data-view="history"].active {
     background-color: var(--secondary-color);
     color: white;
@@ -269,36 +254,30 @@ a {
 
 
 /* -------------------------------------------------------------------------- */
-/* NUOVI STILI RICHIESTI PER GRIGLIA TAVOLI E LAYOUT DASHBOARD */
+/* GRIGLIA TAVOLI E LAYOUT DASHBOARD */
 /* -------------------------------------------------------------------------- */
 
-/* Layout per schermi più grandi: griglia dei tavoli e dettagli */
 #admin-dashboard-layout {
     display: grid;
-    grid-template-columns: 1fr; /* Default mobile: 1 colonna */
+    grid-template-columns: 1fr; /* Default mobile */
     gap: 20px;
 }
 
 @media (min-width: 900px) {
     #admin-dashboard-layout {
-        /* Layout Desktop: Griglia (3 parti) | Dettagli (1.5 parti) */
         grid-template-columns: 3fr 1.5fr; 
     }
 }
 
-/* Gestione delle viste Dinamiche */
 .hidden {
     display: none !important;
 }
 
 /* --- Griglia dei Tavoli (#tables-grid) --- */
 #tables-grid {
-    /* *** MODIFICA CHIAVE ***
-    * RIDUCIAMO ulteriormente il minmax per colonne più strette.
-    */
-    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); 
-    /* RIDUCIAMO il gap. */
-    gap: 12px; 
+    /* Tavoli il più piccoli possibile */
+    grid-template-columns: repeat(auto-fit, minmax(45px, 1fr)); /* RIDOTTO: 45px */
+    gap: 8px; /* RIDOTTO: 8px */
     padding: 20px;
     background-color: var(--card-bg);
     border-radius: 12px;
@@ -307,68 +286,58 @@ a {
 
 .table-btn {
     width: 100%;
-    /* Rende il bottone quadrato */
-    padding-top: 100%; 
+    padding-top: 100%; /* Forza l'aspetto quadrato */
     position: relative;
-    border: 3px solid #ccc; 
+    border: 2px solid #ccc; /* RIDOTTO: 2px */
     border-radius: 50%; 
-    /* *** MODIFICA CHIAVE ***
-    * RIDUCIAMO il font-size per adattarsi al bottone più piccolo.
-    */
-    font-size: 1.2em; 
+    font-size: 1.0em; /* RIDOTTO: 1.0em */
     font-weight: 800;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
 }
 
-/* Contenuto centrato all'interno del padding-top hack */
+/* Contenuto centrato */
 .table-btn::before {
     content: attr(data-table);
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    line-height: 1; /* Rende il numero del tavolo ben centrato */
+    line-height: 1; 
 }
 
 /* Colori e Stati */
-/* 1. Tavolo Libero */
 .table-btn.free {
     background-color: #f7f7f7;
     border-color: #ddd;
     color: #495057;
 }
 
-/* 2. PENDING (Ordine Appena Inviato) */
 .table-btn.pending {
-    background-color: var(--pending-color) !important; /* Arancione forte */
+    background-color: var(--pending-color) !important; 
     border-color: #e0a800;
     color: var(--text-dark); 
 }
 
-/* 3. EXECUTED (Ordine Eseguito/Pronto) */
 .table-btn.executed {
-    background-color: var(--executed-color) !important; /* Blu scuro */
+    background-color: var(--executed-color) !important; 
     border-color: #004085;
     color: white; 
-    /* Aggiungiamo un'animazione leggera per attirare l'attenzione */
     animation: pulse-executed 1.5s infinite;
 }
 
-/* 4. SELEZIONATO (Il tavolo visualizzato nel dettaglio) */
 .table-btn.selected {
-    box-shadow: 0 0 0 5px rgba(0, 123, 255, 0.7); /* Anello primario marcato */
+    box-shadow: 0 0 0 5px rgba(0, 123, 255, 0.7); 
     transform: scale(1.05); 
 }
 
-/* Keyframe per l'animazione di stato 'executed' */
 @keyframes pulse-executed {
     0% { box-shadow: 0 0 0 0 rgba(0, 86, 179, 0.4); }
     70% { box-shadow: 0 0 0 10px rgba(0, 86, 179, 0); }
     100% { box-shadow: 0 0 0 0 rgba(0, 86, 179, 0); }
 }
 
-/* --- Pannello Dettagli Ordine --- */
+/* --- Pannello Dettagli Ordine & Storico --- */
 #order-details {
     padding: 20px;
     background-color: var(--card-bg);
@@ -376,22 +345,89 @@ a {
     box-shadow: var(--shadow);
 }
 
-/* --- Area Storico Ordini (#orders-container-history) --- */
 #orders-container-history {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
     gap: 25px;
     padding: 0;
-    /* Non ha background e padding qui perché lo gestiscono le card */
 }
 
-/* Stile per la card dello storico */
+.order-card {
+    padding: 0; 
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    background-color: var(--card-bg);
+}
+
 .history-card {
-    /* La logica è la stessa di .order-card, ma se volessi distinguere: */
     opacity: 0.8;
 }
 
-/* --- Stili per i Pulsanti di Azione nel Dettaglio (per coerenza) --- */
+/* Stili comuni per Header, Items e Footer delle Card Ordine/Storico */
+.order-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.order-card .order-items {
+    list-style: none;
+    padding: 15px;
+    margin: 0;
+}
+
+.order-card .order-items li {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    font-size: 1.05em;
+    border-bottom: 1px dashed #f1f1f1;
+}
+
+.order-card .order-items li:last-child {
+    border-bottom: none;
+}
+
+.order-card .order-note-display {
+    padding: 15px;
+    margin: 0 15px 15px;
+    border-left: 5px solid var(--pending-color);
+    background-color: #fffbe6;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.order-card .order-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-top: 1px solid #eee;
+    background-color: #f7f9fc;
+}
+
+.order-card .order-footer strong {
+    font-size: 1.2em;
+    color: var(--text-dark);
+}
+
+.order-card .empty-message {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Linee colorate in base allo stato */
+.order-card.pending { border-top: 5px solid var(--pending-color); } 
+.order-card.executed { border-top: 5px solid var(--executed-color); } 
+.order-card.completed { border-top: 5px solid var(--secondary-color); opacity: 0.9; }
+
+
+/* --- Stili Pulsanti Azione Dettaglio --- */
 
 .update-status-btn {
     padding: 10px 18px;
@@ -404,7 +440,6 @@ a {
     transition: background-color 0.2s;
 }
 
-/* Pulsante MARCA COME ESEGUITO (Blu) */
 .update-status-btn.btn-executed {
     background-color: var(--executed-color); 
 }
@@ -412,86 +447,12 @@ a {
     background-color: #003366;
 }
 
-/* Pulsante MARCA COME PAGATO/COMPLETA (Verde) */
 .update-status-btn.btn-completed {
     background-color: var(--secondary-color);
 }
 .update-status-btn.btn-completed:hover {
     background-color: #1e7e34;
 }
-
-/* --- Card Ordine Generica (Utilizzata per Storico e Dettagli) --- */
-/* Rimosse le vecchie classi inutilizzate e consolidate quelle attuali */
-.order-card {
-    padding: 0; 
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    overflow: hidden;
-    background-color: var(--card-bg);
-}
-
-/* Stili Header, Elementi e Footer delle Card */
-.order-card-detail .card-header, .history-card .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    border-bottom: 1px solid #eee;
-}
-
-.order-card-detail .order-items, .history-card .order-items {
-    list-style: none;
-    padding: 15px;
-    margin: 0;
-}
-
-.order-card-detail .order-items li, .history-card .order-items li {
-    display: flex;
-    justify-content: space-between;
-    padding: 5px 0;
-    font-size: 1.05em;
-    border-bottom: 1px dashed #f1f1f1;
-}
-
-.order-card-detail .order-items li:last-child, .history-card .order-items li:last-child {
-    border-bottom: none;
-}
-
-.order-card-detail .order-note-display, .history-card .order-note-display {
-    padding: 15px;
-    margin: 0 15px 15px;
-    border-left: 5px solid var(--pending-color);
-    background-color: #fffbe6;
-    border-radius: 4px;
-    font-size: 0.9em;
-}
-
-.order-card-detail .order-footer, .history-card .order-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    border-top: 1px solid #eee;
-    background-color: #f7f9fc;
-}
-
-.order-card-detail .order-footer strong, .history-card .order-footer strong {
-    font-size: 1.2em;
-    color: var(--text-dark);
-}
-
-.order-card-detail .empty-message {
-    text-align: center;
-    padding: 40px 20px;
-    color: #6c757d;
-    font-style: italic;
-}
-/* Fine Stili Dettagli/Storico */
-
-
-.order-card.pending { border-top: 5px solid var(--pending-color); } 
-.order-card.executed { border-top: 5px solid var(--executed-color); } 
-.order-card.completed { border-top: 5px solid var(--secondary-color); opacity: 0.9; }
 
 /* Messaggi di stato */
 .loading-state {
