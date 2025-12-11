@@ -244,27 +244,15 @@ a {
 .active-order-banner {
     max-width: 900px;
     margin: 100px auto 20px auto; 
-    padding: 20px;
+    padding: 15px;
     border-radius: 12px;
     box-shadow: var(--shadow);
     border-left: 5px solid var(--primary-color);
     background: var(--card-bg);
     animation: slideIn 0.3s ease-out;
-    padding-left: 20px; 
-    padding-right: 20px;
 }
 
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
+/* Header status ottimizzato */
 .order-status-header {
     display: flex;
     justify-content: space-between;
@@ -288,21 +276,10 @@ a {
     white-space: nowrap;
 }
 
-.status-badge.status-pending {
-    background: #fff3cd;
-    color: #856404;
-    border: 1px solid #ffeaa7;
-}
-
-.status-badge.status-executed {
-    background: #cce5ff;
-    color: #004085;
-    border: 1px solid #b8daff;
-}
-
+/* Lista items con migliore gestione spazio */
 .order-items-list {
     margin: 15px 0;
-    padding: 15px;
+    padding: 12px;
     background: var(--bg-light);
     border-radius: 8px;
 }
@@ -313,6 +290,7 @@ a {
     padding: 8px 0;
     border-bottom: 1px dashed #dee2e6;
     align-items: center;
+    gap: 10px;
 }
 
 .order-item-row:last-child {
@@ -322,47 +300,93 @@ a {
 .order-item-row span:first-child {
     font-weight: 500;
     color: var(--text-dark);
+    flex: 1;
+    word-wrap: break-word;
 }
 
 .order-item-row span:last-child {
     font-weight: 600;
     color: var(--primary-color);
+    white-space: nowrap;
 }
 
+/* Note ordine */
 .order-notes {
     background: #fff3cd;
-    padding: 12px 15px;
+    padding: 10px 12px;
     border-radius: 6px;
     margin: 15px 0;
     font-size: 0.95em;
     border-left: 4px solid #ffc107;
+    word-wrap: break-word;
 }
 
-.order-notes strong {
-    color: #856404;
-}
-
+/* Totale ordine */
 .order-total {
-    font-size: 1.3em;
+    font-size: 1.2em;
     text-align: right;
     margin-top: 15px;
-    padding-top: 15px;
+    padding-top: 12px;
     border-top: 2px solid #dee2e6;
     color: var(--text-dark);
 }
 
+/* Info aggiuntive */
 .order-info {
     text-align: center;
     color: #6c757d;
     font-style: italic;
     margin-top: 15px;
-    padding: 10px;
+    padding: 8px;
     background: #f8f9fa;
     border-radius: 6px;
-    font-size: 0.9em;
+    font-size: 0.85em;
 }
 
-/* Responsive per mobile */
+/* ========================================================== */
+/* MEDIA QUERIES PROGRESSIVE (Mobile First) */
+/* ========================================================== */
+
+/* Dispositivi molto piccoli (< 375px) */
+@media (max-width: 374px) {
+    .active-order-banner {
+        margin: 95px 8px 15px 8px;
+        padding: 12px;
+    }
+    
+    .order-status-header h3 {
+        font-size: 1.05em;
+    }
+    
+    .status-badge {
+        font-size: 0.8em;
+        padding: 5px 12px;
+    }
+    
+    .order-items-list {
+        padding: 10px;
+    }
+    
+    .order-item-row {
+        font-size: 0.9em;
+        padding: 6px 0;
+    }
+    
+    .order-notes {
+        font-size: 0.85em;
+        padding: 8px 10px;
+    }
+    
+    .order-total {
+        font-size: 1.1em;
+    }
+    
+    .order-info {
+        font-size: 0.8em;
+    }
+}
+
+/* Smartphone standard (375px - 600px) */
 @media (max-width: 600px) {
     .active-order-banner {
         margin: 95px 10px 15px 10px;
@@ -375,11 +399,87 @@ a {
     }
     
     .order-status-header h3 {
-        font-size: 1.1em;
+        font-size: 1.15em;
     }
     
     .status-badge {
         align-self: flex-start;
+        font-size: 0.85em;
+    }
+    
+    .order-items-list {
+        padding: 12px;
+    }
+    
+    .order-item-row {
+        font-size: 0.95em;
+    }
+    
+    .order-item-row span:first-child {
+        max-width: 65%;
+    }
+    
+    .order-notes {
+        font-size: 0.9em;
+    }
+    
+    .order-total {
+        font-size: 1.15em;
+    }
+}
+
+/* Tablet piccoli (601px - 768px) */
+@media (min-width: 601px) and (max-width: 768px) {
+    .active-order-banner {
+        margin: 100px 15px 20px 15px;
+        padding: 18px;
+    }
+    
+    .order-status-header {
+        flex-direction: row;
+    }
+    
+    .order-status-header h3 {
+        font-size: 1.25em;
+    }
+    
+    .order-item-row {
+        font-size: 1em;
+    }
+}
+
+/* ========================================================== */
+/* OTTIMIZZAZIONI AGGIUNTIVE PER TUTTI I DISPOSITIVI */
+/* ========================================================== */
+
+/* Previeni overflow orizzontale */
+.active-order-banner * {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Gestione testi lunghi */
+.order-item-row span:first-child,
+.order-notes,
+.order-info {
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+}
+
+/* Migliore leggibilità su schermi piccoli */
+@media (max-width: 600px) {
+    .order-items-list,
+    .order-notes,
+    .order-info {
+        line-height: 1.5;
+    }
+}
+
+/* Touch-friendly su mobile */
+@media (hover: none) and (pointer: coarse) {
+    .active-order-banner {
+        -webkit-tap-highlight-color: transparent;
     }
 }
 
