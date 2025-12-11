@@ -3,41 +3,41 @@
 /* ========================================================= */
 
 :root {
-    /* Colori */
-    --primary-color: #007bff;
-    --secondary-color: #28a745;
-    --text-dark: #343a40;
-    --bg-light: #f4f6f9;
-    --card-bg: #ffffff;
-    --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --delete-color: #dc3545;
-    
-    /* Stati Ordine */
-    --executed-color: #0056b3;  /* Blu scuro per Eseguito */
-    --pending-color: #ffc107;   /* Giallo/Arancione per In attesa */
-    
-    /* Layout */
-    --header-height: 95px;      
+    /* Colori */
+    --primary-color: #007bff;
+    --secondary-color: #28a745;
+    --text-dark: #343a40;
+    --bg-light: #f4f6f9;
+    --card-bg: #ffffff;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --delete-color: #dc3545;
+    
+    /* Stati Ordine */
+    --executed-color: #0056b3;  /* Blu scuro per Eseguito */
+    --pending-color: #ffc107;   /* Giallo/Arancione per In attesa */
+    
+    /* Layout */
+    --header-height: 95px;      
 }
 
 body {
-    font-family: 'Roboto', Arial, sans-serif;
-    background-color: var(--bg-light);
-    color: var(--text-dark);
-    line-height: 1.6;
-    /* Adattato per la barra fissa staff */
-    padding-bottom: 80px;      
-    padding-top: 100px; /* Spazio per l'header fisso staff */
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    line-height: 1.6;
+    /* Adattato per la barra fissa staff */
+    padding-bottom: 80px;      
+    padding-top: 100px; /* Spazio per l'header fisso staff */
 }
 
 /* Impedisce lo scroll del corpo quando il carrello modale staff è aperto */
 body.no-scroll {
-    overflow: hidden;
+    overflow: hidden;
 }
 
 a {
-    text-decoration: none;
-    color: var(--primary-color);
+    text-decoration: none;
+    color: var(--primary-color);
 }
 
 /* ========================================================= */
@@ -45,108 +45,108 @@ a {
 /* ========================================================= */
 
 .menu-header {
-    background-color: var(--card-bg);
-    color: var(--text-dark);
-    padding: 4px 0;    
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
+    background-color: var(--card-bg);
+    color: var(--text-dark);
+    padding: 4px 0;    
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
 }
 
 .header-content {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 0 20px;
-    /* Rimosso text-align: center; per layout staff */
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px;
+    /* Rimosso text-align: center; per layout staff */
 }
 
 /* Stili specifici per l'interfaccia STAFF */
 .header-main-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
 }
 
 .menu-header h1 {
-    /* Reso visibile solo nell'interfaccia staff (se necessario, altrimenti nascondi come prima) */
-    display: block; 
-    margin: 0;
-    font-size: 1.3em;
-    color: var(--primary-color);
+    /* Reso visibile solo nell'interfaccia staff (se necessario, altrimenti nascondi come prima) */
+    display: block; 
+    margin: 0;
+    font-size: 1.3em;
+    color: var(--primary-color);
 }
 
 .header-table-controls {
-    display: flex;
-    align-items: center;
-    font-size: 1em;
-    padding: 5px 0;
+    display: flex;
+    align-items: center;
+    font-size: 1em;
+    padding: 5px 0;
 }
 
-.header-table-controls label, 
+.header-table-controls label, 
 .header-table-controls p {
-    margin: 0;
-    font-weight: 500;
+    margin: 0;
+    font-weight: 500;
 }
 
 #table-select {
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-left: 10px;
-    background-color: #fff;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-left: 10px;
+    background-color: #fff;
 }
 
 .header-table-controls strong {
-    color: var(--delete-color); /* Rosso per evidenziare il tavolo */
+    color: var(--delete-color); /* Rosso per evidenziare il tavolo */
 }
 
 .simple-btn {
-    background: none;
-    border: none;
-    color: var(--delete-color);
-    padding: 5px 10px;
-    cursor: pointer;
-    font-weight: 500;
+    background: none;
+    border: none;
+    color: var(--delete-color);
+    padding: 5px 10px;
+    cursor: pointer;
+    font-weight: 500;
 }
 
 
 /* Navigazione Categorie (Quick Links) */
 .category-nav {
-    display: flex;
-    overflow-x: auto;    
-    white-space: nowrap;
-    padding: 6px 0;    
-    background-color: var(--card-bg);
-    border-bottom: 1px solid #eee;
-    /* Rimosso sticky per staff, è già sotto l'header principale */
-    /* top: 45px; */     
-    z-index: 900;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    display: flex;
+    overflow-x: auto;    
+    white-space: nowrap;
+    padding: 6px 0;    
+    background-color: var(--card-bg);
+    border-bottom: 1px solid #eee;
+    /* Rimosso sticky per staff, è già sotto l'header principale */
+    /* top: 45px; */     
+    z-index: 900;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .category-btn {
-    display: inline-block;
-    padding: 8px 15px;
-    margin: 0 4px;
-    border: 1px solid #ddd;
-    border-radius: 25px;
-    background-color: var(--bg-light);
-    color: var(--text-dark);
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
-    flex-shrink: 0;    
+    display: inline-block;
+    padding: 8px 15px;
+    margin: 0 4px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    flex-shrink: 0;    
 }
 
-.category-btn:hover, 
+.category-btn:hover, 
 .category-btn.active {
-    background-color: var(--primary-color);
-    color: white;
-    border-color: var(--primary-color);
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
 }
 
 /* ========================================================== */
@@ -154,161 +154,161 @@ a {
 /* ========================================================== */
 
 #menu-container {
-    max-width: 900px;
-    /* Rimosso padding-top: var(--header-height); visto il padding-top: 100px sul body */    
-    margin: 0 auto;
-    padding-left: 20px;
-    padding-right: 20px;
-    transition: opacity 0.5s ease;
+    max-width: 900px;
+    /* Rimosso padding-top: var(--header-height); visto il padding-top: 100px sul body */    
+    margin: 0 auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    transition: opacity 0.5s ease;
 }
 
 .menu-category h2 {
-    font-size: 2em;
-    color: var(--text-dark);
-    margin-top: 20px;    
-    margin-bottom: 10px;    
-    padding-top: 10px;
-    border-bottom: 2px solid var(--primary-color);
+    font-size: 2em;
+    color: var(--text-dark);
+    margin-top: 20px;    
+    margin-bottom: 10px;    
+    padding-top: 10px;
+    border-bottom: 2px solid var(--primary-color);
 }
 
 /* Griglia per il menu staff su schermi più grandi */
 .category-items {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-    gap: 15px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+    gap: 15px;
 }
 
 /* Stili per la Card Menu con Opzioni */
 .menu-item-card {
-    /* Stili Base */
-    background: var(--card-bg);
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 8px; /* Meno margine se siamo in griglia */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    /* Stili Base */
+    background: var(--card-bg);
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 8px; /* Meno margine se siamo in griglia */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .item-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 1.1em;
-    padding-bottom: 5px;
-    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.1em;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #eee;
 }
 
 .item-info h3 {
-    margin: 0;
-    font-size: 1.1em;
-    font-weight: 600;
+    margin: 0;
+    font-size: 1.1em;
+    font-weight: 600;
 }
 
 .item-info p {
-    margin: 0;
-    font-size: 1.2em;
-    font-weight: 700;
-    color: var(--secondary-color);
+    margin: 0;
+    font-size: 1.2em;
+    font-weight: 700;
+    color: var(--secondary-color);
 }
 
 /* Stili per le Checkbox (Opzioni) */
 .item-options-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    padding: 5px 0;
-    border-top: 1px solid #eee;
-    border-bottom: 1px solid #eee;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 5px 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
 }
 
 .option-label {
-    background-color: #f0f0f0;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9em;
-    transition: background-color 0.2s;
-    display: flex;
-    align-items: center;
-    line-height: 1.2;
+    background-color: #f0f0f0;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    line-height: 1.2;
 }
 
 .option-label input[type="checkbox"] {
-    margin-right: 5px;
-    /* Nasconde l'input nativo per usare l'icona FA */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    width: 15px;
-    height: 15px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    outline: none;
-    cursor: pointer;
-    position: relative;
-    top: 1px;
-    flex-shrink: 0;
+    margin-right: 5px;
+    /* Nasconde l'input nativo per usare l'icona FA */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    top: 1px;
+    flex-shrink: 0;
 }
 
 .option-label input[type="checkbox"]:checked {
-    background-color: var(--primary-color); 
-    border-color: var(--primary-color);
+    background-color: var(--primary-color); 
+    border-color: var(--primary-color);
 }
 
 /* Aggiunge il segno di spunta se selezionato */
 .option-label input[type="checkbox"]:checked::after {
-    content: "\f00c"; /* Icona di spunta FontAwesome */
-    font-family: "Font Awesome 6 Free";
-    font-weight: 900;
-    color: #fff;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 10px;
+    content: "\f00c"; /* Icona di spunta FontAwesome */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    color: #fff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 10px;
 }
 
 /* Effetto visivo al check */
 .option-label:has(input[type="checkbox"]:checked) {
-    background-color: #cce0ff; /* Sfondo light blue */
-    font-weight: bold;
+    background-color: #cce0ff; /* Sfondo light blue */
+    font-weight: bold;
 }
 
 .add-to-cart-btn {
-    background-color: var(--secondary-color);
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1em;
-    font-weight: 600;
-    transition: background-color 0.2s;
-    width: 100%;
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    transition: background-color 0.2s;
+    width: 100%;
 }
 
 .add-to-cart-btn:hover {
-    background-color: #218838;
+    background-color: #218838;
 }
 
 .add-to-cart-btn:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-    opacity: 0.7;
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.7;
 }
 
 .loading-state {
-    text-align: center;
-    padding: 50px 0;
-    color: #6c757d;
+    text-align: center;
+    padding: 50px 0;
+    color: #6c757d;
 }
 
 .loading-state i {
-    font-size: 3em;
-    margin-bottom: 15px;
+    font-size: 3em;
+    margin-bottom: 15px;
 }
 
 /* ========================================================== */
@@ -317,53 +317,53 @@ a {
 /* Rinominato da #cart-fixed-bar a #cart-fixed-bar-staff come in HTML */
 
 #cart-fixed-bar-staff {
-    position: fixed;
-    bottom: 0;    
-    left: 0;
-    width: 100%;
-    background-color: var(--secondary-color);    
-    z-index: 1000;
-    box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.3);    
-    padding: 10px 15px; /* Spazio ridotto */
-    text-align: center;
-    transition: transform 0.3s ease-in-out;
+    position: fixed;
+    bottom: 0;    
+    left: 0;
+    width: 100%;
+    background-color: var(--secondary-color);    
+    z-index: 1000;
+    box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.3);    
+    padding: 10px 15px; /* Spazio ridotto */
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
 }
 
 #cart-fixed-bar-staff.hidden {
-    transform: translateY(100%);
-    opacity: 0;
+    transform: translateY(100%);
+    opacity: 0;
 }
 
 #toggle-full-cart-btn {
-    width: 100%;
-    max-width: 400px;
-    background: #fff;
-    border: none;
-    color: var(--text-dark);
-    font-size: 1.1rem;
-    font-weight: 700;
-    padding: 10px 20px;
-    border-radius: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;    
-    margin: 0 auto;
-    transition: background-color 0.2s;
+    width: 100%;
+    max-width: 400px;
+    background: #fff;
+    border: none;
+    color: var(--text-dark);
+    font-size: 1.1rem;
+    font-weight: 700;
+    padding: 10px 20px;
+    border-radius: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;    
+    margin: 0 auto;
+    transition: background-color 0.2s;
 }
 
 #toggle-full-cart-btn:hover {
-    background-color: #eee;
+    background-color: #eee;
 }
 
 #cart-fixed-bar-staff i {
-    margin-right: 5px;
+    margin-right: 5px;
 }
 
 #total-price-fixed {
-    color: var(--primary-color);
-    font-weight: bold;
-    margin-left: 5px;
+    color: var(--primary-color);
+    font-weight: bold;
+    margin-left: 5px;
 }
 
 
@@ -372,232 +372,213 @@ a {
 /* ========================================================== */
 
 #full-cart-details {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    z-index: 2000;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end; 
-    transition: opacity 0.3s;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end; 
+    transition: opacity 0.3s;
 }
 
 #full-cart-details.hidden-cart {
-    opacity: 0;
-    pointer-events: none;
+    opacity: 0;
+    pointer-events: none;
 }
 
 #cart-inner-full {
-    background-color: #fff;
-    width: 100%;
-    max-height: 90%;
-    padding: 20px;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-    overflow-y: auto;
-    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.3);
+    background-color: #fff;
+    width: 100%;
+    max-height: 90%;
+    padding: 20px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    overflow-y: auto;
+    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.3);
 }
 
 #cart-list {
-    list-style: none;
-    padding: 0;
-    margin: 15px 0;
+    list-style: none;
+    padding: 0;
+    margin: 15px 0;
 }
 
 .staff-cart-item-compact {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px dashed #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px dashed #eee;
 }
 
 .item-quantity-controls {
-    display: flex;
-    align-items: center;
-    min-width: 100px;
+    display: flex;
+    align-items: center;
+    min-width: 100px;
 }
 
 .quantity-display {
-    padding: 0 10px;
-    font-weight: bold;
+    padding: 0 10px;
+    font-weight: bold;
 }
 
 /* Riutilizzo dei button style, ma con classi staff dedicate */
 .cart-btn {
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 4px 10px;
-    cursor: pointer;
-    border-radius: 4px;
-    font-weight: 700;
-    font-size: 1em;
-    line-height: 1;
-    transition: background-color 0.2s;
-    width: 30px;
-    height: 30px;
-    box-sizing: border-box;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 4px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 1em;
+    line-height: 1;
+    transition: background-color 0.2s;
+    width: 30px;
+    height: 30px;
+    box-sizing: border-box;
 }
 
 .cart-decrement {
-    background: var(--delete-color);      
+    background: var(--delete-color);      
 }
 
 .cart-remove {
-    background-color: var(--delete-color);
-    color: white;
-    border: none;
-    margin-left: 10px;
-    padding: 5px 8px;
-    width: auto;
+    background-color: var(--delete-color);
+    color: white;
+    border: none;
+    margin-left: 10px;
+    padding: 5px 8px;
+    width: auto;
 }
 
 .item-name-compact {
-    flex-grow: 1;
-    margin: 0 10px;
-    font-weight: 500;
+    flex-grow: 1;
+    margin: 0 10px;
+    font-weight: 500;
 }
 
 .item-total-price {
-    font-weight: bold;
-    color: var(--primary-color);
-    min-width: 60px;
-    text-align: right;
+    font-weight: bold;
+    color: var(--primary-color);
+    min-width: 60px;
+    text-align: right;
 }
 
 .item-options-display {
-    display: block;
-    color: #6c757d;
-    font-style: italic;
-    font-size: 0.85em;
-    margin-top: 2px;
+    display: block;
+    color: #6c757d;
+    font-style: italic;
+    font-size: 0.85em;
+    margin-top: 2px;
 }
 
 
 /* Note Section */
 .order-notes-section {
-    margin: 20px 0;
-    padding: 15px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
 }
 
 #order-notes {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-top: 5px;
-    resize: vertical;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 5px;
+    resize: vertical;
 }
 
 .total-summary-full {
-    font-size: 1.4em;
-    font-weight: bold;
-    text-align: right;
-    margin-top: 20px;
-    padding-top: 10px;
-    border-top: 2px solid var(--text-dark);
+    font-size: 1.4em;
+    font-weight: bold;
+    text-align: right;
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 2px solid var(--text-dark);
 }
 
 .main-action-btn {
-    width: 100%;
-    padding: 15px;
-    background-color: var(--secondary-color);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1.2em;
-    cursor: pointer;
-    margin-bottom: 10px;
+    width: 100%;
+    padding: 15px;
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2em;
+    cursor: pointer;
+    margin-bottom: 10px;
 }
 
 #close-cart-btn {
-    display: block;
-    width: 100%;
-    background-color: transparent;
-    border: none;
-    color: #6c757d;
-    padding: 10px;
-    cursor: pointer;
+    display: block;
+    width: 100%;
+    background-color: transparent;
+    border: none;
+    color: #6c757d;
+    padding: 10px;
+    cursor: pointer;
 }
 
 /* Desktop View (Sidebar Cart) */
 @media (min-width: 900px) {
-    body {
-        /* Rimuovi padding-bottom desktop se il carrello è fisso */
-        padding-bottom: 0;
-    }
-    main {
-        padding: 20px;
-        margin-right: 320px; /* Spazio per il carrello fisso a destra */
-    }
+    body {
+        /* Rimuovi padding-bottom desktop se il carrello è fisso */
+        padding-bottom: 0;
+    }
+    main {
+        padding: 20px;
+        margin-right: 320px; /* Spazio per il carrello fisso a destra */
+    }
 
-    #full-cart-details {
-        position: fixed;
-        top: 0;
-        right: 0;
-        width: 320px;
-        height: 100%;
-        background-color: #fff;
-        box-shadow: -3px 0 10px rgba(0,0,0,0.1);
-        z-index: 1000;
-        display: block;
-        padding-top: var(--header-height); /* Usa l'altezza variabile per lo spazio dell'header fisso */
-        transition: transform 0.3s ease-in-out;
-        opacity: 1;
-        pointer-events: auto;
-        /* Nascondi di default all'avvio su desktop */
-        transform: translateX(100%);
-    }
-    
-    #full-cart-details.hidden-cart {
-        /* Nascosto: sposta completamente a destra */
-        transform: translateX(100%); 
-    }
+    #full-cart-details {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 320px;
+        height: 100%;
+        background-color: #fff;
+        box-shadow: -3px 0 10px rgba(0,0,0,0.1);
+        z-index: 1000;
+        display: block;
+        padding-top: 100px; /* Spazio per l'header fisso */
+        transition: transform 0.3s ease-in-out;
+        opacity: 1;
+        pointer-events: auto;
+    }
+    
+    #full-cart-details.hidden-cart {
+        /* Nascondi lateralmente */
+        transform: translateX(100%); 
+    }
 
-    #full-cart-details:not(.hidden-cart) {
-        /* Visibile: posizione normale */
-        transform: translateX(0);
-    }
-    
-    #cart-inner-full {
-        width: 100%;
-        height: 100%;
-        max-height: none;
-        border-radius: 0;
-        overflow-y: auto;
-        position: relative; /* Per posizionare il pulsante di chiusura */
-        padding-bottom: 55px; /* Spazio extra per il pulsante di chiusura */
-    }
-    
-    #cart-fixed-bar-staff {
-        display: none !important; /* Nasconde la barra mobile */
-    }
-    
-    /* Stili per il pulsante di chiusura su Desktop (sovrascrivono il default) */
-    #close-cart-btn {
-        display: block;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background-color: #f7f9fc;
-        border-top: 1px solid #eee;
-        padding: 10px;
-        box-sizing: border-box;
-        color: var(--text-dark); /* Colore del testo più scuro */
-        font-weight: 500;
-    }
-    
-    #close-cart-btn:hover {
-        background-color: #e9ecef;
-    }
+    /* Quando il carrello è visibile su desktop, non c'è trasformazione */
+    #full-cart-details:not(.hidden-cart) {
+        transform: translateX(0);
+    }
+    
+    #cart-inner-full {
+        width: 100%;
+        height: 100%;
+        max-height: none;
+        border-radius: 0;
+        overflow-y: auto;
+    }
+    
+    #cart-fixed-bar-staff {
+        display: none !important; /* Nasconde la barra mobile */
+    }
+    
+    #close-cart-btn {
+        display: none; /* Chiudi/apri non necessari su desktop */
+    }
 }
 
 
@@ -606,145 +587,145 @@ a {
 /* ========================================================== */
 
 .active-order-banner {
-    max-width: 900px;
-    margin: 100px auto 20px auto;    
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    border-left: 5px solid var(--primary-color);
-    background: var(--card-bg);
-    animation: slideIn 0.3s ease-out;
-    padding-left: 20px;    
-    padding-right: 20px;
+    max-width: 900px;
+    margin: 100px auto 20px auto;    
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    border-left: 5px solid var(--primary-color);
+    background: var(--card-bg);
+    animation: slideIn 0.3s ease-out;
+    padding-left: 20px;    
+    padding-right: 20px;
 }
 
 @keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .order-status-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-    flex-wrap: wrap;
-    gap: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .order-status-header h3 {
-    margin: 0;
-    font-size: 1.3em;
-    color: var(--text-dark);
+    margin: 0;
+    font-size: 1.3em;
+    color: var(--text-dark);
 }
 
 .status-badge {
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-weight: 600;
-    font-size: 0.9em;
-    white-space: nowrap;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9em;
+    white-space: nowrap;
 }
 
 .status-badge.status-pending {
-    background: #fff3cd;
-    color: #856404;
-    border: 1px solid #ffeaa7;
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
 }
 
 .status-badge.status-executed {
-    background: #cce5ff;
-    color: #004085;
-    border: 1px solid #b8daff;
+    background: #cce5ff;
+    color: #004085;
+    border: 1px solid #b8daff;
 }
 
 .order-items-list {
-    margin: 15px 0;
-    padding: 15px;
-    background: var(--bg-light);
-    border-radius: 8px;
+    margin: 15px 0;
+    padding: 15px;
+    background: var(--bg-light);
+    border-radius: 8px;
 }
 
 .order-item-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 0;
-    border-bottom: 1px dashed #dee2e6;
-    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px dashed #dee2e6;
+    align-items: center;
 }
 
 .order-item-row:last-child {
-    border-bottom: none;
+    border-bottom: none;
 }
 
 .order-item-row span:first-child {
-    font-weight: 500;
-    color: var(--text-dark);
+    font-weight: 500;
+    color: var(--text-dark);
 }
 
 .order-item-row span:last-child {
-    font-weight: 600;
-    color: var(--primary-color);
+    font-weight: 600;
+    color: var(--primary-color);
 }
 
 .order-notes {
-    background: #fff3cd;
-    padding: 12px 15px;
-    border-radius: 6px;
-    margin: 15px 0;
-    font-size: 0.95em;
-    border-left: 4px solid #ffc107;
+    background: #fff3cd;
+    padding: 12px 15px;
+    border-radius: 6px;
+    margin: 15px 0;
+    font-size: 0.95em;
+    border-left: 4px solid #ffc107;
 }
 
 .order-notes strong {
-    color: #856404;
+    color: #856404;
 }
 
 .order-total {
-    font-size: 1.3em;
-    text-align: right;
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 2px solid #dee2e6;
-    color: var(--text-dark);
+    font-size: 1.3em;
+    text-align: right;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 2px solid #dee2e6;
+    color: var(--text-dark);
 }
 
 .order-info {
-    text-align: center;
-    color: #6c757d;
-    font-style: italic;
-    margin-top: 15px;
-    padding: 10px;
-    background: #f8f9fa;
-    border-radius: 6px;
-    font-size: 0.9em;
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    margin-top: 15px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    font-size: 0.9em;
 }
 
 /* Responsive per mobile */
 @media (max-width: 600px) {
-    .active-order-banner {
-        margin: 95px 10px 15px 10px;
-        padding: 15px;
-    }
-    
-    .order-status-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .order-status-header h3 {
-        font-size: 1.1em;
-    }
-    
-    .status-badge {
-        align-self: flex-start;
-    }
+    .active-order-banner {
+        margin: 95px 10px 15px 10px;
+        padding: 15px;
+    }
+    
+    .order-status-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .order-status-header h3 {
+        font-size: 1.1em;
+    }
+    
+    .status-badge {
+        align-self: flex-start;
+    }
 }
 
 /* ========================================================== */
@@ -753,117 +734,117 @@ a {
 
 /* Sfondo scuro e fissa */
 .modal {
-    display: none;    
-    position: fixed;    
-    z-index: 2000;    
-    left: 0;
-    top: 0;
-    width: 100%;    
-    height: 100%;    
-    overflow-y: auto;    
-    background-color: rgba(0,0,0,0.6);    
-    backdrop-filter: blur(3px);
+    display: none;    
+    position: fixed;    
+    z-index: 2000;    
+    left: 0;
+    top: 0;
+    width: 100%;    
+    height: 100%;    
+    overflow-y: auto;    
+    background-color: rgba(0,0,0,0.6);    
+    backdrop-filter: blur(3px);
 }
 
 /* Contenuto centrato */
 .modal-content {
-    background-color: var(--card-bg);
-    margin: 5% auto;    
-    padding: 25px;
-    border-radius: 10px;
-    width: 95%;    
-    max-width: 450px;
-    box-shadow: var(--shadow);
-    position: relative;
-    animation: fadeInModal 0.3s ease-out;
+    background-color: var(--card-bg);
+    margin: 5% auto;    
+    padding: 25px;
+    border-radius: 10px;
+    width: 95%;    
+    max-width: 450px;
+    box-shadow: var(--shadow);
+    position: relative;
+    animation: fadeInModal 0.3s ease-out;
 }
 
 @keyframes fadeInModal {
-    from { opacity: 0; transform: translateY(50px); }
-    to { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateY(50px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .close-btn {
-    color: #aaa;
-    float: right;
-    font-size: 30px;
-    font-weight: bold;
-    cursor: pointer;
-    line-height: 1;
+    color: #aaa;
+    float: right;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1;
 }
 
 .modal-content h2 {
-    color: var(--primary-color);
-    border-bottom: 2px solid #eee;
-    padding-bottom: 10px;
-    margin-top: 0;
-    margin-bottom: 20px;
-    font-size: 1.5em;
+    color: var(--primary-color);
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.5em;
 }
 
 /* Lista Articoli Carrello */
 .cart-items-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 .cart-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px dashed #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px dashed #ddd;
 }
 
 .cart-item:last-child {
-    border-bottom: none;
+    border-bottom: none;
 }
 
 .item-details strong {
-    display: block;
-    font-size: 1.1em;
-    color: var(--text-dark);
+    display: block;
+    font-size: 1.1em;
+    color: var(--text-dark);
 }
 
 .item-details span {
-    font-size: 0.9em;
-    color: #6c757d;
+    font-size: 0.9em;
+    color: #6c757d;
 }
 
 .cart-summary {
-    display: flex;
-    justify-content: space-between;
-    padding-top: 15px;
-    border-top: 2px solid var(--secondary-color);
-    font-size: 1.4em;
-    font-weight: bold;
-    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    padding-top: 15px;
+    border-top: 2px solid var(--secondary-color);
+    font-size: 1.4em;
+    font-weight: bold;
+    margin-top: 15px;
 }
 
 /* Pulsante principale Invia Ordine */
 #send-order-btn {
-    width: 100%;
-    padding: 15px;
-    background: var(--secondary-color);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1.1em;
-    font-weight: 700;
-    cursor: pointer;
-    margin-top: 20px;
-    transition: background-color 0.3s;
+    width: 100%;
+    padding: 15px;
+    background: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s;
 }
 
 #send-order-btn:hover:not(:disabled) {
-    background: #1e7e34;
+    background: #1e7e34;
 }
 
 #send-order-btn:disabled {
-    background: #6c757d;
-    cursor: not-allowed;
-    opacity: 0.8;
+    background: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.8;
 }
 
 /* ========================================================== */
@@ -871,26 +852,26 @@ a {
 /* ========================================================== */
 
 .cart-item-controls {
-    display: flex;
-    align-items: center;
-    gap: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
 /* Stili .cart-btn sono definiti anche per lo staff, ma riadattati se necessario */
 
 
 .cart-decrement {
-    background: var(--delete-color);    
+    background: var(--delete-color);    
 }
 
 .cart-decrement:hover {
-    background: #c82333;
+    background: #c82333;
 }
 
 .cart-qty {
-    padding: 0 5px;
-    font-weight: 700;
-    font-size: 1.1em;
+    padding: 0 5px;
+    font-weight: 700;
+    font-size: 1.1em;
 }
 
 /* ========================================================== */
@@ -899,123 +880,123 @@ a {
 
 /* --- Layout Generale Admin --- */
 .admin-main {
-    max-width: 1200px;
-    margin: 20px auto;
-    padding: 0 20px;
-    padding-top: 20px;    
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+    padding-top: 20px;    
 }
 
 #dashboard-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 15px;
-    background-color: #f7f9fc;    
-    border-bottom: 1px solid #ddd;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    position: sticky;
-    top: 0;    
-    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: #f7f9fc;    
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;    
+    z-index: 100;
 }
 
 #admin-logout-btn {
-    padding: 8px 15px;
-    background: var(--delete-color);    
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.2s;
+    padding: 8px 15px;
+    background: var(--delete-color);    
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
 }
 
 #admin-logout-btn:hover {
-    background: #c82333;
+    background: #c82333;
 }
 
 /* --- Login Admin (Aggiunto) --- */
 #admin-login-form {
-    max-width: 350px;
-    margin: 100px auto;
-    padding: 30px;
-    background: var(--card-bg);
-    border-radius: 12px;
-    box-shadow: var(--shadow);
+    max-width: 350px;
+    margin: 100px auto;
+    padding: 30px;
+    background: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
 }
 
 #admin-login-form h2 {
-    text-align: center;
-    color: var(--primary-color);
-    margin-bottom: 25px;
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 25px;
 }
 
 #admin-login-form input[type="email"],
 #admin-login-form input[type="password"] {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    box-sizing: border-box;
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
 }
 
 #admin-login-btn {
-    width: 100%;
-    padding: 12px;
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 1.1em;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.2s;
+    width: 100%;
+    padding: 12px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1em;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
 #admin-login-btn:hover:not(:disabled) {
-    background: #0056b3;
+    background: #0056b3;
 }
 
 #error-message {
-    color: var(--delete-color);
-    text-align: center;
-    margin-bottom: 15px;
-    font-weight: 500;
+    color: var(--delete-color);
+    text-align: center;
+    margin-bottom: 15px;
+    font-weight: 500;
 }
 
 /* --- Filtri/Controlli --- */
 #order-filters {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin: 25px auto 35px;
-    padding: 15px 0;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 25px auto 35px;
+    padding: 15px 0;
 }
 
 .filter-btn {
-    padding: 12px 25px;
-    border: 2px solid #ccc;
-    border-radius: 8px;
-    background-color: var(--card-bg);
-    color: var(--text-dark);
-    font-size: 1em;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    padding: 12px 25px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    background-color: var(--card-bg);
+    color: var(--text-dark);
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .filter-btn[data-view="active"].active {
-    background-color: var(--primary-color);
-    color: white;
-    border-color: var(--primary-color);
-    box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
 }
 
 .filter-btn[data-view="history"].active {
-    background-color: var(--secondary-color);
-    color: white;
-    border-color: var(--secondary-color);
-    box-shadow: 0 4px 6px rgba(40, 167, 69, 0.3);
+    background-color: var(--secondary-color);
+    color: white;
+    border-color: var(--secondary-color);
+    box-shadow: 0 4px 6px rgba(40, 167, 69, 0.3);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1023,195 +1004,195 @@ a {
 /* -------------------------------------------------------------------------- */
 
 #admin-dashboard-layout {
-    display: grid;
-    grid-template-columns: 1fr; /* Default mobile */
-    gap: 20px;
+    display: grid;
+    grid-template-columns: 1fr; /* Default mobile */
+    gap: 20px;
 }
 
 @media (min-width: 900px) {
-    #admin-dashboard-layout {
-        grid-template-columns: 3fr 1.5fr;    
-    }
+    #admin-dashboard-layout {
+        grid-template-columns: 3fr 1.5fr;    
+    }
 }
 
 .hidden {
-    display: none !important;
+    display: none !important;
 }
 
 /* --- Griglia dei Tavoli (#tables-grid) --- */
 #tables-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(60px, 60px));    
-    gap: 12px;    
-    padding: 20px;
-    background-color: var(--card-bg);
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(60px, 60px));    
+    gap: 12px;    
+    padding: 20px;
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    justify-content: center;
 }
 
 .table-btn {
-    width: 100%;
-    padding-top: 100%;    
-    position: relative;
-    border: 2px solid #ccc;
-    border-radius: 50%;    
-    font-size: 1.0em;    
-    font-weight: 800;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
+    width: 100%;
+    padding-top: 100%;    
+    position: relative;
+    border: 2px solid #ccc;
+    border-radius: 50%;    
+    font-size: 1.0em;    
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
 }
 
 /* Contenuto centrato */
 .table-btn::before {
-    content: attr(data-table);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    line-height: 1;    
+    content: attr(data-table);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    line-height: 1;    
 }
 
 /* Colori e Stati */
 .table-btn.free {
-    background-color: #f7f7f7;
-    border-color: #ddd;
-    color: #495057;
+    background-color: #f7f7f7;
+    border-color: #ddd;
+    color: #495057;
 }
 
 /* 💡 OTTIMIZZAZIONE PENDING: Colore più caldo per urgenza e animazione */
 .table-btn.pending {
-    background-color: #ffead0; /* Colore più caldo per l'urgenza */    
-    border-color: var(--pending-color); /* Giallo/Arancione */
-    color: var(--text-dark);    
-    animation: pulse-pending 1s infinite alternate;    
+    background-color: #ffead0; /* Colore più caldo per l'urgenza */    
+    border-color: var(--pending-color); /* Giallo/Arancione */
+    color: var(--text-dark);    
+    animation: pulse-pending 1s infinite alternate;    
 }
 
 @keyframes pulse-pending {
-    from { box-shadow: 0 0 5px rgba(255, 193, 7, 0.6); }
-    to { box-shadow: 0 0 15px rgba(255, 69, 0, 0.9); } /* Passa all'arancio scuro */
+    from { box-shadow: 0 0 5px rgba(255, 193, 7, 0.6); }
+    to { box-shadow: 0 0 15px rgba(255, 69, 0, 0.9); } /* Passa all'arancio scuro */
 }
 
 .table-btn.executed {
-    background-color: var(--executed-color);    
-    border-color: #004085;
-    color: white;    
-    animation: none; /* Mantieni solo l'animazione di selezione */
+    background-color: var(--executed-color);    
+    border-color: #004085;
+    color: white;    
+    animation: none; /* Mantieni solo l'animazione di selezione */
 }
 
 .table-btn.selected {
-    box-shadow: 0 0 0 5px rgba(0, 123, 255, 0.7);    
-    transform: scale(1.05);    
+    box-shadow: 0 0 0 5px rgba(0, 123, 255, 0.7);    
+    transform: scale(1.05);    
 }
 
 /* --- Pannello Dettagli Ordine & Storico --- */
 #order-details {
-    padding: 20px;
-    background-color: var(--card-bg);
-    border-radius: 12px;
-    box-shadow: var(--shadow);
+    padding: 20px;
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
 }
 
 #orders-container-history {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));    
-    gap: 25px;
-    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));    
+    gap: 25px;
+    padding: 0;
 }
 
 .order-card {
-    padding: 0;    
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    overflow: hidden;
-    background-color: var(--card-bg);
+    padding: 0;    
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    background-color: var(--card-bg);
 }
 
 .history-card {
-    opacity: 0.8;
+    opacity: 0.8;
 }
 
 /* Stili comuni per Header, Items e Footer delle Card Ordine/Storico */
 .order-card .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
 }
 
 .order-card .order-items {
-    list-style: none;
-    padding: 15px;
-    margin: 0;
+    list-style: none;
+    padding: 15px;
+    margin: 0;
 }
 
 .order-card .order-items li {
-    display: flex;
-    justify-content: space-between;
-    padding: 5px 0;
-    font-size: 1.05em;
-    border-bottom: 1px dashed #f1f1f1;
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    font-size: 1.05em;
+    border-bottom: 1px dashed #f1f1f1;
 }
 
 .order-card .order-items li:last-child {
-    border-bottom: none;
+    border-bottom: none;
 }
 
 .order-card .order-note-display {
-    padding: 15px;
-    margin: 0 15px 15px;
-    border-left: 5px solid var(--pending-color);
-    background-color: #fffbe6;
-    border-radius: 4px;
-    font-size: 0.9em;
+    padding: 15px;
+    margin: 0 15px 15px;
+    border-left: 5px solid var(--pending-color);
+    background-color: #fffbe6;
+    border-radius: 4px;
+    font-size: 0.9em;
 }
 
 .order-card .order-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    border-top: 1px solid #eee;
-    background-color: #f7f9fc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-top: 1px solid #eee;
+    background-color: #f7f9fc;
 }
 
 .order-card .order-footer strong {
-    font-size: 1.2em;
-    color: var(--text-dark);
+    font-size: 1.2em;
+    color: var(--text-dark);
 }
 
 /* 💡 AGGIUNTE PER FUNZIONE ELIMINA STORICO */
 
 /* Contenitore per allineare Pagato e Elimina */
 .history-actions {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* Spazio tra l'etichetta "Pagato" e il pulsante "Elimina" */
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Spazio tra l'etichetta "Pagato" e il pulsante "Elimina" */
 }
 
 /* Stile del pulsante Elimina */
 .delete-history-btn {
-    padding: 8px 12px;
-    border-radius: 4px;
-    font-size: 0.9em;
-    font-weight: 600;
-    border: none;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    background-color: var(--delete-color); /* Rosso */
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-weight: 600;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    background-color: var(--delete-color); /* Rosso */
 }
 
 .delete-history-btn:hover {
-    background-color: #c82333; /* Rosso più scuro al passaggio del mouse */
+    background-color: #c82333; /* Rosso più scuro al passaggio del mouse */
 }
 
 .completed-label {
-    /* Assicurati che l'etichetta "Pagato" sia ben visibile accanto al pulsante */
-    color: var(--secondary-color);
-    font-weight: 600;
-    font-size: 0.9em;
+    /* Assicurati che l'etichetta "Pagato" sia ben visibile accanto al pulsante */
+    color: var(--secondary-color);
+    font-weight: 600;
+    font-size: 0.9em;
 }
 
 /* FINE AGGIUNTE */
@@ -1219,64 +1200,64 @@ a {
 /* Messaggi di Stato (Aggiunto/Ottimizzato) */
 .empty-message,
 .error-message {
-    text-align: center;
-    padding: 30px 20px;
-    font-size: 1.1em;
-    border-radius: 8px;
-    margin-top: 20px;
+    text-align: center;
+    padding: 30px 20px;
+    font-size: 1.1em;
+    border-radius: 8px;
+    margin-top: 20px;
 }
 
 .empty-message {
-    background-color: #f8f9fa;
-    color: #6c757d;
-    border: 1px dashed #dee2e6;
+    background-color: #f8f9fa;
+    color: #6c757d;
+    border: 1px dashed #dee2e6;
 }
 
 .error-message {
-    background-color: #f8d7da;    
-    color: #721c24;    
-    border: 1px solid #f5c6cb;
+    background-color: #f8d7da;    
+    color: #721c24;    
+    border: 1px solid #f5c6cb;
 }
 
 
 /* Linee colorate in base allo stato */
-.order-card.pending {    
-    border-top: 5px solid var(--pending-color);    
+.order-card.pending {    
+    border-top: 5px solid var(--pending-color);    
 }
 
-.order-card.executed {    
-    border-top: 5px solid var(--executed-color);    
+.order-card.executed {    
+    border-top: 5px solid var(--executed-color);    
 }
 
-.order-card.completed {    
-    border-top: 5px solid var(--secondary-color);    
-    opacity: 0.9;    
+.order-card.completed {    
+    border-top: 5px solid var(--secondary-color);    
+    opacity: 0.9;    
 }
 
 /* --- Stili Pulsanti Azione Dettaglio --- */
 .update-status-btn {
-    padding: 10px 18px;
-    border-radius: 4px;
-    font-size: 0.95em;
-    font-weight: 600;
-    border: none;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.2s;
+    padding: 10px 18px;
+    border-radius: 4px;
+    font-size: 0.95em;
+    font-weight: 600;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
 .update-status-btn.btn-executed {
-    background-color: var(--executed-color);    
+    background-color: var(--executed-color);    
 }
 
 .update-status-btn.btn-executed:hover {
-    background-color: #003366;
+    background-color: #003366;
 }
 
 .update-status-btn.btn-completed {
-    background-color: var(--secondary-color);
+    background-color: var(--secondary-color);
 }
 
 .update-status-btn.btn-completed:hover {
-    background-color: #1e7e34;
+    background-color: #1e7e34;
 }
