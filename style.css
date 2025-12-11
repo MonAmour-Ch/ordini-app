@@ -36,7 +36,6 @@ a {
 /* ========================================================= */
 /* 2. Header & Navigazione (Fissi e Compatti) */
 /* ========================================================= */
-/* ... (Sezione 2 non modificata) ... */
 
 .menu-header {
     background-color: var(--card-bg);
@@ -120,7 +119,6 @@ a {
 /* ========================================================= */
 /* 3. Menu Items & Container (Carte pulite e snelle) */
 /* ========================================================= */
-/* ... (Sezione 3 non modificata) ... */
 
 #menu-container {
     max-width: 900px;
@@ -154,7 +152,6 @@ a {
 /* ========================================================== */
 /* 4. BARRA FISSA CARRELLO (Cliccabile per lo Scroll) */
 /* ========================================================== */
-/* ... (Sezione 4 non modificata) ... */
 
 #cart-fixed-bar {
     position: fixed;
@@ -296,9 +293,12 @@ a {
 
 /* --- Griglia dei Tavoli (#tables-grid) --- */
 #tables-grid {
-    /* Tavoli più grandi: min-width aumentato e gap maggiore */
-    grid-template-columns: repeat(auto-fit, minmax(85px, 1fr)); 
-    gap: 18px; 
+    /* *** MODIFICA CHIAVE ***
+    * RIDUCIAMO il minmax (da 85px a 70px) per consentire più colonne.
+    * RIDUCIAMO il gap (da 18px a 15px).
+    */
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); 
+    gap: 15px; 
     padding: 20px;
     background-color: var(--card-bg);
     border-radius: 12px;
@@ -307,12 +307,15 @@ a {
 
 .table-btn {
     width: 100%;
-    /* Rende il bottone quadrato, aumentando la dimensione del testo e del cerchio */
+    /* Rende il bottone quadrato */
     padding-top: 100%; 
     position: relative;
     border: 3px solid #ccc; 
     border-radius: 50%; 
-    font-size: 1.6em; /* Testo più grande */
+    /* *** MODIFICA CHIAVE ***
+    * RIDUCIAMO il font-size (da 1.6em a 1.4em) per adattarsi al bottone più piccolo.
+    */
+    font-size: 1.4em; 
     font-weight: 800;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
@@ -426,7 +429,65 @@ a {
     overflow: hidden;
     background-color: var(--card-bg);
 }
-/* ... (Il resto degli stili .card-header, .order-items, .order-note-display, .order-footer resta invariato) ... */
+
+/* Stili Header, Elementi e Footer delle Card */
+.order-card-detail .card-header, .history-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.order-card-detail .order-items, .history-card .order-items {
+    list-style: none;
+    padding: 15px;
+    margin: 0;
+}
+
+.order-card-detail .order-items li, .history-card .order-items li {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    font-size: 1.05em;
+    border-bottom: 1px dashed #f1f1f1;
+}
+
+.order-card-detail .order-items li:last-child, .history-card .order-items li:last-child {
+    border-bottom: none;
+}
+
+.order-card-detail .order-note-display, .history-card .order-note-display {
+    padding: 15px;
+    margin: 0 15px 15px;
+    border-left: 5px solid var(--pending-color);
+    background-color: #fffbe6;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.order-card-detail .order-footer, .history-card .order-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-top: 1px solid #eee;
+    background-color: #f7f9fc;
+}
+
+.order-card-detail .order-footer strong, .history-card .order-footer strong {
+    font-size: 1.2em;
+    color: var(--text-dark);
+}
+
+.order-card-detail .empty-message {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6c757d;
+    font-style: italic;
+}
+/* Fine Stili Dettagli/Storico */
+
 
 .order-card.pending { border-top: 5px solid var(--pending-color); } 
 .order-card.executed { border-top: 5px solid var(--executed-color); } 
@@ -439,5 +500,3 @@ a {
     font-size: 1.2em;
     color: var(--primary-color);
 }
-
-/* FINE DELLE MODIFICHE */
