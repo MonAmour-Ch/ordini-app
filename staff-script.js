@@ -113,7 +113,7 @@ function handleLogout() {
 
 /**
  * Popola il dropdown di selezione tavolo.
- * AGGIORNATO: Inizia con l'opzione "Seleziona Tavolo" e blocca l'interfaccia.
+ * AGGIORNATO: Mostra solo il numero del tavolo (es: "1", "2", "3"...)
  */
 function populateTableSelect() {
     const tableSelect = document.getElementById('table-select');
@@ -129,11 +129,11 @@ function populateTableSelect() {
     defaultOption.selected = true; // Selezionata all'inizio
     tableSelect.appendChild(defaultOption);
 
-    // --- 2. POPOLA LE OPZIONI (Tavoli 1-40) ---
+    // --- 2. POPOLA LE OPZIONI (Solo numeri 1-40) ---
     for (let i = 1; i <= 40; i++) { 
         const option = document.createElement('option');
         option.value = `TAVOLO_${i}`;
-        option.textContent = `Tavolo ${i}`;
+        option.textContent = `${i}`; // MODIFICATO: Mostra solo il numero
         tableSelect.appendChild(option);
     }
 
@@ -186,7 +186,6 @@ function populateTableSelect() {
     // Blocca l'interfaccia all'avvio
     mainContainer.style.pointerEvents = 'none';
     mainContainer.style.opacity = '0.5';
-    // NON C'È PIÙ L'EVENTO DI FORZATURA
 }
 
 /**
