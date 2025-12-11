@@ -275,8 +275,8 @@ a {
 
 /* --- Griglia dei Tavoli (#tables-grid) --- */
 #tables-grid {
-    /* MODIFICATO: Dimensione minima ridotta a 30px e massima fissa a 45px per layout compatto */
-    grid-template-columns: repeat(auto-fit, minmax(30px, 45px)); 
+    /* MODIFICATO: Aumento la dimensione minima a 40px e massima a 55px */
+    grid-template-columns: repeat(auto-fit, minmax(40px, 55px)); 
     gap: 8px; 
     padding: 20px;
     background-color: var(--card-bg);
@@ -290,7 +290,7 @@ a {
     position: relative;
     border: 2px solid #ccc; /* RIDOTTO: 2px */
     border-radius: 50%;  
-    /* FONT: Mantenuto a 1.0em come richiesto */
+    /* FONT: Mantenuto a 1.0em */
     font-size: 1.0em; 
     font-weight: 800;
     cursor: pointer;
