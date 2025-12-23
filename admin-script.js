@@ -184,9 +184,22 @@ function setupViewFilters() {
 function displayOrderDetails(order) {
     const time = formatTimestampToTime(order.timestamp);
 
-    const itemsHtml = order.items.map(item =>
-        `<li>${item.quantity}x ${item.name} <span class="item-price">€${(item.quantity * item.price).toFixed(2)}</span></li>`
-    ).join('');
+    // Mappatura articoli con gestione opzioni (checkbox)
+    const itemsHtml = order.items.map(item => {
+        // Se esistono opzioni, le uniamo in una stringa, altrimenti stringa vuota
+        const optionsHtml = (item.options && item.options.length > 0) 
+            ? `<div class="admin-item-options"><i class="fas fa-plus-circle"></i> ${item.options.join(', ')}</div>` 
+            : '';
+
+        return `
+            <li>
+                <div class="item-main-row">
+                    <span><strong>${item.quantity}x</strong> ${item.name}</span>
+                    <span class="item-price">€${(item.quantity * item.price).toFixed(2)}</span>
+                </div>
+                ${optionsHtml} </li>
+        `;
+    }).join('');
 
     const noteHtml = order.notes
         ? `<div class="order-note-display"><strong><i class="fas fa-sticky-note"></i> NOTA:</strong> ${order.notes}</div>`
@@ -225,7 +238,6 @@ function handleTableClick(e) {
 
     const tableNumber = button.dataset.table;
     
-    // Rimuovi la selezione precedente e aggiungi quella corrente
     document.querySelectorAll('.table-btn').forEach(b => b.classList.remove('selected'));
     button.classList.add('selected');
     
@@ -413,14 +425,26 @@ async function fetchHistoryOrders() {
 }
 
 function renderHistoryCard(order) {
-    // order deve contenere order.docId
     const card = document.createElement('div');
     card.className = 'order-card completed history-card';
 
     const time = formatTimestampToTime(order.completionTime, true);
-    const itemsHtml = order.items.map(i =>
-        `<li>${i.quantity}x ${i.name} <span class="item-price">€${(i.quantity * i.price).toFixed(2)}</span></li>`
-    ).join('');
+    
+    // Mappatura articoli anche per lo storico
+    const itemsHtml = order.items.map(i => {
+        const optionsHtml = (i.options && i.options.length > 0) 
+            ? `<div class="admin-item-options italic-small"><i class="fas fa-plus-circle"></i> ${i.options.join(', ')}</div>` 
+            : '';
+            
+        return `
+            <li>
+                <div class="item-main-row">
+                    <span><strong>${i.quantity}x</strong> ${i.name}</span>
+                    <span class="item-price">€${(i.quantity * i.price).toFixed(2)}</span>
+                </div>
+                ${optionsHtml}
+            </li>`;
+    }).join('');
 
     const noteHtml = order.notes
         ? `<div class="order-note-display"><strong><i class="fas fa-sticky-note"></i> NOTA:</strong> ${order.notes}</div>`
