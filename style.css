@@ -371,14 +371,16 @@ a {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 3px 0;
+    padding: 3px 0 !important;
+    margin: 0 !important;
+    height: 40px;
     border-bottom: 1px dashed #eee;
 }
 
 .item-quantity-controls {
     display: flex;
     align-items: center;
-    min-width: 100px;
+    min-width: 50px;
 }
 
 .quantity-display {
