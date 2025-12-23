@@ -1296,3 +1296,41 @@ a {
 .update-status-btn.btn-completed:hover {
     background-color: #1e7e34;
 }
+
+
+/* --- AGGIUNTE PER VISUALIZZAZIONE OPZIONI ARTICOLI --- */
+
+/* 1. Forza il layout orizzontale per Nome e Prezzo */
+.item-main-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+/* 2. Stile per le opzioni (checkbox) sotto il piatto */
+.admin-item-options {
+    font-size: 0.85em;
+    color: #d9534f; /* Rosso per evidenziare le modifiche allo chef/barman */
+    font-style: italic;
+    margin-left: 28px; /* Rientro per allinearlo sotto il nome del prodotto */
+    margin-top: 2px;
+    margin-bottom: 5px;
+    display: block;
+    line-height: 1.2;
+    font-weight: 500;
+}
+
+/* 3. Iconcina FontAwesome per le opzioni */
+.admin-item-options i {
+    font-size: 0.8em;
+    margin-right: 4px;
+    opacity: 0.8;
+}
+
+/* 4. Modifica specifica per la lista ordini admin per non tagliare il testo */
+.order-card .order-items li {
+    flex-direction: column; /* Permette alle opzioni di andare a capo sotto il nome */
+    align-items: flex-start;
+    padding: 8px 0;
+}
