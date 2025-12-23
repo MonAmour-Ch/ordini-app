@@ -154,8 +154,7 @@ a {
 /* ========================================================== */
 
 #menu-container {
-    max-width: 900px;
-    /* Rimosso padding-top: var(--header-height); visto il padding-top: 100px sul body */    
+    max-width: 900px;    
     margin: 0 auto;
     padding-left: 20px;
     padding-right: 20px;
@@ -174,8 +173,8 @@ a {
 /* Griglia per il menu staff su schermi più grandi */
 .category-items {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+    gap: 10px;
 }
 
 /* Stili per la Card Menu con Opzioni */
@@ -183,13 +182,13 @@ a {
     /* Stili Base */
     background: var(--card-bg);
     border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 15px;
+    border-radius: 6px;
+    padding: 10px;
     margin-bottom: 8px; /* Meno margine se siamo in griglia */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
 }
 
 .item-info {
@@ -205,13 +204,13 @@ a {
 
 .item-info h3 {
     margin: 0;
-    font-size: 1.1em;
+    font-size: 0.95em;
     font-weight: 600;
 }
 
 .item-info p {
     margin: 0;
-    font-size: 1.1em;
+    font-size: 1em;
     font-weight: 700;
     color: var(--secondary-color);
     text-align: left;
@@ -231,10 +230,10 @@ a {
 
 .option-label {
     background-color: #f0f0f0;
-    padding: 8px 12px;
-    border-radius: 6px;
+    padding: 4px 8px;
+    border-radius: 4px;
     cursor: pointer;
-    font-size: 0.95em;
+    font-size: 0.8em;
     transition: background-color 0.2s;
     display: flex;
     align-items: center;
@@ -287,7 +286,7 @@ a {
 .add-to-cart-btn {
     background-color: var(--secondary-color);
     color: white;
-    padding: 10px;
+    padding: 8px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
