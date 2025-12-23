@@ -194,10 +194,12 @@ a {
 
 .item-info {
     display: flex;
+    flex-direction: column; /* Nome sopra, prezzo sotto o allineati a sinistra */
     justify-content: flex-start;
     align-items: flex-start;
+    gap: 5px;
     font-size: 1.1em;
-    padding-bottom: 5px;
+    padding-bottom: 8px;
     border-bottom: 1px solid #eee;
 }
 
@@ -209,49 +211,53 @@ a {
 
 .item-info p {
     margin: 0;
-    font-size: 1.2em;
+    font-size: 1.1em;
     font-weight: 700;
     color: var(--secondary-color);
+    text-align: left;
 }
 
 /* Stili per le Checkbox (Opzioni) */
 .item-options-container {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    padding: 5px 0;
+    flex-direction: column; /* Cambiato da wrap a column per forzare l'allineamento a sinistra */
+    align-items: flex-start; /* Forza tutto a sinistra */
+    gap: 8px;
+    padding: 10px 0;
     border-top: 1px solid #eee;
     border-bottom: 1px solid #eee;
+    width: 100%; /* Occupa tutta la larghezza */
 }
 
 .option-label {
     background-color: #f0f0f0;
-    padding: 5px 8px;
-    border-radius: 4px;
+    padding: 8px 12px;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 0.9em;
+    font-size: 0.95em;
     transition: background-color 0.2s;
     display: flex;
     align-items: center;
+    justify-content: flex-start; /* Allinea contenuto dell'etichetta a sinistra */
     text-align: left;
     line-height: 1.2;
+    width: 100%; /* Opzionale: rende le opzioni larghe quanto la card per un click più facile */
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
+/* Rendi le checkbox leggermente più grandi per il tocco su mobile */
 .option-label input[type="checkbox"] {
-    margin-right: 5px;
-    /* Nasconde l'input nativo per usare l'icona FA */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    width: 15px;
-    height: 15px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    outline: none;
-    cursor: pointer;
-    position: relative;
-    top: 1px;
+    margin-right: 12px; /* Più spazio tra checkbox e testo */
+    width: 20px;
+    height: 20px;
     flex-shrink: 0;
+    -webkit-appearance: none;
+    appearance: none;
+    border: 2px solid #bbb;
+    border-radius: 4px;
+    position: relative;
+    cursor: pointer;
 }
 
 .option-label input[type="checkbox"]:checked {
