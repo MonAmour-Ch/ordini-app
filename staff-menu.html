@@ -43,8 +43,8 @@
             display: flex;
             flex-wrap: wrap;
             gap: 6px;
-            justify-content: left; 
-            align-items: left;
+            justify-content: flex-start;
+            align-items: flex-start;
             padding: 5px 0;
             width: 100%;
         }
@@ -60,10 +60,10 @@
             cursor: pointer;
             font-size: 0.8em;
             display: inline-flex;
-            align-items: left;
-           
-            justify-content: flex-start; 
+            align-items: center;
+            justify-content: flex-start;
             margin: 0;
+            text-align: left;
         }
 
         .option-label input[type="checkbox"] {
@@ -176,7 +176,8 @@
                 <h2>Seleziona un tavolo</h2>
             </div>
         </section>
-        <div id="order-anchor-point" style="height: 60px;"></div> </main>
+        <div id="order-anchor-point" style="height: 60px;"></div>
+    </main>
     
     <section id="cart-fixed-bar-staff" class="hidden"> 
         <button id="toggle-full-cart-btn">
